@@ -28,6 +28,18 @@ npm run build
 
 Xem tên biến tại [`.env.example`](.env.example). Không dùng tiền tố `VITE_` cho khoá; không commit `.env`. Khi chưa có `STUDIO_ACCESS_TOKEN`, API trên Vercel đóng, còn tiền kỳ và nhập/ghép clip local vẫn dùng được.
 
+Nếu Vercel báo `EUSAGE` / không tìm thấy `package-lock.json`, kiểm tra **Settings → Build and Deployment**:
+
+| Thiết lập | Giá trị |
+|---|---|
+| Root Directory | để trống hoặc `.` |
+| Framework Preset | Other |
+| Install Command | `node scripts/vercel-install.mjs` |
+| Build Command | `cd apps/director-studio && npm run build` |
+| Output Directory | `apps/director-studio/dist` |
+
+Lệnh cài mới kiểm tra lockfile v3 và chạy `npm ci` ngay trong thư mục app, với đường dẫn tuyệt đối tính từ file script; luôn cài devDependencies cần cho TypeScript/Vite. Không thay bằng `npm install` để bỏ qua lỗi lockfile. Khi sửa Settings, deploy commit mới nhất trên `main`; bản redeploy của commit cũ vẫn dùng cấu hình cũ. Log cài mới phải xuất hiện dòng `[studio install]` và đường dẫn kết thúc bằng `/apps/director-studio/`.
+
 ## API miễn phí trước
 
 - Google Gemini và Groq: danh sách model văn bản có free tier; phải xác nhận tài khoản/key đang dùng free tier, chưa bật billing. Quota và khả năng truy cập phụ thuộc tài khoản.
