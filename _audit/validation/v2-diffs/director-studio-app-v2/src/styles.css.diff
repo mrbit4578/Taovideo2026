@@ -1,0 +1,102 @@
+--- D:\AI\KIEMTIEN ONLINE\taovideo chatgpt\_audit\tiktok-director-skillpack\director-studio-app\src\styles.css
++++ D:\AI\KIEMTIEN ONLINE\taovideo chatgpt\_audit\tiktok-director-skillpack-v2\director-studio-app-v2\src\styles.css
+@@ -880,3 +880,99 @@
+     padding: 16px;
+   }
+ }
++
++/* ───────── Director Studio v2 — knowledge layer ───────── */
++.side-group {
++  display: flex;
++  flex-direction: column;
++  gap: 2px;
++}
++.side-group + .side-group {
++  margin-top: 8px;
++}
++.side-group-title {
++  padding: 4px 10px 2px;
++  text-transform: uppercase;
++  letter-spacing: 0.04em;
++  font-weight: 500;
++}
++.grid-3 {
++  display: grid;
++  grid-template-columns: repeat(3, minmax(0, 1fr));
++  gap: 10px 12px;
++}
++.intake-item {
++  border-top: 1px solid var(--border-subtle);
++  padding-top: 10px;
++  display: flex;
++  flex-direction: column;
++  gap: 6px;
++}
++.lint-list {
++  margin: 0;
++  padding-left: 18px;
++  display: flex;
++  flex-direction: column;
++  gap: 3px;
++  font-size: 12px;
++  line-height: 16px;
++}
++.claim-row {
++  border-top: 1px solid var(--border-subtle);
++  padding-top: 10px;
++  display: flex;
++  flex-direction: column;
++  gap: 6px;
++}
++.claim-meta {
++  display: grid;
++  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr) auto auto;
++  gap: 8px;
++  align-items: center;
++}
++.beat {
++  color: var(--info-text);
++}
++.beat-row {
++  display: grid;
++  grid-template-columns: 96px minmax(0, 1fr);
++  gap: 8px;
++  align-items: center;
++}
++.beat-row + .beat-row {
++  margin-top: 6px;
++}
++.finding-list {
++  list-style: none;
++  margin: 0;
++  padding: 0;
++  display: flex;
++  flex-direction: column;
++  gap: 8px;
++}
++.finding {
++  display: flex;
++  gap: 10px;
++  align-items: flex-start;
++  padding: 8px 10px;
++  border-radius: var(--radius-md);
++  border: 1px solid var(--border-subtle);
++}
++.finding.uncovered {
++  border-color: color-mix(in srgb, var(--error-text) 40%, transparent);
++}
++.finding .badge {
++  flex-shrink: 0;
++}
++input[type="file"][hidden] {
++  display: none;
++}
++
++@media (max-width: 960px) {
++  .grid-3 {
++    grid-template-columns: 1fr;
++  }
++  .claim-meta {
++    grid-template-columns: 1fr 1fr;
++  }
++}

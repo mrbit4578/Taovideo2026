@@ -1,0 +1,42 @@
+{
+  "date": "2026-10-03",
+  "node": "v24.14.1",
+  "results": [
+    {
+      "name": "capability guard denies unauthorised write",
+      "result": "confirmed",
+      "scope": "actual source handler with mocked auth/database/storage; no live backend"
+    },
+    {
+      "name": "app read scope exposes same project to two different permitted subjects",
+      "result": "confirmed",
+      "scope": "actual source handler with mocked auth/database/storage; no live backend"
+    },
+    {
+      "name": "write scope has no per-project ownership check",
+      "result": "confirmed",
+      "scope": "actual source handler with mocked auth/database/storage; no live backend"
+    },
+    {
+      "name": "duplicate slide keys pass source business validation",
+      "result": "confirmed",
+      "scope": "actual source handler with mocked auth/database/storage; no live backend"
+    },
+    {
+      "name": "deleting one project deletes storage referenced by another",
+      "result": "confirmed",
+      "scope": "actual source handler with mocked auth/database/storage; no live backend"
+    },
+    {
+      "name": "render dimensions and slide duration are 720x1280 with additive transitions",
+      "result": "confirmed",
+      "scope": "actual source handler with mocked auth/database/storage; no live backend"
+    }
+  ],
+  "limitations": [
+    "Not an end-to-end browser test",
+    "No Type runtime session or provider was invoked",
+    "Mocked records intentionally contain shared assets",
+    "App-scoped shared access may be intentional for the original Type artifact; unsuitable as private multi-tenant access"
+  ]
+}

@@ -1,0 +1,49 @@
+--- D:\AI\KIEMTIEN ONLINE\taovideo chatgpt\_audit\tiktok-director-skillpack\director-studio-app\README.md
++++ D:\AI\KIEMTIEN ONLINE\taovideo chatgpt\_audit\tiktok-director-skillpack-v2\director-studio-app-v2\README.md
+@@ -1,31 +1,17 @@
+-# Director Studio — TikTok Video Pipeline (Type app)
++# Director Studio v2 — đấu nối lớp tri thức (Type app wart_01m4132f0pe0nakpmrbgma4a0e)
+ 
+-App mini đã build & publish trên Type (ID: wart_01m4132f0pe0nakpmrbgma4a0e), dựng từ bộ skill
+-`tiktok-director-skill/`. Đây là 4 file nguồn do tôi viết; phần còn lại (main.tsx, typeAuth,
+-convex/type*.ts, package.json…) là scaffold platform-owned của Type.
++Thay đổi so với v1 (chỉ 4 file nguồn do tôi viết; scaffold Type không kèm):
+ 
+-## Cấu trúc
+-- `convex/schema.ts` — bảng `projects` (brief, hooks, character bible, timelapse 4 ô, caption, QC)
+-  và `scenes` (production board: SHOT/CAMERA/ACTION/SUBJECT/ENV/PROP/ANIMAL, bố cục màn hình,
+-  trạng thái keyframe→take→duyệt→ghép, takes, ghi chú fallback).
+-- `convex/app.ts` — listProjects, getProject, createProject, updateProject, updateScene,
+-  replaceScenes, deleteProject (validate mọi input, bounded).
+-- `src/App.tsx` — 8 bước: Brief → Hook → Casting → Shot list → Prompt → Lời đọc & sub → Caption → QC & bàn giao.
+-  Chứa toàn bộ generator: template cảnh 30/45/60s + timelapse 7 KF, keyframe/motion prompt,
+-  `labels.ass` / `subs.ass` (PlayRes 1080x1920), `build.sh` ffmpeg (concat, sub, beat 0.15 +
+-  sidechain ducking, normalize=0, alimiter 0.95), production pack .md, lint "mắt đạo diễn".
+-- `src/styles.css` — design tokens của Type + style riêng của app (phần cuối file).
+-
+-## Ánh xạ skill → app
+-| Skill | Trong app |
+-|---|---|
+-| §1 Brief | Bước 1 |
+-| §4 Hook 6 dạng | Bước 2 (+ AI gợi ý nếu typeAi khả dụng) |
+-| §17.1 Character bible / production board | Bước 3 + 4 |
+-| §5, 7b, 7c, 7d | Template cảnh, ô SHOT/CAMERA/ACTION/cast, bố cục màn hình, lint |
+-| §7, 7e Prompt | Bước 5 |
+-| references/loi-doc-phu-de-mix.md | Bước 6 (.ass + build.sh) |
+-| §8 bước 8 Caption | Bước 7 |
+-| §9, §17.4 QC 4 lượt, §17.5 failover | Bước 8 |
+-| shot-list-30-keyframes.md | Format "Timelapse công trình" |
+-| references/capcut-workflow.md | Production pack (handoff contract) |
++- `convex/schema.ts` — thêm bảng `briefs` (series, briefNo, source{docId, section, anchors}, claims[{text, anchors, status}],
++  risk{accuracy, notes}, outline[{order, text}] = beat từng cảnh, continuity, raw). Bảng cũ giữ nguyên.
++- `convex/app.ts` — thêm `getBrief`, `listBriefs`, `createProjectFromBrief`, `upsertBrief`; `deleteProject` dọn cả brief.
++  Các hàm cũ giữ nguyên contract.
++- `src/App.tsx`
++  - `parseBrief()` — đọc brief 8 trường (v1 bullet hoặc v2 frontmatter) → ParsedBrief + warnings (audit tự động).
++  - `scenesFromBrief()` — dàn ý → cảnh: HOOK 10s · ý · Tóm tắt · CTA 5s; cảnh < 8s → cảnh báo.
++  - Màn **Intake**: dán/upload nhiều .md → preview → tạo cả series (bible + CTA chung).
++  - Bước **2 · Claim ledger**: VERIFIED/UNVERIFIED/EDITORIAL, anchors, risk, continuity, beat; nút AI đối chiếu lời đọc.
++  - Lint mới: số liệu (%, số ≥ 10) không có trong ledger; claim UNVERIFIED; cảnh < 8s; caption thiếu "mô phỏng".
++  - **⚡ AI dựng nháp**: shot list → lời đọc theo beat, chỉ dùng dữ kiện trong ledger.
++  - QC thêm "Lượt 5 — Claim & series"; production pack thêm Nguồn/Claim/Risk/Continuity.
++- `src/styles.css` — thêm style v2 ở cuối file.

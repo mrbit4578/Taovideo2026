@@ -1,0 +1,2068 @@
+{
+  "app": "VeoGenie Tool",
+  "kind": "automation-tool-veo-3.workflow-page",
+  "version": 1,
+  "exportedAt": "2026-10-03T15:30:24.762Z",
+  "page": {
+    "id": "8924e5ed-7d90-4eef-82b5-c2ef2ebddd57",
+    "name": "Trang 9",
+    "snapshot": {
+      "nodes": [
+        {
+          "id": "ae951667-ee60-40be-8e1c-fa2bcb2943e1",
+          "type": "group",
+          "position": {
+            "x": -3710.869572992475,
+            "y": 3504.000048647242
+          },
+          "data": {
+            "title": "Nhóm mới",
+            "subtitle": "Nhóm Workflow",
+            "color": "#8bbcf4",
+            "description": "Gộp nhiều node liên quan và chạy hàng loạt kết quả.",
+            "width": 4474,
+            "height": 684
+          },
+          "style": {
+            "width": 4474,
+            "height": 684
+          }
+        },
+        {
+          "id": "b9dda70f-f87b-489c-9b4a-9384ee90f54f",
+          "type": "group",
+          "position": {
+            "x": -3659.0751040961495,
+            "y": 4747.080684152085
+          },
+          "data": {
+            "title": "Nhóm mới",
+            "subtitle": "Nhóm Workflow",
+            "color": "#8bbcf4",
+            "description": "Gộp nhiều node liên quan và chạy hàng loạt kết quả.",
+            "width": 6796,
+            "height": 2203.0207406734417
+          },
+          "style": {
+            "width": 6796,
+            "height": 2203.0207406734417
+          }
+        },
+        {
+          "id": "98049bb1-30cc-45ce-9af4-529e2d19fdef",
+          "type": "imageReference",
+          "position": {
+            "x": -4419.854472439416,
+            "y": 5084.238799492075
+          },
+          "data": {
+            "title": "Ảnh Tham Chiếu",
+            "subtitle": "Đầu Vào Hình Ảnh",
+            "color": "#2fbf71",
+            "description": "Cung cấp ảnh mẫu để tham chiếu phong cách hoặc bố cục.",
+            "imageUrl": "workflows/trang-9-reference-1.png",
+            "imageName": "Ảnh ChatGPT 21_28_49 28 thg 9, 2026.png",
+            "strength": 1,
+            "imagePreviewUrl": "workflows/trang-9-reference-1.png",
+            "imageSha256": "568f15855f6de42d7f5bf67f9e6012124230bf5260db3988c1e4e59650332ebe"
+          }
+        },
+        {
+          "id": "780c1632-ddd2-46e6-a4ca-a7e015cb24f7",
+          "type": "videoGenerate",
+          "position": {
+            "x": 139.125572045853,
+            "y": 361.35890554343587
+          },
+          "data": {
+            "title": "Tạo Video",
+            "subtitle": "Đầu Ra Video",
+            "color": "#6c63ff",
+            "description": "Tạo chuyển động từ ảnh nguồn thành video ngắn.",
+            "provider": "dola",
+            "model": "seedance-2.5",
+            "duration": 30,
+            "aspectRatio": "16:9",
+            "resultCount": 1,
+            "fps": 24,
+            "motionStrength": 0.52,
+            "preserveIdentity": true,
+            "generationPhase": "idle",
+            "generationStatus": "idle",
+            "generationError": null,
+            "generatedAsset": null,
+            "generatedAssetHistory": [],
+            "resolution": "720p"
+          },
+          "parentId": "b9dda70f-f87b-489c-9b4a-9384ee90f54f",
+          "extent": "parent"
+        },
+        {
+          "id": "39ca51e8-52fa-40e9-8332-f052a1a1b626",
+          "type": "textPrompt",
+          "position": {
+            "x": 124.97645807000663,
+            "y": 101.8357820548581
+          },
+          "data": {
+            "title": "Prompt Văn Bản",
+            "subtitle": "Nguồn Prompt",
+            "color": "#ff8a3d",
+            "description": "Chứa prompt chính cho bước sinh nội dung.",
+            "prompt": "Asset: #1 Daniel, #2 Anna, #3 Control Room Survivor, #4 Tunnel Stalker, #5 Underground Network\nPrompt VIDEO:\nCreate a photorealistic live-action cinematic horror sequence inside the abandoned metro control room from Reference #5.\nUse References #1 and #2 to preserve Daniel and Anna’s exact identity, facial structure, hairstyle, body proportions, clothing and survival gear, but portray them as realistic human actors.\nUse the Control Room Survivor from Reference #3 for the exhausted man locked behind the reinforced side-room door.\nThe room is dimly illuminated by old surveillance monitors and emergency lights.\nA slow metallic scraping sound travels through the ventilation ducts above.\nDaniel raises his tactical flashlight.\nAnna stands close behind him.\nThe survivor looks toward the ceiling in fear.\nSurvivor:\n“It found us.”\nDaniel turns toward him.\nDaniel:\n“What found us?”\nThe scraping suddenly stops directly above Daniel.\nSilence.\nAnna quietly says:\nAnna:\n“Daniel…”\nA second ventilation grille across the room begins shaking.\nThe control-room lights flicker once, twice, then shut off.\nA heavy impact hits the ventilation system.\nDaniel immediately shouts:\nDaniel:\n“Down!”\nA vent panel falls to the floor.\nA fast humanoid shadow crosses briefly between the old monitors, inspired by the Tunnel Stalker design from Reference #4, but never reveal it clearly.\nDaniel turns his flashlight back on.\nNothing is visible.\nThen the rear control-room door slowly begins opening by itself.\nEnd with Daniel and Anna staring toward the opening.\nPremium theatrical horror, controlled camera movement, deep shadows, strong sound design, realistic practical lighting, no graphic violence, no visible gore, no text, no watermark.",
+            "negativePrompt": ""
+          },
+          "parentId": "b9dda70f-f87b-489c-9b4a-9384ee90f54f",
+          "extent": "parent"
+        },
+        {
+          "id": "6934c7a8-5de0-4a6b-a56d-e1cc18a60efa",
+          "type": "videoGenerate",
+          "position": {
+            "x": 44.1393774321582,
+            "y": 1082.6499702433102
+          },
+          "data": {
+            "title": "Tạo Video",
+            "subtitle": "Đầu Ra Video",
+            "color": "#6c63ff",
+            "description": "Tạo chuyển động từ ảnh nguồn thành video ngắn.",
+            "provider": "dola",
+            "model": "seedance-2.5",
+            "duration": 30,
+            "aspectRatio": "16:9",
+            "resultCount": 1,
+            "fps": 24,
+            "motionStrength": 0.52,
+            "preserveIdentity": true,
+            "generationPhase": "idle",
+            "generationStatus": "idle",
+            "generationError": null,
+            "generatedAsset": null,
+            "generatedAssetHistory": [],
+            "resolution": "720p"
+          },
+          "parentId": "b9dda70f-f87b-489c-9b4a-9384ee90f54f",
+          "extent": "parent"
+        },
+        {
+          "id": "842fec5a-3ce3-4ad6-aa5d-75caad384ee2",
+          "type": "textPrompt",
+          "position": {
+            "x": 100.006587328769,
+            "y": 808.4162767310609
+          },
+          "data": {
+            "title": "Prompt Văn Bản",
+            "subtitle": "Nguồn Prompt",
+            "color": "#ff8a3d",
+            "description": "Chứa prompt chính cho bước sinh nội dung.",
+            "prompt": "",
+            "negativePrompt": ""
+          },
+          "parentId": "b9dda70f-f87b-489c-9b4a-9384ee90f54f",
+          "extent": "parent"
+        },
+        {
+          "id": "1175af08-d4ff-4f87-9bf1-d1ee16257dee",
+          "type": "videoGenerate",
+          "position": {
+            "x": 24,
+            "y": 1825.6716200513274
+          },
+          "data": {
+            "title": "Tạo Video",
+            "subtitle": "Đầu Ra Video",
+            "color": "#6c63ff",
+            "description": "Tạo chuyển động từ ảnh nguồn thành video ngắn.",
+            "provider": "dola",
+            "model": "seedance-2.5",
+            "duration": 30,
+            "aspectRatio": "16:9",
+            "resultCount": 1,
+            "fps": 24,
+            "motionStrength": 0.52,
+            "preserveIdentity": true,
+            "generationPhase": "idle",
+            "generationStatus": "idle",
+            "generationError": null,
+            "generatedAsset": null,
+            "generatedAssetHistory": [],
+            "resolution": "720p"
+          },
+          "parentId": "b9dda70f-f87b-489c-9b4a-9384ee90f54f",
+          "extent": "parent"
+        },
+        {
+          "id": "743eabc5-1581-4e94-8221-83a5e902a482",
+          "type": "textPrompt",
+          "position": {
+            "x": 79.8672098966108,
+            "y": 1551.437926539078
+          },
+          "data": {
+            "title": "Prompt Văn Bản",
+            "subtitle": "Nguồn Prompt",
+            "color": "#ff8a3d",
+            "description": "Chứa prompt chính cho bước sinh nội dung.",
+            "prompt": "",
+            "negativePrompt": ""
+          },
+          "parentId": "b9dda70f-f87b-489c-9b4a-9384ee90f54f",
+          "extent": "parent"
+        },
+        {
+          "id": "59e8248b-b268-46b4-957c-39df0e28b87c",
+          "type": "videoGenerate",
+          "position": {
+            "x": 850.7253079668544,
+            "y": 432.2411700848061
+          },
+          "data": {
+            "title": "Tạo Video",
+            "subtitle": "Đầu Ra Video",
+            "color": "#6c63ff",
+            "description": "Tạo chuyển động từ ảnh nguồn thành video ngắn.",
+            "provider": "dola",
+            "model": "seedance-2.5",
+            "duration": 30,
+            "aspectRatio": "16:9",
+            "resultCount": 1,
+            "fps": 24,
+            "motionStrength": 0.52,
+            "preserveIdentity": true,
+            "generationPhase": "idle",
+            "generationStatus": "idle",
+            "generationError": null,
+            "generatedAsset": null,
+            "generatedAssetHistory": [],
+            "resolution": "720p"
+          },
+          "parentId": "b9dda70f-f87b-489c-9b4a-9384ee90f54f",
+          "extent": "parent"
+        },
+        {
+          "id": "0837617d-79f8-4d5e-8597-c85285d0be3a",
+          "type": "textPrompt",
+          "position": {
+            "x": 983.0163966701998,
+            "y": 131.0343428760616
+          },
+          "data": {
+            "title": "Prompt Văn Bản",
+            "subtitle": "Nguồn Prompt",
+            "color": "#ff8a3d",
+            "description": "Chứa prompt chính cho bước sinh nội dung.",
+            "prompt": "",
+            "negativePrompt": ""
+          },
+          "parentId": "b9dda70f-f87b-489c-9b4a-9384ee90f54f",
+          "extent": "parent"
+        },
+        {
+          "id": "146922b6-ba99-41c5-a4a1-6de1c2c889f0",
+          "type": "videoGenerate",
+          "position": {
+            "x": 941.0794980575097,
+            "y": 1100.5921219938173
+          },
+          "data": {
+            "title": "Tạo Video",
+            "subtitle": "Đầu Ra Video",
+            "color": "#6c63ff",
+            "description": "Tạo chuyển động từ ảnh nguồn thành video ngắn.",
+            "provider": "dola",
+            "model": "seedance-2.5",
+            "duration": 30,
+            "aspectRatio": "16:9",
+            "resultCount": 1,
+            "fps": 24,
+            "motionStrength": 0.52,
+            "preserveIdentity": true,
+            "generationPhase": "idle",
+            "generationStatus": "idle",
+            "generationError": null,
+            "generatedAsset": null,
+            "generatedAssetHistory": [],
+            "resolution": "720p"
+          },
+          "parentId": "b9dda70f-f87b-489c-9b4a-9384ee90f54f",
+          "extent": "parent"
+        },
+        {
+          "id": "088747d7-a55b-4516-bc5b-af1ea019d784",
+          "type": "textPrompt",
+          "position": {
+            "x": 996.9467079541205,
+            "y": 826.3584284815679
+          },
+          "data": {
+            "title": "Prompt Văn Bản",
+            "subtitle": "Nguồn Prompt",
+            "color": "#ff8a3d",
+            "description": "Chứa prompt chính cho bước sinh nội dung.",
+            "prompt": "",
+            "negativePrompt": ""
+          },
+          "parentId": "b9dda70f-f87b-489c-9b4a-9384ee90f54f",
+          "extent": "parent"
+        },
+        {
+          "id": "1d456bca-5af7-49ad-9bf9-9dc2c277ee10",
+          "type": "videoGenerate",
+          "position": {
+            "x": 866.4286186796244,
+            "y": 1847.0207406734417
+          },
+          "data": {
+            "title": "Tạo Video",
+            "subtitle": "Đầu Ra Video",
+            "color": "#6c63ff",
+            "description": "Tạo chuyển động từ ảnh nguồn thành video ngắn.",
+            "provider": "dola",
+            "model": "seedance-2.5",
+            "duration": 30,
+            "aspectRatio": "16:9",
+            "resultCount": 1,
+            "fps": 24,
+            "motionStrength": 0.52,
+            "preserveIdentity": true,
+            "generationPhase": "idle",
+            "generationStatus": "idle",
+            "generationError": null,
+            "generatedAsset": null,
+            "generatedAssetHistory": [],
+            "resolution": "720p"
+          },
+          "parentId": "b9dda70f-f87b-489c-9b4a-9384ee90f54f",
+          "extent": "parent"
+        },
+        {
+          "id": "00fd64f0-0856-4ee8-ad86-118dd37862b5",
+          "type": "textPrompt",
+          "position": {
+            "x": 922.2958285762352,
+            "y": 1572.7870471611923
+          },
+          "data": {
+            "title": "Prompt Văn Bản",
+            "subtitle": "Nguồn Prompt",
+            "color": "#ff8a3d",
+            "description": "Chứa prompt chính cho bước sinh nội dung.",
+            "prompt": "",
+            "negativePrompt": ""
+          },
+          "parentId": "b9dda70f-f87b-489c-9b4a-9384ee90f54f",
+          "extent": "parent"
+        },
+        {
+          "id": "d87ca11b-c334-4ccf-bf7e-0bc9c63d1236",
+          "type": "videoGenerate",
+          "position": {
+            "x": 1878.6008093446674,
+            "y": 395.9544371659549
+          },
+          "data": {
+            "title": "Tạo Video",
+            "subtitle": "Đầu Ra Video",
+            "color": "#6c63ff",
+            "description": "Tạo chuyển động từ ảnh nguồn thành video ngắn.",
+            "provider": "dola",
+            "model": "seedance-2.5",
+            "duration": 30,
+            "aspectRatio": "16:9",
+            "resultCount": 1,
+            "fps": 24,
+            "motionStrength": 0.52,
+            "preserveIdentity": true,
+            "generationPhase": "idle",
+            "generationStatus": "idle",
+            "generationError": null,
+            "generatedAsset": null,
+            "generatedAssetHistory": [],
+            "resolution": "720p"
+          },
+          "parentId": "b9dda70f-f87b-489c-9b4a-9384ee90f54f",
+          "extent": "parent"
+        },
+        {
+          "id": "579b0e7e-c8ff-4a15-aa65-b064b85eed57",
+          "type": "textPrompt",
+          "position": {
+            "x": 1934.4680192412782,
+            "y": 121.72074365370554
+          },
+          "data": {
+            "title": "Prompt Văn Bản",
+            "subtitle": "Nguồn Prompt",
+            "color": "#ff8a3d",
+            "description": "Chứa prompt chính cho bước sinh nội dung.",
+            "prompt": "",
+            "negativePrompt": ""
+          },
+          "parentId": "b9dda70f-f87b-489c-9b4a-9384ee90f54f",
+          "extent": "parent"
+        },
+        {
+          "id": "502f1f15-fb89-4d73-b741-98f37096da8a",
+          "type": "videoGenerate",
+          "position": {
+            "x": 1855.054463040901,
+            "y": 1125.3482114875396
+          },
+          "data": {
+            "title": "Tạo Video",
+            "subtitle": "Đầu Ra Video",
+            "color": "#6c63ff",
+            "description": "Tạo chuyển động từ ảnh nguồn thành video ngắn.",
+            "provider": "dola",
+            "model": "seedance-2.5",
+            "duration": 30,
+            "aspectRatio": "16:9",
+            "resultCount": 1,
+            "fps": 24,
+            "motionStrength": 0.52,
+            "preserveIdentity": true,
+            "generationPhase": "idle",
+            "generationStatus": "idle",
+            "generationError": null,
+            "generatedAsset": null,
+            "generatedAssetHistory": [],
+            "resolution": "720p"
+          },
+          "parentId": "b9dda70f-f87b-489c-9b4a-9384ee90f54f",
+          "extent": "parent"
+        },
+        {
+          "id": "737eaf47-1766-4cfe-9ece-38d60f11a6bb",
+          "type": "textPrompt",
+          "position": {
+            "x": 1910.9216729375119,
+            "y": 851.1145179752903
+          },
+          "data": {
+            "title": "Prompt Văn Bản",
+            "subtitle": "Nguồn Prompt",
+            "color": "#ff8a3d",
+            "description": "Chứa prompt chính cho bước sinh nội dung.",
+            "prompt": "",
+            "negativePrompt": ""
+          },
+          "parentId": "b9dda70f-f87b-489c-9b4a-9384ee90f54f",
+          "extent": "parent"
+        },
+        {
+          "id": "508d123e-5e15-4a63-8ef2-30a75200a4ae",
+          "type": "videoGenerate",
+          "position": {
+            "x": 1831.5081167371345,
+            "y": 1837.7071414510856
+          },
+          "data": {
+            "title": "Tạo Video",
+            "subtitle": "Đầu Ra Video",
+            "color": "#6c63ff",
+            "description": "Tạo chuyển động từ ảnh nguồn thành video ngắn.",
+            "provider": "dola",
+            "model": "seedance-2.5",
+            "duration": 30,
+            "aspectRatio": "16:9",
+            "resultCount": 1,
+            "fps": 24,
+            "motionStrength": 0.52,
+            "preserveIdentity": true,
+            "generationPhase": "idle",
+            "generationStatus": "idle",
+            "generationError": null,
+            "generatedAsset": null,
+            "generatedAssetHistory": [],
+            "resolution": "720p"
+          },
+          "parentId": "b9dda70f-f87b-489c-9b4a-9384ee90f54f",
+          "extent": "parent"
+        },
+        {
+          "id": "67d516c2-a9a1-40db-9c65-104165f1214d",
+          "type": "textPrompt",
+          "position": {
+            "x": 1887.3753266337453,
+            "y": 1563.4734479388362
+          },
+          "data": {
+            "title": "Prompt Văn Bản",
+            "subtitle": "Nguồn Prompt",
+            "color": "#ff8a3d",
+            "description": "Chứa prompt chính cho bước sinh nội dung.",
+            "prompt": "",
+            "negativePrompt": ""
+          },
+          "parentId": "b9dda70f-f87b-489c-9b4a-9384ee90f54f",
+          "extent": "parent"
+        },
+        {
+          "id": "96fa041c-0701-42b6-9ad1-0b97b1969417",
+          "type": "videoGenerate",
+          "position": {
+            "x": 2751.6921478687636,
+            "y": 400.2687134300295
+          },
+          "data": {
+            "title": "Tạo Video",
+            "subtitle": "Đầu Ra Video",
+            "color": "#6c63ff",
+            "description": "Tạo chuyển động từ ảnh nguồn thành video ngắn.",
+            "provider": "dola",
+            "model": "seedance-2.5",
+            "duration": 30,
+            "aspectRatio": "16:9",
+            "resultCount": 1,
+            "fps": 24,
+            "motionStrength": 0.52,
+            "preserveIdentity": true,
+            "generationPhase": "idle",
+            "generationStatus": "idle",
+            "generationError": null,
+            "generatedAsset": null,
+            "generatedAssetHistory": [],
+            "resolution": "720p"
+          },
+          "parentId": "b9dda70f-f87b-489c-9b4a-9384ee90f54f",
+          "extent": "parent"
+        },
+        {
+          "id": "b2ec7884-a651-4d9e-b70e-99382b9b83a3",
+          "type": "textPrompt",
+          "position": {
+            "x": 2807.5593577653744,
+            "y": 126.03501991778012
+          },
+          "data": {
+            "title": "Prompt Văn Bản",
+            "subtitle": "Nguồn Prompt",
+            "color": "#ff8a3d",
+            "description": "Chứa prompt chính cho bước sinh nội dung.",
+            "prompt": "",
+            "negativePrompt": ""
+          },
+          "parentId": "b9dda70f-f87b-489c-9b4a-9384ee90f54f",
+          "extent": "parent"
+        },
+        {
+          "id": "bc92ba56-60bb-402f-8e1b-74435ea28b93",
+          "type": "videoGenerate",
+          "position": {
+            "x": 3494.6535708730307,
+            "y": 338.2336935122494
+          },
+          "data": {
+            "title": "Tạo Video",
+            "subtitle": "Đầu Ra Video",
+            "color": "#6c63ff",
+            "description": "Tạo chuyển động từ ảnh nguồn thành video ngắn.",
+            "provider": "dola",
+            "model": "seedance-2.5",
+            "duration": 30,
+            "aspectRatio": "16:9",
+            "resultCount": 1,
+            "fps": 24,
+            "motionStrength": 0.52,
+            "preserveIdentity": true,
+            "generationPhase": "idle",
+            "generationStatus": "idle",
+            "generationError": null,
+            "generatedAsset": null,
+            "generatedAssetHistory": [],
+            "resolution": "720p"
+          },
+          "parentId": "b9dda70f-f87b-489c-9b4a-9384ee90f54f",
+          "extent": "parent"
+        },
+        {
+          "id": "1f365f40-a629-4391-88b7-9d3459d021f4",
+          "type": "textPrompt",
+          "position": {
+            "x": 3550.5207807696415,
+            "y": 64
+          },
+          "data": {
+            "title": "Prompt Văn Bản",
+            "subtitle": "Nguồn Prompt",
+            "color": "#ff8a3d",
+            "description": "Chứa prompt chính cho bước sinh nội dung.",
+            "prompt": "",
+            "negativePrompt": ""
+          },
+          "parentId": "b9dda70f-f87b-489c-9b4a-9384ee90f54f",
+          "extent": "parent"
+        },
+        {
+          "id": "ec5fb206-6888-4ed8-9b69-829d052bda87",
+          "type": "videoGenerate",
+          "position": {
+            "x": 3443.851473596401,
+            "y": 1036.9647479893629
+          },
+          "data": {
+            "title": "Tạo Video",
+            "subtitle": "Đầu Ra Video",
+            "color": "#6c63ff",
+            "description": "Tạo chuyển động từ ảnh nguồn thành video ngắn.",
+            "provider": "dola",
+            "model": "seedance-2.5",
+            "duration": 30,
+            "aspectRatio": "16:9",
+            "resultCount": 1,
+            "fps": 24,
+            "motionStrength": 0.52,
+            "preserveIdentity": true,
+            "generationPhase": "idle",
+            "generationStatus": "idle",
+            "generationError": null,
+            "generatedAsset": null,
+            "generatedAssetHistory": [],
+            "resolution": "720p"
+          },
+          "parentId": "b9dda70f-f87b-489c-9b4a-9384ee90f54f",
+          "extent": "parent"
+        },
+        {
+          "id": "338d1412-68d9-49b1-bcf7-eef063b121d4",
+          "type": "textPrompt",
+          "position": {
+            "x": 3499.7186834930117,
+            "y": 762.7310544771135
+          },
+          "data": {
+            "title": "Prompt Văn Bản",
+            "subtitle": "Nguồn Prompt",
+            "color": "#ff8a3d",
+            "description": "Chứa prompt chính cho bước sinh nội dung.",
+            "prompt": "",
+            "negativePrompt": ""
+          },
+          "parentId": "b9dda70f-f87b-489c-9b4a-9384ee90f54f",
+          "extent": "parent"
+        },
+        {
+          "id": "e4bd0f9f-4783-4ee8-919d-9cda2c9431db",
+          "type": "videoGenerate",
+          "position": {
+            "x": 3423.712096164243,
+            "y": 1779.98639779738
+          },
+          "data": {
+            "title": "Tạo Video",
+            "subtitle": "Đầu Ra Video",
+            "color": "#6c63ff",
+            "description": "Tạo chuyển động từ ảnh nguồn thành video ngắn.",
+            "provider": "dola",
+            "model": "seedance-2.5",
+            "duration": 30,
+            "aspectRatio": "16:9",
+            "resultCount": 1,
+            "fps": 24,
+            "motionStrength": 0.52,
+            "preserveIdentity": true,
+            "generationPhase": "idle",
+            "generationStatus": "idle",
+            "generationError": null,
+            "generatedAsset": null,
+            "generatedAssetHistory": [],
+            "resolution": "720p"
+          },
+          "parentId": "b9dda70f-f87b-489c-9b4a-9384ee90f54f",
+          "extent": "parent"
+        },
+        {
+          "id": "9a90ee0c-0eec-4299-a1b7-5fb10ca98192",
+          "type": "textPrompt",
+          "position": {
+            "x": 3479.579306060854,
+            "y": 1505.7527042851307
+          },
+          "data": {
+            "title": "Prompt Văn Bản",
+            "subtitle": "Nguồn Prompt",
+            "color": "#ff8a3d",
+            "description": "Chứa prompt chính cho bước sinh nội dung.",
+            "prompt": "",
+            "negativePrompt": ""
+          },
+          "parentId": "b9dda70f-f87b-489c-9b4a-9384ee90f54f",
+          "extent": "parent"
+        },
+        {
+          "id": "b1faef99-cb81-41df-b7ee-43a8ac9360fc",
+          "type": "videoGenerate",
+          "position": {
+            "x": 4326.861282937832,
+            "y": 359.5828141343636
+          },
+          "data": {
+            "title": "Tạo Video",
+            "subtitle": "Đầu Ra Video",
+            "color": "#6c63ff",
+            "description": "Tạo chuyển động từ ảnh nguồn thành video ngắn.",
+            "provider": "dola",
+            "model": "seedance-2.5",
+            "duration": 30,
+            "aspectRatio": "16:9",
+            "resultCount": 1,
+            "fps": 24,
+            "motionStrength": 0.52,
+            "preserveIdentity": true,
+            "generationPhase": "idle",
+            "generationStatus": "idle",
+            "generationError": null,
+            "generatedAsset": null,
+            "generatedAssetHistory": [],
+            "resolution": "720p"
+          },
+          "parentId": "b9dda70f-f87b-489c-9b4a-9384ee90f54f",
+          "extent": "parent"
+        },
+        {
+          "id": "22bd7203-f061-460e-bb01-0e21e23a64f5",
+          "type": "textPrompt",
+          "position": {
+            "x": 4382.7284928344425,
+            "y": 85.34912062211424
+          },
+          "data": {
+            "title": "Prompt Văn Bản",
+            "subtitle": "Nguồn Prompt",
+            "color": "#ff8a3d",
+            "description": "Chứa prompt chính cho bước sinh nội dung.",
+            "prompt": "",
+            "negativePrompt": ""
+          },
+          "parentId": "b9dda70f-f87b-489c-9b4a-9384ee90f54f",
+          "extent": "parent"
+        },
+        {
+          "id": "72b6c058-ff13-4669-8563-518b39f9ad87",
+          "type": "videoGenerate",
+          "position": {
+            "x": 4340.791594221752,
+            "y": 1054.90689973987
+          },
+          "data": {
+            "title": "Tạo Video",
+            "subtitle": "Đầu Ra Video",
+            "color": "#6c63ff",
+            "description": "Tạo chuyển động từ ảnh nguồn thành video ngắn.",
+            "provider": "dola",
+            "model": "seedance-2.5",
+            "duration": 30,
+            "aspectRatio": "16:9",
+            "resultCount": 1,
+            "fps": 24,
+            "motionStrength": 0.52,
+            "preserveIdentity": true,
+            "generationPhase": "idle",
+            "generationStatus": "idle",
+            "generationError": null,
+            "generatedAsset": null,
+            "generatedAssetHistory": [],
+            "resolution": "720p"
+          },
+          "parentId": "b9dda70f-f87b-489c-9b4a-9384ee90f54f",
+          "extent": "parent"
+        },
+        {
+          "id": "e4be7b7a-094e-44ce-aa14-21fb9a3b353f",
+          "type": "textPrompt",
+          "position": {
+            "x": 4396.658804118363,
+            "y": 780.6732062276205
+          },
+          "data": {
+            "title": "Prompt Văn Bản",
+            "subtitle": "Nguồn Prompt",
+            "color": "#ff8a3d",
+            "description": "Chứa prompt chính cho bước sinh nội dung.",
+            "prompt": "",
+            "negativePrompt": ""
+          },
+          "parentId": "b9dda70f-f87b-489c-9b4a-9384ee90f54f",
+          "extent": "parent"
+        },
+        {
+          "id": "2c4f4c62-2324-4587-a746-fbbfcebce084",
+          "type": "videoGenerate",
+          "position": {
+            "x": 4266.1407148438675,
+            "y": 1801.3355184194943
+          },
+          "data": {
+            "title": "Tạo Video",
+            "subtitle": "Đầu Ra Video",
+            "color": "#6c63ff",
+            "description": "Tạo chuyển động từ ảnh nguồn thành video ngắn.",
+            "provider": "dola",
+            "model": "seedance-2.5",
+            "duration": 30,
+            "aspectRatio": "16:9",
+            "resultCount": 1,
+            "fps": 24,
+            "motionStrength": 0.52,
+            "preserveIdentity": true,
+            "generationPhase": "idle",
+            "generationStatus": "idle",
+            "generationError": null,
+            "generatedAsset": null,
+            "generatedAssetHistory": [],
+            "resolution": "720p"
+          },
+          "parentId": "b9dda70f-f87b-489c-9b4a-9384ee90f54f",
+          "extent": "parent"
+        },
+        {
+          "id": "6fc70232-eb3a-47da-ad43-5065c0b4b699",
+          "type": "textPrompt",
+          "position": {
+            "x": 4322.007924740478,
+            "y": 1527.101824907245
+          },
+          "data": {
+            "title": "Prompt Văn Bản",
+            "subtitle": "Nguồn Prompt",
+            "color": "#ff8a3d",
+            "description": "Chứa prompt chính cho bước sinh nội dung.",
+            "prompt": "",
+            "negativePrompt": ""
+          },
+          "parentId": "b9dda70f-f87b-489c-9b4a-9384ee90f54f",
+          "extent": "parent"
+        },
+        {
+          "id": "9da21a3c-d5bb-4bd0-a557-ea8bf6a46c61",
+          "type": "videoGenerate",
+          "position": {
+            "x": 5278.31290550891,
+            "y": 350.26921491200756
+          },
+          "data": {
+            "title": "Tạo Video",
+            "subtitle": "Đầu Ra Video",
+            "color": "#6c63ff",
+            "description": "Tạo chuyển động từ ảnh nguồn thành video ngắn.",
+            "provider": "dola",
+            "model": "seedance-2.5",
+            "duration": 30,
+            "aspectRatio": "16:9",
+            "resultCount": 1,
+            "fps": 24,
+            "motionStrength": 0.52,
+            "preserveIdentity": true,
+            "generationPhase": "idle",
+            "generationStatus": "idle",
+            "generationError": null,
+            "generatedAsset": null,
+            "generatedAssetHistory": [],
+            "resolution": "720p"
+          },
+          "parentId": "b9dda70f-f87b-489c-9b4a-9384ee90f54f",
+          "extent": "parent"
+        },
+        {
+          "id": "da1d8ce0-1720-4230-be14-123990d2f621",
+          "type": "textPrompt",
+          "position": {
+            "x": 5334.180115405521,
+            "y": 76.03552139975818
+          },
+          "data": {
+            "title": "Prompt Văn Bản",
+            "subtitle": "Nguồn Prompt",
+            "color": "#ff8a3d",
+            "description": "Chứa prompt chính cho bước sinh nội dung.",
+            "prompt": "",
+            "negativePrompt": ""
+          },
+          "parentId": "b9dda70f-f87b-489c-9b4a-9384ee90f54f",
+          "extent": "parent"
+        },
+        {
+          "id": "8cd25589-6e73-4dab-8e2e-565074ec9031",
+          "type": "videoGenerate",
+          "position": {
+            "x": 5254.7665592051435,
+            "y": 1079.6629892335923
+          },
+          "data": {
+            "title": "Tạo Video",
+            "subtitle": "Đầu Ra Video",
+            "color": "#6c63ff",
+            "description": "Tạo chuyển động từ ảnh nguồn thành video ngắn.",
+            "provider": "dola",
+            "model": "seedance-2.5",
+            "duration": 30,
+            "aspectRatio": "16:9",
+            "resultCount": 1,
+            "fps": 24,
+            "motionStrength": 0.52,
+            "preserveIdentity": true,
+            "generationPhase": "idle",
+            "generationStatus": "idle",
+            "generationError": null,
+            "generatedAsset": null,
+            "generatedAssetHistory": [],
+            "resolution": "720p"
+          },
+          "parentId": "b9dda70f-f87b-489c-9b4a-9384ee90f54f",
+          "extent": "parent"
+        },
+        {
+          "id": "30cd8100-8ae3-4cba-91be-3d126395ef48",
+          "type": "textPrompt",
+          "position": {
+            "x": 5310.633769101754,
+            "y": 805.4292957213429
+          },
+          "data": {
+            "title": "Prompt Văn Bản",
+            "subtitle": "Nguồn Prompt",
+            "color": "#ff8a3d",
+            "description": "Chứa prompt chính cho bước sinh nội dung.",
+            "prompt": "",
+            "negativePrompt": ""
+          },
+          "parentId": "b9dda70f-f87b-489c-9b4a-9384ee90f54f",
+          "extent": "parent"
+        },
+        {
+          "id": "a4152a9a-4981-4527-93b2-e80f9c2dabc1",
+          "type": "videoGenerate",
+          "position": {
+            "x": 5231.220212901378,
+            "y": 1792.0219191971382
+          },
+          "data": {
+            "title": "Tạo Video",
+            "subtitle": "Đầu Ra Video",
+            "color": "#6c63ff",
+            "description": "Tạo chuyển động từ ảnh nguồn thành video ngắn.",
+            "provider": "dola",
+            "model": "seedance-2.5",
+            "duration": 30,
+            "aspectRatio": "16:9",
+            "resultCount": 1,
+            "fps": 24,
+            "motionStrength": 0.52,
+            "preserveIdentity": true,
+            "generationPhase": "idle",
+            "generationStatus": "idle",
+            "generationError": null,
+            "generatedAsset": null,
+            "generatedAssetHistory": [],
+            "resolution": "720p"
+          },
+          "parentId": "b9dda70f-f87b-489c-9b4a-9384ee90f54f",
+          "extent": "parent"
+        },
+        {
+          "id": "5597d16f-f121-418d-8cca-2ef8c5a2845d",
+          "type": "textPrompt",
+          "position": {
+            "x": 5287.087422797988,
+            "y": 1517.7882256848889
+          },
+          "data": {
+            "title": "Prompt Văn Bản",
+            "subtitle": "Nguồn Prompt",
+            "color": "#ff8a3d",
+            "description": "Chứa prompt chính cho bước sinh nội dung.",
+            "prompt": "",
+            "negativePrompt": ""
+          },
+          "parentId": "b9dda70f-f87b-489c-9b4a-9384ee90f54f",
+          "extent": "parent"
+        },
+        {
+          "id": "d4ec354f-a72a-49c3-b30c-1dd8572b35c6",
+          "type": "videoGenerate",
+          "position": {
+            "x": 6151.404244033007,
+            "y": 354.58349117608213
+          },
+          "data": {
+            "title": "Tạo Video",
+            "subtitle": "Đầu Ra Video",
+            "color": "#6c63ff",
+            "description": "Tạo chuyển động từ ảnh nguồn thành video ngắn.",
+            "provider": "dola",
+            "model": "seedance-2.5",
+            "duration": 30,
+            "aspectRatio": "16:9",
+            "resultCount": 1,
+            "fps": 24,
+            "motionStrength": 0.52,
+            "preserveIdentity": true,
+            "generationPhase": "idle",
+            "generationStatus": "idle",
+            "generationError": null,
+            "generatedAsset": null,
+            "generatedAssetHistory": [],
+            "resolution": "720p"
+          },
+          "parentId": "b9dda70f-f87b-489c-9b4a-9384ee90f54f",
+          "extent": "parent"
+        },
+        {
+          "id": "2bcc1ec1-841f-4f32-b585-78194322e3de",
+          "type": "textPrompt",
+          "position": {
+            "x": 6207.271453929618,
+            "y": 80.34979766383276
+          },
+          "data": {
+            "title": "Prompt Văn Bản",
+            "subtitle": "Nguồn Prompt",
+            "color": "#ff8a3d",
+            "description": "Chứa prompt chính cho bước sinh nội dung.",
+            "prompt": "",
+            "negativePrompt": ""
+          },
+          "parentId": "b9dda70f-f87b-489c-9b4a-9384ee90f54f",
+          "extent": "parent"
+        },
+        {
+          "id": "e7c91954-e24c-4c9b-81f6-b2c7fdec2ce2",
+          "type": "videoMerge",
+          "position": {
+            "x": 1015.7142379253132,
+            "y": 4363.089966205716
+          },
+          "data": {
+            "title": "Ghép Video",
+            "subtitle": "Đầu Ra Video Ghép",
+            "color": "#00b894",
+            "description": "Ghép các video đầu vào thành một video theo thứ tự nối dây.",
+            "generationStatus": "idle",
+            "generationError": null,
+            "generatedAsset": null,
+            "generatedAssetHistory": []
+          }
+        },
+        {
+          "id": "62717894-e610-4ffe-8cb2-5b5819d70a53",
+          "type": "videoGenerate",
+          "position": {
+            "x": 63.79829468280877,
+            "y": 305.6431446359993
+          },
+          "data": {
+            "title": "Tạo Video",
+            "subtitle": "Đầu Ra Video",
+            "color": "#6c63ff",
+            "description": "Tạo chuyển động từ ảnh nguồn thành video ngắn.",
+            "provider": "google",
+            "model": "veo-3.1-lite",
+            "duration": 8,
+            "aspectRatio": "16:9",
+            "resultCount": 1,
+            "fps": 24,
+            "motionStrength": 0.52,
+            "preserveIdentity": true,
+            "generationPhase": "idle",
+            "generationStatus": "idle",
+            "generationError": null,
+            "generatedAsset": null,
+            "generatedAssetHistory": [],
+            "customName": "1"
+          },
+          "parentId": "ae951667-ee60-40be-8e1c-fa2bcb2943e1",
+          "extent": "parent"
+        },
+        {
+          "id": "7d0cf310-fb69-4808-912f-674f6e3b6f58",
+          "type": "textPrompt",
+          "position": {
+            "x": 24,
+            "y": 73.48642565294631
+          },
+          "data": {
+            "title": "Prompt Văn Bản",
+            "subtitle": "Nguồn Prompt",
+            "color": "#ff8a3d",
+            "description": "Chứa prompt chính cho bước sinh nội dung.",
+            "prompt": "",
+            "negativePrompt": "",
+            "customName": "Prompt Văn Bản"
+          },
+          "parentId": "ae951667-ee60-40be-8e1c-fa2bcb2943e1",
+          "extent": "parent"
+        },
+        {
+          "id": "1d1dd145-e8ac-4b7a-b202-32b2ec422468",
+          "type": "videoGenerate",
+          "position": {
+            "x": 848.0667463147756,
+            "y": 313.84484995319053
+          },
+          "data": {
+            "title": "Tạo Video",
+            "subtitle": "Đầu Ra Video",
+            "color": "#6c63ff",
+            "description": "Tạo chuyển động từ ảnh nguồn thành video ngắn.",
+            "provider": "google",
+            "model": "veo-3.1-lite",
+            "duration": 8,
+            "aspectRatio": "16:9",
+            "resultCount": 1,
+            "fps": 24,
+            "motionStrength": 0.52,
+            "preserveIdentity": true,
+            "generationPhase": "idle",
+            "generationStatus": "idle",
+            "generationError": null,
+            "generatedAsset": null,
+            "generatedAssetHistory": [],
+            "customName": "2"
+          },
+          "parentId": "ae951667-ee60-40be-8e1c-fa2bcb2943e1",
+          "extent": "parent"
+        },
+        {
+          "id": "60ffcc33-05e5-47b6-b5cf-3ea8037964b9",
+          "type": "textPrompt",
+          "position": {
+            "x": 808.2684516319669,
+            "y": 81.68813097013754
+          },
+          "data": {
+            "title": "Prompt Văn Bản",
+            "subtitle": "Nguồn Prompt",
+            "color": "#ff8a3d",
+            "description": "Chứa prompt chính cho bước sinh nội dung.",
+            "prompt": "",
+            "negativePrompt": ""
+          },
+          "parentId": "ae951667-ee60-40be-8e1c-fa2bcb2943e1",
+          "extent": "parent"
+        },
+        {
+          "id": "88710267-d324-4eae-871f-15abcf453d81",
+          "type": "videoGenerate",
+          "position": {
+            "x": 1669.9224762582837,
+            "y": 317.62452252784715
+          },
+          "data": {
+            "title": "Tạo Video",
+            "subtitle": "Đầu Ra Video",
+            "color": "#6c63ff",
+            "description": "Tạo chuyển động từ ảnh nguồn thành video ngắn.",
+            "provider": "google",
+            "model": "veo-3.1-lite",
+            "duration": 8,
+            "aspectRatio": "16:9",
+            "resultCount": 1,
+            "fps": 24,
+            "motionStrength": 0.52,
+            "preserveIdentity": true,
+            "generationPhase": "idle",
+            "generationStatus": "idle",
+            "generationError": null,
+            "generatedAsset": null,
+            "generatedAssetHistory": [],
+            "customName": "3"
+          },
+          "parentId": "ae951667-ee60-40be-8e1c-fa2bcb2943e1",
+          "extent": "parent"
+        },
+        {
+          "id": "cb9234b8-9635-467e-aca2-0e08273a8dd8",
+          "type": "textPrompt",
+          "position": {
+            "x": 1630.124181575475,
+            "y": 85.46780354479415
+          },
+          "data": {
+            "title": "Prompt Văn Bản",
+            "subtitle": "Nguồn Prompt",
+            "color": "#ff8a3d",
+            "description": "Chứa prompt chính cho bước sinh nội dung.",
+            "prompt": "",
+            "negativePrompt": ""
+          },
+          "parentId": "ae951667-ee60-40be-8e1c-fa2bcb2943e1",
+          "extent": "parent"
+        },
+        {
+          "id": "f1b5015a-5b2a-4247-a4cd-d016a0c82e83",
+          "type": "videoGenerate",
+          "position": {
+            "x": 2417.2106922120124,
+            "y": 296.156718983053
+          },
+          "data": {
+            "title": "Tạo Video",
+            "subtitle": "Đầu Ra Video",
+            "color": "#6c63ff",
+            "description": "Tạo chuyển động từ ảnh nguồn thành video ngắn.",
+            "provider": "google",
+            "model": "veo-3.1-lite",
+            "duration": 8,
+            "aspectRatio": "16:9",
+            "resultCount": 1,
+            "fps": 24,
+            "motionStrength": 0.52,
+            "preserveIdentity": true,
+            "generationPhase": "idle",
+            "generationStatus": "idle",
+            "generationError": null,
+            "generatedAsset": null,
+            "generatedAssetHistory": [],
+            "customName": "4"
+          },
+          "parentId": "ae951667-ee60-40be-8e1c-fa2bcb2943e1",
+          "extent": "parent"
+        },
+        {
+          "id": "eee5f337-a6d8-4cdd-80fb-a0e8c43074bc",
+          "type": "textPrompt",
+          "position": {
+            "x": 2252.6148961622434,
+            "y": 64
+          },
+          "data": {
+            "title": "Prompt Văn Bản",
+            "subtitle": "Nguồn Prompt",
+            "color": "#ff8a3d",
+            "description": "Chứa prompt chính cho bước sinh nội dung.",
+            "prompt": "",
+            "negativePrompt": ""
+          },
+          "parentId": "ae951667-ee60-40be-8e1c-fa2bcb2943e1",
+          "extent": "parent"
+        },
+        {
+          "id": "9126280c-0a5e-4eb4-8a0b-57f10216f082",
+          "type": "videoGenerate",
+          "position": {
+            "x": 3076.681642477019,
+            "y": 304.3584243002442
+          },
+          "data": {
+            "title": "Tạo Video",
+            "subtitle": "Đầu Ra Video",
+            "color": "#6c63ff",
+            "description": "Tạo chuyển động từ ảnh nguồn thành video ngắn.",
+            "provider": "google",
+            "model": "veo-3.1-lite",
+            "duration": 8,
+            "aspectRatio": "16:9",
+            "resultCount": 1,
+            "fps": 24,
+            "motionStrength": 0.52,
+            "preserveIdentity": true,
+            "generationPhase": "idle",
+            "generationStatus": "idle",
+            "generationError": null,
+            "generatedAsset": null,
+            "generatedAssetHistory": [],
+            "customName": "5"
+          },
+          "parentId": "ae951667-ee60-40be-8e1c-fa2bcb2943e1",
+          "extent": "parent"
+        },
+        {
+          "id": "5807c147-7111-4de9-a69f-872199a648fc",
+          "type": "textPrompt",
+          "position": {
+            "x": 3036.8833477942103,
+            "y": 72.20170531719123
+          },
+          "data": {
+            "title": "Prompt Văn Bản",
+            "subtitle": "Nguồn Prompt",
+            "color": "#ff8a3d",
+            "description": "Chứa prompt chính cho bước sinh nội dung.",
+            "prompt": "",
+            "negativePrompt": ""
+          },
+          "parentId": "ae951667-ee60-40be-8e1c-fa2bcb2943e1",
+          "extent": "parent"
+        },
+        {
+          "id": "a84ea20c-dabe-4a2c-9da2-472061efa395",
+          "type": "videoGenerate",
+          "position": {
+            "x": 3898.5373724205274,
+            "y": 308.13809687490084
+          },
+          "data": {
+            "title": "Tạo Video",
+            "subtitle": "Đầu Ra Video",
+            "color": "#6c63ff",
+            "description": "Tạo chuyển động từ ảnh nguồn thành video ngắn.",
+            "provider": "google",
+            "model": "veo-3.1-lite",
+            "duration": 8,
+            "aspectRatio": "16:9",
+            "resultCount": 1,
+            "fps": 24,
+            "motionStrength": 0.52,
+            "preserveIdentity": true,
+            "generationPhase": "idle",
+            "generationStatus": "idle",
+            "generationError": null,
+            "generatedAsset": null,
+            "generatedAssetHistory": [],
+            "customName": "6"
+          },
+          "parentId": "ae951667-ee60-40be-8e1c-fa2bcb2943e1",
+          "extent": "parent"
+        },
+        {
+          "id": "600cbd6f-e0c0-4308-a2ab-72af3f4b57fa",
+          "type": "textPrompt",
+          "position": {
+            "x": 3858.7390777377186,
+            "y": 75.98137789184784
+          },
+          "data": {
+            "title": "Prompt Văn Bản",
+            "subtitle": "Nguồn Prompt",
+            "color": "#ff8a3d",
+            "description": "Chứa prompt chính cho bước sinh nội dung.",
+            "prompt": "",
+            "negativePrompt": ""
+          },
+          "parentId": "ae951667-ee60-40be-8e1c-fa2bcb2943e1",
+          "extent": "parent"
+        },
+        {
+          "id": "89434a58-dcc5-4e4c-bff5-ff8751bb4b99",
+          "type": "videoMerge",
+          "position": {
+            "x": -2062.571499570092,
+            "y": 2891.6634721428723
+          },
+          "data": {
+            "title": "Ghép Video",
+            "subtitle": "Đầu Ra Video Ghép",
+            "color": "#00b894",
+            "description": "Ghép các video đầu vào thành một video theo thứ tự nối dây.",
+            "generationStatus": "idle",
+            "generationError": null,
+            "generatedAsset": null,
+            "generatedAssetHistory": []
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source": "98049bb1-30cc-45ce-9af4-529e2d19fdef",
+          "sourceHandle": "image",
+          "target": "780c1632-ddd2-46e6-a4ca-a7e015cb24f7",
+          "targetHandle": "video-reference-image",
+          "id": "26f6f887-8a0a-4bb3-baaa-f28f5eb2c3b6",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "39ca51e8-52fa-40e9-8332-f052a1a1b626",
+          "sourceHandle": "text",
+          "target": "780c1632-ddd2-46e6-a4ca-a7e015cb24f7",
+          "targetHandle": "text",
+          "id": "fffb9f25-acac-40c9-a7fa-914abfe3a51f",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "98049bb1-30cc-45ce-9af4-529e2d19fdef",
+          "sourceHandle": "image",
+          "target": "6934c7a8-5de0-4a6b-a56d-e1cc18a60efa",
+          "targetHandle": "video-reference-image",
+          "id": "431596c9-a382-4f6b-a1fe-578b3b467f83",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "842fec5a-3ce3-4ad6-aa5d-75caad384ee2",
+          "sourceHandle": "text",
+          "target": "6934c7a8-5de0-4a6b-a56d-e1cc18a60efa",
+          "targetHandle": "text",
+          "id": "345abb59-8cd3-4eee-8dff-0186a1f24453",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "98049bb1-30cc-45ce-9af4-529e2d19fdef",
+          "sourceHandle": "image",
+          "target": "1175af08-d4ff-4f87-9bf1-d1ee16257dee",
+          "targetHandle": "video-reference-image",
+          "id": "a4370fca-228f-43a0-9266-a6feac18d105",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "743eabc5-1581-4e94-8221-83a5e902a482",
+          "sourceHandle": "text",
+          "target": "1175af08-d4ff-4f87-9bf1-d1ee16257dee",
+          "targetHandle": "text",
+          "id": "9a24d89b-6afd-4957-bb6b-cb9aa9a8cb34",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "98049bb1-30cc-45ce-9af4-529e2d19fdef",
+          "sourceHandle": "image",
+          "target": "59e8248b-b268-46b4-957c-39df0e28b87c",
+          "targetHandle": "video-reference-image",
+          "id": "34edd2c3-94c2-4a1f-ac28-a1438b2dbe36",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "0837617d-79f8-4d5e-8597-c85285d0be3a",
+          "sourceHandle": "text",
+          "target": "59e8248b-b268-46b4-957c-39df0e28b87c",
+          "targetHandle": "text",
+          "id": "ae319c8e-f1fa-40ae-be9b-f0c7ed42711e",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "98049bb1-30cc-45ce-9af4-529e2d19fdef",
+          "sourceHandle": "image",
+          "target": "146922b6-ba99-41c5-a4a1-6de1c2c889f0",
+          "targetHandle": "video-reference-image",
+          "id": "e5350ae3-27a0-4781-b513-ef19bf371c01",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "088747d7-a55b-4516-bc5b-af1ea019d784",
+          "sourceHandle": "text",
+          "target": "146922b6-ba99-41c5-a4a1-6de1c2c889f0",
+          "targetHandle": "text",
+          "id": "e3d46b7c-609c-4740-9548-8c472b00a081",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "98049bb1-30cc-45ce-9af4-529e2d19fdef",
+          "sourceHandle": "image",
+          "target": "1d456bca-5af7-49ad-9bf9-9dc2c277ee10",
+          "targetHandle": "video-reference-image",
+          "id": "c8c91936-40b5-4654-bbc0-60418623f942",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "00fd64f0-0856-4ee8-ad86-118dd37862b5",
+          "sourceHandle": "text",
+          "target": "1d456bca-5af7-49ad-9bf9-9dc2c277ee10",
+          "targetHandle": "text",
+          "id": "09f544ea-e808-49d9-8ca0-d8d9f10e0784",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "98049bb1-30cc-45ce-9af4-529e2d19fdef",
+          "sourceHandle": "image",
+          "target": "d87ca11b-c334-4ccf-bf7e-0bc9c63d1236",
+          "targetHandle": "video-reference-image",
+          "id": "cb6678da-58bf-46b8-bb66-aab668bd73d1",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "579b0e7e-c8ff-4a15-aa65-b064b85eed57",
+          "sourceHandle": "text",
+          "target": "d87ca11b-c334-4ccf-bf7e-0bc9c63d1236",
+          "targetHandle": "text",
+          "id": "64449bfc-6e10-4c88-99a4-18dae6377188",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "98049bb1-30cc-45ce-9af4-529e2d19fdef",
+          "sourceHandle": "image",
+          "target": "502f1f15-fb89-4d73-b741-98f37096da8a",
+          "targetHandle": "video-reference-image",
+          "id": "02e2daf2-4e63-4e73-9adc-158a73bb8931",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "737eaf47-1766-4cfe-9ece-38d60f11a6bb",
+          "sourceHandle": "text",
+          "target": "502f1f15-fb89-4d73-b741-98f37096da8a",
+          "targetHandle": "text",
+          "id": "73a19e07-439e-4244-b104-ab5a757c57c3",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "98049bb1-30cc-45ce-9af4-529e2d19fdef",
+          "sourceHandle": "image",
+          "target": "508d123e-5e15-4a63-8ef2-30a75200a4ae",
+          "targetHandle": "video-reference-image",
+          "id": "5892db87-74f5-4bdb-9ccf-80e109e1f6a8",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "67d516c2-a9a1-40db-9c65-104165f1214d",
+          "sourceHandle": "text",
+          "target": "508d123e-5e15-4a63-8ef2-30a75200a4ae",
+          "targetHandle": "text",
+          "id": "c3f3fb5a-2fc5-40b5-8635-e70461f50d63",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "98049bb1-30cc-45ce-9af4-529e2d19fdef",
+          "sourceHandle": "image",
+          "target": "96fa041c-0701-42b6-9ad1-0b97b1969417",
+          "targetHandle": "video-reference-image",
+          "id": "e44175d0-9558-412e-8f3f-63a3f77f9477",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "b2ec7884-a651-4d9e-b70e-99382b9b83a3",
+          "sourceHandle": "text",
+          "target": "96fa041c-0701-42b6-9ad1-0b97b1969417",
+          "targetHandle": "text",
+          "id": "423d8ad6-ab29-43ae-9412-b2df8e707d4e",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "98049bb1-30cc-45ce-9af4-529e2d19fdef",
+          "sourceHandle": "image",
+          "target": "bc92ba56-60bb-402f-8e1b-74435ea28b93",
+          "targetHandle": "video-reference-image",
+          "id": "1c72d740-8026-4831-81ec-89fad5694a11",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "1f365f40-a629-4391-88b7-9d3459d021f4",
+          "sourceHandle": "text",
+          "target": "bc92ba56-60bb-402f-8e1b-74435ea28b93",
+          "targetHandle": "text",
+          "id": "9b809e3f-de77-4a2c-95f3-ad347887d2d4",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "98049bb1-30cc-45ce-9af4-529e2d19fdef",
+          "sourceHandle": "image",
+          "target": "ec5fb206-6888-4ed8-9b69-829d052bda87",
+          "targetHandle": "video-reference-image",
+          "id": "7aba2fc1-0f40-47a7-809a-657c8f285973",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "338d1412-68d9-49b1-bcf7-eef063b121d4",
+          "sourceHandle": "text",
+          "target": "ec5fb206-6888-4ed8-9b69-829d052bda87",
+          "targetHandle": "text",
+          "id": "7ea65787-a56e-4e71-bc1e-ca0b9f90570c",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "98049bb1-30cc-45ce-9af4-529e2d19fdef",
+          "sourceHandle": "image",
+          "target": "e4bd0f9f-4783-4ee8-919d-9cda2c9431db",
+          "targetHandle": "video-reference-image",
+          "id": "a19fdd6f-10d2-4e67-86b5-8e80fcef8666",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "9a90ee0c-0eec-4299-a1b7-5fb10ca98192",
+          "sourceHandle": "text",
+          "target": "e4bd0f9f-4783-4ee8-919d-9cda2c9431db",
+          "targetHandle": "text",
+          "id": "72fe5f24-3d2a-4603-b041-d4a4386ab1fd",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "98049bb1-30cc-45ce-9af4-529e2d19fdef",
+          "sourceHandle": "image",
+          "target": "b1faef99-cb81-41df-b7ee-43a8ac9360fc",
+          "targetHandle": "video-reference-image",
+          "id": "800cee5b-5d4b-4f88-a61e-27d721f8823f",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "22bd7203-f061-460e-bb01-0e21e23a64f5",
+          "sourceHandle": "text",
+          "target": "b1faef99-cb81-41df-b7ee-43a8ac9360fc",
+          "targetHandle": "text",
+          "id": "356e4e85-8256-4ef6-83a6-d0b18ee8334a",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "98049bb1-30cc-45ce-9af4-529e2d19fdef",
+          "sourceHandle": "image",
+          "target": "72b6c058-ff13-4669-8563-518b39f9ad87",
+          "targetHandle": "video-reference-image",
+          "id": "ef0a482b-0b9a-44eb-bdbe-d470c65b9044",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "e4be7b7a-094e-44ce-aa14-21fb9a3b353f",
+          "sourceHandle": "text",
+          "target": "72b6c058-ff13-4669-8563-518b39f9ad87",
+          "targetHandle": "text",
+          "id": "7c5f2bfc-3a62-4040-a64e-b7787bf58bd4",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "98049bb1-30cc-45ce-9af4-529e2d19fdef",
+          "sourceHandle": "image",
+          "target": "2c4f4c62-2324-4587-a746-fbbfcebce084",
+          "targetHandle": "video-reference-image",
+          "id": "2fc5594c-e315-4feb-9b4c-06b49982fe69",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "6fc70232-eb3a-47da-ad43-5065c0b4b699",
+          "sourceHandle": "text",
+          "target": "2c4f4c62-2324-4587-a746-fbbfcebce084",
+          "targetHandle": "text",
+          "id": "7e181925-6405-45aa-be30-86cf6f29c22d",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "98049bb1-30cc-45ce-9af4-529e2d19fdef",
+          "sourceHandle": "image",
+          "target": "9da21a3c-d5bb-4bd0-a557-ea8bf6a46c61",
+          "targetHandle": "video-reference-image",
+          "id": "3989ecef-0067-4bae-8542-af565709ce11",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "da1d8ce0-1720-4230-be14-123990d2f621",
+          "sourceHandle": "text",
+          "target": "9da21a3c-d5bb-4bd0-a557-ea8bf6a46c61",
+          "targetHandle": "text",
+          "id": "599c3490-aa3d-4d6e-86ec-918d666aaff9",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "98049bb1-30cc-45ce-9af4-529e2d19fdef",
+          "sourceHandle": "image",
+          "target": "8cd25589-6e73-4dab-8e2e-565074ec9031",
+          "targetHandle": "video-reference-image",
+          "id": "c6698503-1aac-4a9f-8014-5e411da83991",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "30cd8100-8ae3-4cba-91be-3d126395ef48",
+          "sourceHandle": "text",
+          "target": "8cd25589-6e73-4dab-8e2e-565074ec9031",
+          "targetHandle": "text",
+          "id": "6d0c7adf-0818-4e66-b813-4b2a7587ba76",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "98049bb1-30cc-45ce-9af4-529e2d19fdef",
+          "sourceHandle": "image",
+          "target": "a4152a9a-4981-4527-93b2-e80f9c2dabc1",
+          "targetHandle": "video-reference-image",
+          "id": "db1e7376-8882-4ef4-bd2b-b53b3e552086",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "5597d16f-f121-418d-8cca-2ef8c5a2845d",
+          "sourceHandle": "text",
+          "target": "a4152a9a-4981-4527-93b2-e80f9c2dabc1",
+          "targetHandle": "text",
+          "id": "1b84f5a1-bc6f-48a9-82ef-50b824b64ee1",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "98049bb1-30cc-45ce-9af4-529e2d19fdef",
+          "sourceHandle": "image",
+          "target": "d4ec354f-a72a-49c3-b30c-1dd8572b35c6",
+          "targetHandle": "video-reference-image",
+          "id": "ce876042-9a51-458a-84d4-4b1ce5a12869",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "2bcc1ec1-841f-4f32-b585-78194322e3de",
+          "sourceHandle": "text",
+          "target": "d4ec354f-a72a-49c3-b30c-1dd8572b35c6",
+          "targetHandle": "text",
+          "id": "2c784da1-48a4-4064-b4ea-2d325d823a31",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "id": "190317c9-2d8b-4c32-9127-a6be8c761211",
+          "source": "780c1632-ddd2-46e6-a4ca-a7e015cb24f7",
+          "sourceHandle": "video",
+          "target": "e7c91954-e24c-4c9b-81f6-b2c7fdec2ce2",
+          "targetHandle": "video",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "6934c7a8-5de0-4a6b-a56d-e1cc18a60efa",
+          "sourceHandle": "video",
+          "target": "e7c91954-e24c-4c9b-81f6-b2c7fdec2ce2",
+          "targetHandle": "video",
+          "id": "e5233fbd-02d3-439f-b620-7c43f3469c91",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "1175af08-d4ff-4f87-9bf1-d1ee16257dee",
+          "sourceHandle": "video",
+          "target": "e7c91954-e24c-4c9b-81f6-b2c7fdec2ce2",
+          "targetHandle": "video",
+          "id": "70500ff0-6ee9-4044-9ce5-5ade3c08c64e",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "59e8248b-b268-46b4-957c-39df0e28b87c",
+          "sourceHandle": "video",
+          "target": "e7c91954-e24c-4c9b-81f6-b2c7fdec2ce2",
+          "targetHandle": "video",
+          "id": "7beef729-e969-4597-9939-fd85882a27b4",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "146922b6-ba99-41c5-a4a1-6de1c2c889f0",
+          "sourceHandle": "video",
+          "target": "e7c91954-e24c-4c9b-81f6-b2c7fdec2ce2",
+          "targetHandle": "video",
+          "id": "e9658e51-ae18-4efa-97ac-e65ba3295670",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "1d456bca-5af7-49ad-9bf9-9dc2c277ee10",
+          "sourceHandle": "video",
+          "target": "e7c91954-e24c-4c9b-81f6-b2c7fdec2ce2",
+          "targetHandle": "video",
+          "id": "5c49323d-1b12-4652-9301-877382d099bd",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "d87ca11b-c334-4ccf-bf7e-0bc9c63d1236",
+          "sourceHandle": "video",
+          "target": "e7c91954-e24c-4c9b-81f6-b2c7fdec2ce2",
+          "targetHandle": "video",
+          "id": "69052f26-5aaf-49a2-895b-6aac9da7bdaf",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "502f1f15-fb89-4d73-b741-98f37096da8a",
+          "sourceHandle": "video",
+          "target": "e7c91954-e24c-4c9b-81f6-b2c7fdec2ce2",
+          "targetHandle": "video",
+          "id": "ddda7e3d-7bcb-449c-9873-4ed770e308a2",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "508d123e-5e15-4a63-8ef2-30a75200a4ae",
+          "sourceHandle": "video",
+          "target": "e7c91954-e24c-4c9b-81f6-b2c7fdec2ce2",
+          "targetHandle": "video",
+          "id": "a13cf8d3-f95b-4f1f-ac20-d934a6271770",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "96fa041c-0701-42b6-9ad1-0b97b1969417",
+          "sourceHandle": "video",
+          "target": "e7c91954-e24c-4c9b-81f6-b2c7fdec2ce2",
+          "targetHandle": "video",
+          "id": "a8a5f5db-87cb-4ca2-8324-9a697c3c8bbe",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "bc92ba56-60bb-402f-8e1b-74435ea28b93",
+          "sourceHandle": "video",
+          "target": "e7c91954-e24c-4c9b-81f6-b2c7fdec2ce2",
+          "targetHandle": "video",
+          "id": "6d9e0076-8948-4886-881a-6c57a45d5053",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "ec5fb206-6888-4ed8-9b69-829d052bda87",
+          "sourceHandle": "video",
+          "target": "e7c91954-e24c-4c9b-81f6-b2c7fdec2ce2",
+          "targetHandle": "video",
+          "id": "e5a6b6f7-0c09-44bf-abd6-0192bc0496a9",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "e4bd0f9f-4783-4ee8-919d-9cda2c9431db",
+          "sourceHandle": "video",
+          "target": "e7c91954-e24c-4c9b-81f6-b2c7fdec2ce2",
+          "targetHandle": "video",
+          "id": "9d2ee9f7-de51-4929-8660-458de13a8555",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "b1faef99-cb81-41df-b7ee-43a8ac9360fc",
+          "sourceHandle": "video",
+          "target": "e7c91954-e24c-4c9b-81f6-b2c7fdec2ce2",
+          "targetHandle": "video",
+          "id": "eb6e26e5-9827-423e-b757-c40cdea97018",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "72b6c058-ff13-4669-8563-518b39f9ad87",
+          "sourceHandle": "video",
+          "target": "e7c91954-e24c-4c9b-81f6-b2c7fdec2ce2",
+          "targetHandle": "video",
+          "id": "fa580dbd-3169-4e89-b11a-ffd4288704d1",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "2c4f4c62-2324-4587-a746-fbbfcebce084",
+          "sourceHandle": "video",
+          "target": "e7c91954-e24c-4c9b-81f6-b2c7fdec2ce2",
+          "targetHandle": "video",
+          "id": "b2bf4975-f2c1-4783-b040-130c7458d0ba",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "9da21a3c-d5bb-4bd0-a557-ea8bf6a46c61",
+          "sourceHandle": "video",
+          "target": "e7c91954-e24c-4c9b-81f6-b2c7fdec2ce2",
+          "targetHandle": "video",
+          "id": "787e39eb-f89f-4fc4-b65e-e7786fba1ba2",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "8cd25589-6e73-4dab-8e2e-565074ec9031",
+          "sourceHandle": "video",
+          "target": "e7c91954-e24c-4c9b-81f6-b2c7fdec2ce2",
+          "targetHandle": "video",
+          "id": "e2cc4ab9-0a66-45f5-b67c-f319d50d3627",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "a4152a9a-4981-4527-93b2-e80f9c2dabc1",
+          "sourceHandle": "video",
+          "target": "e7c91954-e24c-4c9b-81f6-b2c7fdec2ce2",
+          "targetHandle": "video",
+          "id": "39687079-3952-46ef-b23f-7d03eb10bb9d",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "d4ec354f-a72a-49c3-b30c-1dd8572b35c6",
+          "sourceHandle": "video",
+          "target": "e7c91954-e24c-4c9b-81f6-b2c7fdec2ce2",
+          "targetHandle": "video",
+          "id": "e1580c62-eda5-49db-9117-c2b290411428",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "7d0cf310-fb69-4808-912f-674f6e3b6f58",
+          "sourceHandle": "text",
+          "target": "62717894-e610-4ffe-8cb2-5b5819d70a53",
+          "targetHandle": "text",
+          "id": "21c59b8e-a56f-467f-bf85-9066d3a6da0b",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "98049bb1-30cc-45ce-9af4-529e2d19fdef",
+          "sourceHandle": "image",
+          "target": "62717894-e610-4ffe-8cb2-5b5819d70a53",
+          "targetHandle": "video-reference-image",
+          "id": "3d89cfd9-7aa3-426d-9031-b6e837bb0966",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "60ffcc33-05e5-47b6-b5cf-3ea8037964b9",
+          "sourceHandle": "text",
+          "target": "1d1dd145-e8ac-4b7a-b202-32b2ec422468",
+          "targetHandle": "text",
+          "id": "3c43a4e3-01f4-4bc9-93e5-993b017a617d",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "98049bb1-30cc-45ce-9af4-529e2d19fdef",
+          "sourceHandle": "image",
+          "target": "1d1dd145-e8ac-4b7a-b202-32b2ec422468",
+          "targetHandle": "video-reference-image",
+          "id": "d7df20ab-6fcd-4ab9-8028-5cedc59b8b5c",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "cb9234b8-9635-467e-aca2-0e08273a8dd8",
+          "sourceHandle": "text",
+          "target": "88710267-d324-4eae-871f-15abcf453d81",
+          "targetHandle": "text",
+          "id": "75114bab-f2c2-4b05-9ad6-aa977f196b15",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "98049bb1-30cc-45ce-9af4-529e2d19fdef",
+          "sourceHandle": "image",
+          "target": "88710267-d324-4eae-871f-15abcf453d81",
+          "targetHandle": "video-reference-image",
+          "id": "a539a726-e5b2-41db-9c5c-b72d194acd73",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "eee5f337-a6d8-4cdd-80fb-a0e8c43074bc",
+          "sourceHandle": "text",
+          "target": "f1b5015a-5b2a-4247-a4cd-d016a0c82e83",
+          "targetHandle": "text",
+          "id": "61ee955a-ffee-40cc-b6b6-223b8ab257d0",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "98049bb1-30cc-45ce-9af4-529e2d19fdef",
+          "sourceHandle": "image",
+          "target": "f1b5015a-5b2a-4247-a4cd-d016a0c82e83",
+          "targetHandle": "video-reference-image",
+          "id": "de902161-1217-491f-9151-6486b41ca198",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "5807c147-7111-4de9-a69f-872199a648fc",
+          "sourceHandle": "text",
+          "target": "9126280c-0a5e-4eb4-8a0b-57f10216f082",
+          "targetHandle": "text",
+          "id": "0297da36-8d3b-4b26-9cde-87b22070c169",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "98049bb1-30cc-45ce-9af4-529e2d19fdef",
+          "sourceHandle": "image",
+          "target": "9126280c-0a5e-4eb4-8a0b-57f10216f082",
+          "targetHandle": "video-reference-image",
+          "id": "d6b1dd14-86ab-4664-ad49-2d15f38fb1ef",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "600cbd6f-e0c0-4308-a2ab-72af3f4b57fa",
+          "sourceHandle": "text",
+          "target": "a84ea20c-dabe-4a2c-9da2-472061efa395",
+          "targetHandle": "text",
+          "id": "57753130-a91e-40ca-b18e-b42d27d43c80",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "98049bb1-30cc-45ce-9af4-529e2d19fdef",
+          "sourceHandle": "image",
+          "target": "a84ea20c-dabe-4a2c-9da2-472061efa395",
+          "targetHandle": "video-reference-image",
+          "id": "0f2f2197-773a-4182-af8b-4dc479ec83f4",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "id": "26436140-6b82-4fd8-9d59-8e2000fea19a",
+          "source": "62717894-e610-4ffe-8cb2-5b5819d70a53",
+          "sourceHandle": "video",
+          "target": "89434a58-dcc5-4e4c-bff5-ff8751bb4b99",
+          "targetHandle": "video",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "1d1dd145-e8ac-4b7a-b202-32b2ec422468",
+          "sourceHandle": "video",
+          "target": "89434a58-dcc5-4e4c-bff5-ff8751bb4b99",
+          "targetHandle": "video",
+          "id": "a9973b65-c1b1-4ffc-a290-a33dd39b2219",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "88710267-d324-4eae-871f-15abcf453d81",
+          "sourceHandle": "video",
+          "target": "89434a58-dcc5-4e4c-bff5-ff8751bb4b99",
+          "targetHandle": "video",
+          "id": "b6b21be0-ef5b-4b0a-a7b7-715e3c72b502",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "f1b5015a-5b2a-4247-a4cd-d016a0c82e83",
+          "sourceHandle": "video",
+          "target": "89434a58-dcc5-4e4c-bff5-ff8751bb4b99",
+          "targetHandle": "video",
+          "id": "e1051a33-187d-4c97-b19f-3af2004d3e61",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "9126280c-0a5e-4eb4-8a0b-57f10216f082",
+          "sourceHandle": "video",
+          "target": "89434a58-dcc5-4e4c-bff5-ff8751bb4b99",
+          "targetHandle": "video",
+          "id": "ec4dfe29-de5e-4a76-8069-f673224243b0",
+          "type": "removable",
+          "animated": true
+        },
+        {
+          "source": "a84ea20c-dabe-4a2c-9da2-472061efa395",
+          "sourceHandle": "video",
+          "target": "89434a58-dcc5-4e4c-bff5-ff8751bb4b99",
+          "targetHandle": "video",
+          "id": "e72323f8-5212-4b4d-83c6-075086f1d065",
+          "type": "removable",
+          "animated": true
+        }
+      ]
+    }
+  },
+  "source": {
+    "filename": "workflow-page-Trang-9-2026-10-03.json",
+    "sha256": "6ebf84c88a9e435163cebafd75bfa36cccbba5542b1527b201cfc7bd749eb760",
+    "importedAt": "2026-10-03",
+    "note": "Imported as data. Prompts are not agent or deployment instructions."
+  }
+}

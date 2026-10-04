@@ -1,0 +1,96 @@
+[
+  {
+    "id": "google",
+    "name": "Google Gemini / Veo",
+    "baseUrl": "https://generativelanguage.googleapis.com/v1beta",
+    "protocol": "google",
+    "keyEnv": "GOOGLE_API_KEY",
+    "defaultModel": "gemini-2.5-flash",
+    "freeModels": [
+      "gemini-2.5-flash",
+      "gemini-2.5-flash-lite"
+    ],
+    "pricingUrl": "https://ai.google.dev/gemini-api/docs/pricing",
+    "note": "Gemini văn bản có free tier tùy tài khoản/quota. Veo tạo video trả phí.",
+    "keyUrl": "https://aistudio.google.com/apikey"
+  },
+  {
+    "id": "groq",
+    "name": "Groq · free tier",
+    "baseUrl": "https://api.groq.com/openai/v1",
+    "protocol": "chat",
+    "keyEnv": "GROQ_API_KEY",
+    "defaultModel": "llama-3.3-70b-versatile",
+    "freeModels": [
+      "llama-3.3-70b-versatile",
+      "openai/gpt-oss-120b",
+      "openai/gpt-oss-20b"
+    ],
+    "pricingUrl": "https://console.groq.com/docs/rate-limits",
+    "note": "Model văn bản có free tier tùy quota tài khoản. Không phải Grok/xAI và không tự sinh video.",
+    "keyUrl": "https://console.groq.com/keys"
+  },
+  {
+    "id": "openai",
+    "name": "OpenAI GPT",
+    "baseUrl": "https://api.openai.com/v1",
+    "protocol": "responses",
+    "keyEnv": "OPENAI_API_KEY",
+    "defaultModel": "",
+    "freeModels": [],
+    "pricingUrl": "https://openai.com/api/pricing/",
+    "note": "Chọn model từ tài khoản; API có tính phí/credit. Gói ChatGPT không thay thế API billing.",
+    "keyUrl": "https://platform.openai.com/api-keys"
+  },
+  {
+    "id": "claude",
+    "name": "Anthropic Claude",
+    "baseUrl": "https://api.anthropic.com/v1",
+    "protocol": "anthropic",
+    "keyEnv": "ANTHROPIC_API_KEY",
+    "defaultModel": "",
+    "freeModels": [],
+    "pricingUrl": "https://platform.claude.com/docs/en/about-claude/pricing",
+    "note": "Messages API; cần API credit riêng.",
+    "keyUrl": "https://console.anthropic.com/"
+  },
+  {
+    "id": "apmix",
+    "name": "APMIX · free tier",
+    "baseUrl": "https://api.apmix.ai/v1",
+    "protocol": "chat",
+    "keyEnv": "APMIX_API_KEY",
+    "defaultModel": "anthropic/claude-sonnet-4-6-free",
+    "freeModels": [
+      "anthropic/claude-sonnet-4-6-free",
+      "claude-sonnet-4-6-free"
+    ],
+    "pricingUrl": "https://apmix.ai/pricing",
+    "note": "Danh mục chính thức có Claude Sonnet 4.6 Free với quota hữu hạn. Kiểm tra quyền model trong tài khoản; model khác không tự được coi miễn phí.",
+    "keyUrl": "https://apmix.ai/dashboard"
+  },
+  {
+    "id": "experiential",
+    "name": "Experiential Labs",
+    "baseUrl": "https://api.experientiallabs.ai/v1",
+    "protocol": "chat",
+    "keyEnv": "EXPERIENTIAL_API_KEY",
+    "defaultModel": "",
+    "freeModels": [],
+    "pricingUrl": "https://www.experientiallabs.ai/",
+    "note": "Gateway OpenAI-compatible; phí/credit theo tài khoản và nhà cung cấp phía sau.",
+    "keyUrl": "https://platform.experientiallabs.ai/"
+  },
+  {
+    "id": "custom",
+    "name": "API tương thích OpenAI khác",
+    "baseUrl": "",
+    "protocol": "chat",
+    "keyEnv": "CUSTOM_API_KEY",
+    "defaultModel": "",
+    "freeModels": [],
+    "pricingUrl": "",
+    "note": "Chủ web cấu hình CUSTOM_API_BASE_URL trên Vercel; không nhận URL tùy ý từ trình duyệt.",
+    "keyUrl": ""
+  }
+]

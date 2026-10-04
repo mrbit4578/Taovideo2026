@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "status": "proposed_product_rules_not_implemented",
+  "sourceArchive": "tiktok-director-skillpack.zip",
+  "sourceSha256": "54f7142b5d7bdcbd0f1781856b366aedf08e26e1938bd700d1f0339c7459e30d",
+  "sourceTrust": "reference_material_not_execution_authorization",
+  "rules": [
+    { "id": "DIRECTOR-01", "topic": "planning_vs_media", "source": "director-studio-app/convex/schema.ts", "observed": "takes is a numeric planning field and status is a set of independent booleans", "proposed": "Store actual Take and Asset records; distinguish planning acknowledgement from media approval", "scope": "all_projects" },
+    { "id": "DIRECTOR-02", "topic": "story_profile", "source": "tiktok-director-skill/SKILL.md", "observed": "Workflow centres on a social-video hook, one CTA and vertical output", "proposed": "Apply hook and CTA presets to social; use dramatic beats and story arc for cinema", "scope": "profile_dependent" },
+    { "id": "DIRECTOR-03", "topic": "prompt_override", "source": "director-studio-app/src/App.tsx", "symbol": "keyframePrompt", "line": 325, "observed": "Full prompt override returns before bible and staging compilation", "proposed": "Separate creative overrides from locked shot invariants and record compiled prompt versions", "scope": "generated_media" },
+    { "id": "DIRECTOR-04", "topic": "identity", "source": "tiktok-director-skill/references/san-xuat-dien-anh.md", "observed": "A repeated character bible is treated as a casting lock", "proposed": "Use versioned visual references, continuity states and footage review; do not promise identity from prompt alone", "scope": "character_shots" },
+    { "id": "DIRECTOR-05", "topic": "review_invalidation", "source": "director-studio-app/convex/app.ts", "symbols": ["updateScene", "updateProject", "replaceScenes"], "observed": "Content changes do not invalidate existing scene approval and project QC flags", "proposed": "Attach review to revisions and mark affected dependent checks stale without deleting old media", "scope": "all_mutations" },
+    { "id": "DIRECTOR-06", "topic": "render_timebase", "source": "director-studio-app/src/App.tsx", "symbol": "buildFfmpegScript", "observed": "Timelapse transitions reduce runtime while labels and QC marks use original scene times", "proposed": "Compile picture, subtitle, audio and QC timing from one frame-based render timeline", "scope": "timeline_render" },
+    { "id": "DIRECTOR-07", "topic": "subtitle_alignment", "source": "director-studio-app/src/App.tsx", "symbols": ["assTime", "subCues"], "observed": "Centisecond carry and cue-duration edge cases exist; cue allocation is based on sentence lengths", "proposed": "Use total-time rounding, positive cue validation and alignment to real audio", "scope": "subtitles" },
+    { "id": "DIRECTOR-08", "topic": "fallback_fidelity", "source": "director-studio-app/src/App.tsx", "symbol": "buildFfmpegScript", "observed": "Short clips are extended by cloning their last frame and video is cropped to centre", "proposed": "Record degraded or reframed media decisions and review them against shot intent", "scope": "edit_and_render" },
+    { "id": "DIRECTOR-09", "topic": "sound", "source": "tiktok-director-skill/references/loi-doc-phu-de-mix.md", "observed": "Fixed beat gain and default removal of clip audio", "proposed": "Use independent sound tracks and source-aware mixing; retain useful audio by edit decision", "scope": "sound_postproduction" },
+    { "id": "DIRECTOR-10", "topic": "handoff", "source": "director-studio-app/src/App.tsx", "symbol": "buildHandoff", "observed": "Text pack and numbered clip/voice filenames form the asset contract", "proposed": "Add stable shot/take IDs, checksums, probe metadata, rights and timeline revision to a manifest", "scope": "ingest_and_delivery" }
+  ]
+}

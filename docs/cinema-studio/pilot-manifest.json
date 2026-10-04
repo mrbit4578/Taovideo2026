@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "status": "planning_only",
+  "title": "Bức thư cuối",
+  "mode": "cinema",
+  "language": "vi",
+  "logline": "Trong quán cà phê cuối chiều mưa, một lá thư khiến người sắp rời đi quyết định ngồi lại.",
+  "frameRate": { "numerator": 24, "denominator": 1 },
+  "targetRuntimeFrames": 2160,
+  "delivery": { "width": 1920, "height": 1080, "colorIntent": "SDR Rec.709", "videoCodec": "H.264", "audioCodec": "AAC", "channels": 2, "status": "proposed_internal_profile" },
+  "budget": { "currency": null, "hardCap": null, "paidDispatchAllowed": false },
+  "bibles": {
+    "version": "v1-planning",
+    "characters": [
+      { "id": "A", "fictional": true, "adultAge": 32, "description": "Tóc đen ngắn, áo sơ mi xám; điềm tĩnh bề ngoài, đang muốn tránh cuộc trò chuyện.", "referenceAssetIds": [] },
+      { "id": "B", "fictional": true, "adultAge": 35, "description": "Tóc đen ngang vai, áo cardigan nâu; cố giữ A ở lại nhưng không ép buộc.", "referenceAssetIds": [] }
+    ],
+    "location": { "id": "CAFE", "description": "Quán cà phê nhỏ vắng, cửa sổ mưa ở trái, đèn practical ấm phía sau; bàn gỗ, A bên trái và B bên phải trong master.", "referenceAssetIds": [] },
+    "prop": { "id": "ENVELOPE", "description": "Phong bì giấy màu kem không logo; đầu scene đóng trong tay B, cuối scene ở A và đã mở.", "referenceAssetIds": [] }
+  },
+  "scene": { "id": "SC01", "locationId": "CAFE", "time": "late_afternoon_rain", "startingState": "A chuẩn bị rời đi, B giữ phong bì đóng", "endingState": "A ngồi lại, phong bì đã mở", "actionAxis": "A-left_B-right_in_master" },
+  "shots": [
+    { "id": "S01", "sceneId": "SC01", "durationFrames": 144, "framing": "wide", "objective": "Thiết lập không gian và chiều mưa", "risks": ["environment"], "takeIds": [] },
+    { "id": "S02", "sceneId": "SC01", "durationFrames": 192, "framing": "medium_two_shot", "objective": "Đặt quan hệ hai người và trục hành động", "risks": ["dual_identity", "blocking"], "takeIds": [] },
+    { "id": "S03", "sceneId": "SC01", "durationFrames": 96, "framing": "insert", "objective": "Giới thiệu phong bì trong tay B", "risks": ["prop_fidelity"], "takeIds": [] },
+    { "id": "S04", "sceneId": "SC01", "durationFrames": 240, "framing": "OTS_A", "objective": "A muốn kết thúc cuộc gặp", "risks": ["eyeline", "performance", "axis"], "takeIds": [] },
+    { "id": "S05", "sceneId": "SC01", "durationFrames": 240, "framing": "reverse_OTS_B", "objective": "B đề nghị A đọc lá thư", "risks": ["identity", "performance", "axis"], "takeIds": [] },
+    { "id": "S06", "sceneId": "SC01", "durationFrames": 144, "framing": "close", "objective": "A do dự trước lời đề nghị", "risks": ["expression", "temporal_identity"], "takeIds": [] },
+    { "id": "S07", "sceneId": "SC01", "durationFrames": 120, "framing": "handoff_insert", "objective": "B trao phong bì đóng vào tay phải A", "continuityIn": "closed_envelope_in_B_hand", "continuityOut": "closed_envelope_in_A_right_hand", "risks": ["hand_contact", "occlusion", "physics"], "takeIds": [] },
+    { "id": "S08", "sceneId": "SC01", "durationFrames": 192, "framing": "profile_medium", "objective": "A dừng ý định bước đi", "risks": ["match_on_action"], "takeIds": [] },
+    { "id": "S09", "sceneId": "SC01", "durationFrames": 120, "framing": "opening_insert", "objective": "A mở phong bì", "continuityIn": "closed_envelope_in_A_right_hand", "continuityOut": "opened_envelope_in_A_hands", "risks": ["hands", "prop_state"], "takeIds": [] },
+    { "id": "S10", "sceneId": "SC01", "durationFrames": 240, "framing": "close", "objective": "Biểu cảm A đổi khi đọc thư", "risks": ["performance", "temporal_identity"], "takeIds": [] },
+    { "id": "S11", "sceneId": "SC01", "durationFrames": 240, "framing": "two_shot", "objective": "A chọn ngồi lại cùng B", "risks": ["blocking", "costume", "space"], "takeIds": [] },
+    { "id": "S12", "sceneId": "SC01", "durationFrames": 192, "framing": "wide_hold", "objective": "Giữ khoảnh khắc hai người ở lại trong tiếng mưa", "risks": ["rhythm", "ambience"], "takeIds": [] }
+  ],
+  "pilotRiskShotIds": ["S06", "S07", "S04", "S05"],
+  "timelinePlan": { "ordering": "shots_array_order", "videoTransitionOverlapFrames": 0, "audioJLCutsAllowed": true, "handlesFramesPerSide": 12, "status": "not_renderable_until_assets_are_ready" },
+  "assets": [],
+  "takes": [],
+  "missingInputs": ["approved_visual_references", "footage_or_provider_selection", "dialogue_audio_and_sound_assets", "user_budget_cap_before_paid_jobs"],
+  "qualityNotes": ["Durations describe edited placement, not provider generation duration", "No film or take has been generated", "All reference assets require validation before production"]
+}

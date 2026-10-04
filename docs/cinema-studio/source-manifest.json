@@ -1,0 +1,756 @@
+{
+  "date": "2026-10-03",
+  "timezone": "Asia/Saigon",
+  "method": "All source files and archive members read as bytes; SHA-256 computed. Human/model semantic audit focuses on knowledge and app source; generated/minified/dependency files inventoried and inspected as build artifacts, not independent authored logic.",
+  "files": [
+    {
+      "path": "Audit_Kaizen_L_i_i_n_nh_b_n_xu_t_TikTok.md",
+      "bytes": 5808,
+      "sha256": "b7b6d6dfde8938e1eafc69d76f53ed4405a26d8f78a122f6dc312a467c3734ae",
+      "category": "knowledge",
+      "lines": 54
+    },
+    {
+      "path": "capcut-workflow.md",
+      "bytes": 1900,
+      "sha256": "bad8c2543f81b61e4ab446d32854a1ef7f6a398c2e51b20ed8c3dd0cd1b8f8b4",
+      "category": "knowledge",
+      "lines": 30
+    },
+    {
+      "path": "character-swap.md",
+      "bytes": 1433,
+      "sha256": "b3fc8165de191f2bbab8878b0b174484a3c2187057987b00fb71a49ee0cffcef",
+      "category": "knowledge",
+      "lines": 18
+    },
+    {
+      "path": "loi-doc-phu-de-mix.md",
+      "bytes": 4310,
+      "sha256": "238feecd2d6716f3bb22ba95fec63f9673f80078f0a055ce8b210da1ceef4d48",
+      "category": "knowledge",
+      "lines": 79
+    },
+    {
+      "path": "mang noron.rar",
+      "bytes": 15479,
+      "sha256": "ba2c28bf6e37d9512b9813bcae50cc64117f67d4569f605f2b2123f0d3b1f2d2",
+      "category": "archive",
+      "lines": null
+    },
+    {
+      "path": "mang noron.rar!/mang noron/01-mang-no-ron-hoc-nhu-the-nao.md",
+      "bytes": 1589,
+      "sha256": "3eeaddf2d7aa440cc9303869571658b86398baeb3c1d4d80930c721f0a56bafe",
+      "category": "knowledge",
+      "lines": 16
+    },
+    {
+      "path": "mang noron.rar!/mang noron/02-3-loi-khien-ai-hoc-lech.md",
+      "bytes": 1663,
+      "sha256": "76c6d695a29c82f5fabb2f355decc06d66a17fd6735d1c2aa93c43528a10f0f7",
+      "category": "knowledge",
+      "lines": 17
+    },
+    {
+      "path": "mang noron.rar!/mang noron/03-cnn-rnn-transformer-khac-nhau.md",
+      "bytes": 1724,
+      "sha256": "0797fdf21a4ae457c70fac758217f71ed5f592d1385848d63ced1e82cb92f51d",
+      "category": "knowledge",
+      "lines": 17
+    },
+    {
+      "path": "mang noron.rar!/mang noron/04-hoi-dap-workflow-ai-agent.md",
+      "bytes": 1636,
+      "sha256": "fe5e530e7bd4121f8bb9a71522969d4dc4138b26e27e02149f9bc73f9dae806d",
+      "category": "knowledge",
+      "lines": 16
+    },
+    {
+      "path": "mang noron.rar!/mang noron/05-mot-ngay-lam-viec-cua-ai-agent-kho.md",
+      "bytes": 1753,
+      "sha256": "de71110e0704d64d4e8c3f285446b1e11aac277f2f8a3eeab3cc52f18266dafa",
+      "category": "knowledge",
+      "lines": 17
+    },
+    {
+      "path": "mang noron.rar!/mang noron/06-5-nguyen-tac-giao-viec-cho-ai-agent.md",
+      "bytes": 1717,
+      "sha256": "e104dd0f56fd2b86ab9b1d272e6cdacb7f30eca87416b4413a2ddfc819117950",
+      "category": "knowledge",
+      "lines": 19
+    },
+    {
+      "path": "mang noron.rar!/mang noron/README.md",
+      "bytes": 2539,
+      "sha256": "befad2fc5db8aa8f547fa23af23da712591787bfb3913273ff711916f8f09602",
+      "category": "knowledge",
+      "lines": 43
+    },
+    {
+      "path": "mang noron.rar!/mang noron/SKILL.md",
+      "bytes": 17185,
+      "sha256": "7b86a535a2a707e83a6409c0164e50387ccdf4b15ff783d6931068134174c004",
+      "category": "knowledge",
+      "lines": 219
+    },
+    {
+      "path": "README.md",
+      "bytes": 1221,
+      "sha256": "a78bc4096ee2196e8faa505f7370a13e2398b2d3a2941d33f8b82103052fe5c7",
+      "category": "knowledge",
+      "lines": 18
+    },
+    {
+      "path": "san-xuat-dien-anh.md",
+      "bytes": 5608,
+      "sha256": "5e69869e4f5ed16af895798b0d8c600674f03eda6ae04829c634aebab271df6c",
+      "category": "knowledge",
+      "lines": 71
+    },
+    {
+      "path": "shot-list-30-keyframes (1).md",
+      "bytes": 13730,
+      "sha256": "7c984f5aa9e8fd6c113f5945b05aa1d85140e7c5f042520c8d34d11f3c65c003",
+      "category": "knowledge",
+      "lines": 335
+    },
+    {
+      "path": "shot-list-30-keyframes.md",
+      "bytes": 13730,
+      "sha256": "7c984f5aa9e8fd6c113f5945b05aa1d85140e7c5f042520c8d34d11f3c65c003",
+      "category": "knowledge",
+      "lines": 335
+    },
+    {
+      "path": "SKILL (1).md",
+      "bytes": 17185,
+      "sha256": "7b86a535a2a707e83a6409c0164e50387ccdf4b15ff783d6931068134174c004",
+      "category": "knowledge",
+      "lines": 219
+    },
+    {
+      "path": "SKILL.md",
+      "bytes": 17185,
+      "sha256": "7b86a535a2a707e83a6409c0164e50387ccdf4b15ff783d6931068134174c004",
+      "category": "knowledge",
+      "lines": 219
+    },
+    {
+      "path": "tiktok-director-skillpack-v2.zip",
+      "bytes": 93504,
+      "sha256": "cb5352ee24aea360b583853a2c7a39cdb0e6882ab0ed2fc50fd39dad813e8d14",
+      "category": "archive",
+      "lines": null
+    },
+    {
+      "path": "tiktok-director-skillpack-v2.zip!/AUDIT-KAIZEN.md",
+      "bytes": 9394,
+      "sha256": "36eb2ae34b263c128c68305ba6965a762611ce56daeb0a74bffc3fa088849660",
+      "category": "knowledge",
+      "lines": 116
+    },
+    {
+      "path": "tiktok-director-skillpack-v2.zip!/knowledge/README.md",
+      "bytes": 2539,
+      "sha256": "befad2fc5db8aa8f547fa23af23da712591787bfb3913273ff711916f8f09602",
+      "category": "knowledge",
+      "lines": 43
+    },
+    {
+      "path": "tiktok-director-skillpack-v2.zip!/knowledge/video-briefs/01-mang-no-ron-hoc-nhu-the-nao.md",
+      "bytes": 1589,
+      "sha256": "3eeaddf2d7aa440cc9303869571658b86398baeb3c1d4d80930c721f0a56bafe",
+      "category": "knowledge",
+      "lines": 16
+    },
+    {
+      "path": "tiktok-director-skillpack-v2.zip!/knowledge/video-briefs/02-3-loi-khien-ai-hoc-lech.md",
+      "bytes": 1663,
+      "sha256": "76c6d695a29c82f5fabb2f355decc06d66a17fd6735d1c2aa93c43528a10f0f7",
+      "category": "knowledge",
+      "lines": 17
+    },
+    {
+      "path": "tiktok-director-skillpack-v2.zip!/knowledge/video-briefs/03-cnn-rnn-transformer-khac-nhau.md",
+      "bytes": 1724,
+      "sha256": "0797fdf21a4ae457c70fac758217f71ed5f592d1385848d63ced1e82cb92f51d",
+      "category": "knowledge",
+      "lines": 17
+    },
+    {
+      "path": "tiktok-director-skillpack-v2.zip!/knowledge/video-briefs/04-hoi-dap-workflow-ai-agent.md",
+      "bytes": 1636,
+      "sha256": "fe5e530e7bd4121f8bb9a71522969d4dc4138b26e27e02149f9bc73f9dae806d",
+      "category": "knowledge",
+      "lines": 16
+    },
+    {
+      "path": "tiktok-director-skillpack-v2.zip!/knowledge/video-briefs/05-mot-ngay-lam-viec-cua-ai-agent-kho.md",
+      "bytes": 1753,
+      "sha256": "de71110e0704d64d4e8c3f285446b1e11aac277f2f8a3eeab3cc52f18266dafa",
+      "category": "knowledge",
+      "lines": 17
+    },
+    {
+      "path": "tiktok-director-skillpack-v2.zip!/knowledge/video-briefs/06-5-nguyen-tac-giao-viec-cho-ai-agent.md",
+      "bytes": 1717,
+      "sha256": "e104dd0f56fd2b86ab9b1d272e6cdacb7f30eca87416b4413a2ddfc819117950",
+      "category": "knowledge",
+      "lines": 19
+    },
+    {
+      "path": "tiktok-director-skillpack-v2.zip!/knowledge-v2/brief-template-v2.md",
+      "bytes": 1922,
+      "sha256": "7b53bb039757d007abbdfb343d3a6d0b1d9a5a482b1d9ce227054010790e42c1",
+      "category": "knowledge",
+      "lines": 27
+    },
+    {
+      "path": "tiktok-director-skillpack-v2.zip!/knowledge-v2/video-briefs/01-mang-no-ron-hoc-nhu-the-nao.md",
+      "bytes": 1910,
+      "sha256": "1fa226dacd934c554059837e437191f368020f711cfc1b70a008663ebf4a56e0",
+      "category": "knowledge",
+      "lines": 26
+    },
+    {
+      "path": "tiktok-director-skillpack-v2.zip!/knowledge-v2/video-briefs/02-3-loi-khien-ai-hoc-lech.md",
+      "bytes": 1988,
+      "sha256": "8d136687174eadf1a177937c24f6af7c30b8ecf4433b27d80d01e4564212a17f",
+      "category": "knowledge",
+      "lines": 27
+    },
+    {
+      "path": "tiktok-director-skillpack-v2.zip!/knowledge-v2/video-briefs/03-cnn-rnn-transformer-khac-nhau.md",
+      "bytes": 2022,
+      "sha256": "b42878c5c0546958d0c4e84a265d83ab43369137c0b24d400208396ae2c99304",
+      "category": "knowledge",
+      "lines": 28
+    },
+    {
+      "path": "tiktok-director-skillpack-v2.zip!/knowledge-v2/video-briefs/04-hoi-dap-workflow-ai-agent.md",
+      "bytes": 2061,
+      "sha256": "f19ff45c5b55bd18dfeeafb743a620aee1501716b94e5b8f56ea51cc1fcd5af1",
+      "category": "knowledge",
+      "lines": 26
+    },
+    {
+      "path": "tiktok-director-skillpack-v2.zip!/knowledge-v2/video-briefs/05-mot-ngay-lam-viec-cua-ai-agent-kho.md",
+      "bytes": 2278,
+      "sha256": "99c16c2f803cec53a58dcf493b5fee4971d77c7b5f2ac6875684c44fee98b8e0",
+      "category": "knowledge",
+      "lines": 27
+    },
+    {
+      "path": "tiktok-director-skillpack-v2.zip!/knowledge-v2/video-briefs/06-5-nguyen-tac-giao-viec-cho-ai-agent.md",
+      "bytes": 2372,
+      "sha256": "f6d955c5b743eb92b6c7727e137f36bdd26d59593bd2552c2d2cd279c7dbeeae",
+      "category": "knowledge",
+      "lines": 29
+    },
+    {
+      "path": "tiktok-director-skillpack-v2.zip!/director-studio-app-v2/convex/schema.ts",
+      "bytes": 3346,
+      "sha256": "0da32751e0cfc1ebad82cc838e184dceb7d2c5a0ade5135719a762c1a6073530",
+      "category": "source",
+      "lines": 119
+    },
+    {
+      "path": "tiktok-director-skillpack-v2.zip!/director-studio-app-v2/convex/app.ts",
+      "bytes": 16140,
+      "sha256": "98aba6e2cbf6a6c9326f71aa80dabd5bc7a7a996d6bbe17451c8af19c115b0aa",
+      "category": "source",
+      "lines": 491
+    },
+    {
+      "path": "tiktok-director-skillpack-v2.zip!/director-studio-app-v2/src/App.tsx",
+      "bytes": 127752,
+      "sha256": "bce13bd95c4ce636e01d9175abadfa69e77172c9b1f9eac934e733bda481051f",
+      "category": "source",
+      "lines": 2612
+    },
+    {
+      "path": "tiktok-director-skillpack-v2.zip!/director-studio-app-v2/src/styles.css",
+      "bytes": 18994,
+      "sha256": "0785995ce416f08685f9385df3a710fbff5088a5d538acad88fbdfe83165000c",
+      "category": "source",
+      "lines": 978
+    },
+    {
+      "path": "tiktok-director-skillpack-v2.zip!/director-studio-app-v2/README.md",
+      "bytes": 1494,
+      "sha256": "a00461887b807f7dcc5ddc6454c33281d3fc17066b18b707b170d1923c40469d",
+      "category": "knowledge",
+      "lines": 17
+    },
+    {
+      "path": "tiktok-director-skillpack-v2.zip!/tiktok-director-skill/SKILL.md",
+      "bytes": 17185,
+      "sha256": "7b86a535a2a707e83a6409c0164e50387ccdf4b15ff783d6931068134174c004",
+      "category": "knowledge",
+      "lines": 219
+    },
+    {
+      "path": "tiktok-director-skillpack-v2.zip!/tiktok-director-skill/README.md",
+      "bytes": 1221,
+      "sha256": "a78bc4096ee2196e8faa505f7370a13e2398b2d3a2941d33f8b82103052fe5c7",
+      "category": "knowledge",
+      "lines": 18
+    },
+    {
+      "path": "tiktok-director-skillpack-v2.zip!/tiktok-director-skill/references/loi-doc-phu-de-mix.md",
+      "bytes": 4310,
+      "sha256": "238feecd2d6716f3bb22ba95fec63f9673f80078f0a055ce8b210da1ceef4d48",
+      "category": "knowledge",
+      "lines": 79
+    },
+    {
+      "path": "tiktok-director-skillpack-v2.zip!/tiktok-director-skill/references/capcut-workflow.md",
+      "bytes": 1900,
+      "sha256": "bad8c2543f81b61e4ab446d32854a1ef7f6a398c2e51b20ed8c3dd0cd1b8f8b4",
+      "category": "knowledge",
+      "lines": 30
+    },
+    {
+      "path": "tiktok-director-skillpack-v2.zip!/tiktok-director-skill/references/san-xuat-dien-anh.md",
+      "bytes": 5608,
+      "sha256": "5e69869e4f5ed16af895798b0d8c600674f03eda6ae04829c634aebab271df6c",
+      "category": "knowledge",
+      "lines": 71
+    },
+    {
+      "path": "tiktok-director-skillpack-v2.zip!/tiktok-director-skill/references/character-swap.md",
+      "bytes": 1433,
+      "sha256": "b3fc8165de191f2bbab8878b0b174484a3c2187057987b00fb71a49ee0cffcef",
+      "category": "knowledge",
+      "lines": 18
+    },
+    {
+      "path": "tiktok-director-skillpack-v2.zip!/tiktok-director-skill/shot-list-30-keyframes.md",
+      "bytes": 13730,
+      "sha256": "7c984f5aa9e8fd6c113f5945b05aa1d85140e7c5f042520c8d34d11f3c65c003",
+      "category": "knowledge",
+      "lines": 335
+    },
+    {
+      "path": "tiktok-director-skillpack.zip",
+      "bytes": 58229,
+      "sha256": "54f7142b5d7bdcbd0f1781856b366aedf08e26e1938bd700d1f0339c7459e30d",
+      "category": "archive",
+      "lines": null
+    },
+    {
+      "path": "tiktok-director-skillpack.zip!/TONG-HOP.md",
+      "bytes": 1823,
+      "sha256": "5968e2d7a6ce5445bef14ca8391c84b3f223e656bd76931df6e40f1bc3ea23cc",
+      "category": "knowledge",
+      "lines": 25
+    },
+    {
+      "path": "tiktok-director-skillpack.zip!/tiktok-director-skill/SKILL.md",
+      "bytes": 17185,
+      "sha256": "7b86a535a2a707e83a6409c0164e50387ccdf4b15ff783d6931068134174c004",
+      "category": "knowledge",
+      "lines": 219
+    },
+    {
+      "path": "tiktok-director-skillpack.zip!/tiktok-director-skill/README.md",
+      "bytes": 1221,
+      "sha256": "a78bc4096ee2196e8faa505f7370a13e2398b2d3a2941d33f8b82103052fe5c7",
+      "category": "knowledge",
+      "lines": 18
+    },
+    {
+      "path": "tiktok-director-skillpack.zip!/tiktok-director-skill/references/loi-doc-phu-de-mix.md",
+      "bytes": 4310,
+      "sha256": "238feecd2d6716f3bb22ba95fec63f9673f80078f0a055ce8b210da1ceef4d48",
+      "category": "knowledge",
+      "lines": 79
+    },
+    {
+      "path": "tiktok-director-skillpack.zip!/tiktok-director-skill/references/capcut-workflow.md",
+      "bytes": 1900,
+      "sha256": "bad8c2543f81b61e4ab446d32854a1ef7f6a398c2e51b20ed8c3dd0cd1b8f8b4",
+      "category": "knowledge",
+      "lines": 30
+    },
+    {
+      "path": "tiktok-director-skillpack.zip!/tiktok-director-skill/references/san-xuat-dien-anh.md",
+      "bytes": 5608,
+      "sha256": "5e69869e4f5ed16af895798b0d8c600674f03eda6ae04829c634aebab271df6c",
+      "category": "knowledge",
+      "lines": 71
+    },
+    {
+      "path": "tiktok-director-skillpack.zip!/tiktok-director-skill/references/character-swap.md",
+      "bytes": 1433,
+      "sha256": "b3fc8165de191f2bbab8878b0b174484a3c2187057987b00fb71a49ee0cffcef",
+      "category": "knowledge",
+      "lines": 18
+    },
+    {
+      "path": "tiktok-director-skillpack.zip!/tiktok-director-skill/shot-list-30-keyframes.md",
+      "bytes": 13730,
+      "sha256": "7c984f5aa9e8fd6c113f5945b05aa1d85140e7c5f042520c8d34d11f3c65c003",
+      "category": "knowledge",
+      "lines": 335
+    },
+    {
+      "path": "tiktok-director-skillpack.zip!/director-studio-app/convex/schema.ts",
+      "bytes": 2436,
+      "sha256": "23721027af5895d12d5c43866b6ad51ba546802488c5ca513f44232c784249e7",
+      "category": "source",
+      "lines": 99
+    },
+    {
+      "path": "tiktok-director-skillpack.zip!/director-studio-app/convex/app.ts",
+      "bytes": 9663,
+      "sha256": "1cb0e463f6791b359f0d993ee42761a0927bc52af10e5fc37b9f4c5baf95d720",
+      "category": "source",
+      "lines": 297
+    },
+    {
+      "path": "tiktok-director-skillpack.zip!/director-studio-app/src/App.tsx",
+      "bytes": 85945,
+      "sha256": "747c519cc9b6d9d8c73c9b682f4fbc9cdee6e5be2d0ccc28e2a92d5459e02c1c",
+      "category": "source",
+      "lines": 1803
+    },
+    {
+      "path": "tiktok-director-skillpack.zip!/director-studio-app/src/styles.css",
+      "bytes": 17196,
+      "sha256": "38a047f323309348324a40aca9a5c9c337508a4c56889100dc0fa9d1bd691ada",
+      "category": "source",
+      "lines": 882
+    },
+    {
+      "path": "tiktok-director-skillpack.zip!/director-studio-app/README.md",
+      "bytes": 1965,
+      "sha256": "826ecdd4f040b8c604d220a56c85dd97164b9f8c6bc828454fca83db361482d1",
+      "category": "knowledge",
+      "lines": 31
+    },
+    {
+      "path": "tiktok-viral-video-skill.zip",
+      "bytes": 13508,
+      "sha256": "17ead4566220da1c696fe080189013f334cc80e4751d8e74ff03a8bcc9246547",
+      "category": "archive",
+      "lines": null
+    },
+    {
+      "path": "tiktok-viral-video-skill.zip!/tiktok-viral-video/SKILL.md",
+      "bytes": 15536,
+      "sha256": "78483f66b9de610f3110ce45be4dc7523318a77507fa2aca10ee7e2c465a804d",
+      "category": "knowledge",
+      "lines": 195
+    },
+    {
+      "path": "tiktok-viral-video-skill.zip!/tiktok-viral-video/references/capcut-workflow.md",
+      "bytes": 1548,
+      "sha256": "d5abe0dc62373c3342480f94a787b9ee7c958604f534acbfae94c6472c6d2598",
+      "category": "knowledge",
+      "lines": 15
+    },
+    {
+      "path": "tiktok-viral-video-skill.zip!/tiktok-viral-video/references/character-swap.md",
+      "bytes": 1405,
+      "sha256": "f400275f5ef2490780649b794d3ac9a572377abc0f39b6256eba009f833c83b1",
+      "category": "knowledge",
+      "lines": 11
+    },
+    {
+      "path": "tiktok-viral-video-skill.zip!/tiktok-viral-video/references/loi-doc-phu-de-mix.md",
+      "bytes": 3121,
+      "sha256": "46d92aaa1a6cb9e4f042c9ab7e5f08748601ac79e221f222481af7f2f61c9c0a",
+      "category": "knowledge",
+      "lines": 23
+    },
+    {
+      "path": "tiktok-viral-video-skill.zip!/tiktok-viral-video/references/san-xuat-dien-anh.md",
+      "bytes": 3338,
+      "sha256": "43f863322662456ff5c5fb4acbbe03843e6d5b4fd841b19b57b839b203a4c14e",
+      "category": "knowledge",
+      "lines": 44
+    },
+    {
+      "path": "TikTok_Video_Maker.zip",
+      "bytes": 466027,
+      "sha256": "9d7eb9b0bdba6851f65fee427be754e43a55b59d7860e623302e1f78942659b0",
+      "category": "archive",
+      "lines": null
+    },
+    {
+      "path": "TikTok_Video_Maker.zip!/.type/integrations.json",
+      "bytes": 40,
+      "sha256": "217dfcdd5d6ed0090768ea6691dfc02ac9c557cb1f1b921b7264e96a65cb1e65",
+      "category": "platform-config",
+      "lines": 4
+    },
+    {
+      "path": "TikTok_Video_Maker.zip!/.type/viewer-policy.json",
+      "bytes": 52,
+      "sha256": "d6a3dc5712d8208d14830ec90ac00667a8f5607fb64983c0c8330d2020a0ff45",
+      "category": "platform-config",
+      "lines": 4
+    },
+    {
+      "path": "TikTok_Video_Maker.zip!/bun.lock",
+      "bytes": 36541,
+      "sha256": "685594a90955f793701dc687a1ea07db374735f3c151984b9d29d71866315e49",
+      "category": "dependency-lock",
+      "lines": 318
+    },
+    {
+      "path": "TikTok_Video_Maker.zip!/convex/_generated/api.d.ts",
+      "bytes": 1299,
+      "sha256": "2ddb2761adfac39b33c700dd4e717a647edb4df21150c3adcf05d0703da61456",
+      "category": "generated-bindings",
+      "lines": 38
+    },
+    {
+      "path": "TikTok_Video_Maker.zip!/convex/_generated/api.js",
+      "bytes": 480,
+      "sha256": "f513058549831e85376f8d19cafaf2a4a770b6eb1b859fb371141f2c9dec0d70",
+      "category": "generated-bindings",
+      "lines": 23
+    },
+    {
+      "path": "TikTok_Video_Maker.zip!/convex/_generated/dataModel.d.ts",
+      "bytes": 1736,
+      "sha256": "db177073d16a4393c7a96bcdc3a2a904e88c2432d54d138ca7715cc431982c17",
+      "category": "generated-bindings",
+      "lines": 60
+    },
+    {
+      "path": "TikTok_Video_Maker.zip!/convex/_generated/server.d.ts",
+      "bytes": 5663,
+      "sha256": "786dd4d1343c1712951d44d9cb493887f0d8b293e028930c4a9c7cc16f06c70e",
+      "category": "generated-bindings",
+      "lines": 145
+    },
+    {
+      "path": "TikTok_Video_Maker.zip!/convex/_generated/server.js",
+      "bytes": 3729,
+      "sha256": "d898c3306539b61b39c6389f6b8352ec315c76746cbdce6bb12fb437e512bef5",
+      "category": "generated-bindings",
+      "lines": 95
+    },
+    {
+      "path": "TikTok_Video_Maker.zip!/convex/app.ts",
+      "bytes": 4890,
+      "sha256": "a5fcb825549f4c76004fc3bc3e4353aa313394b43b0575cc1602da4f174f6799",
+      "category": "source",
+      "lines": 170
+    },
+    {
+      "path": "TikTok_Video_Maker.zip!/convex/auth.config.ts",
+      "bytes": 485,
+      "sha256": "146fd3c3910c0e8e33cd28814b03112965916c8ac3e987656b965b3cd8b1b3dc",
+      "category": "source",
+      "lines": 13
+    },
+    {
+      "path": "TikTok_Video_Maker.zip!/convex/schema.ts",
+      "bytes": 457,
+      "sha256": "d4e106fba80f616a8e45bccda8981393b047f1fe6f5b5e795a1f28ac8af17418",
+      "category": "source",
+      "lines": 15
+    },
+    {
+      "path": "TikTok_Video_Maker.zip!/convex/tsconfig.json",
+      "bytes": 427,
+      "sha256": "372947b6ea2f705d758ee11eba9716a1be0f06262aa2afb5bfd253f2c24b568b",
+      "category": "source",
+      "lines": 18
+    },
+    {
+      "path": "TikTok_Video_Maker.zip!/convex/typeAppData.ts",
+      "bytes": 5686,
+      "sha256": "c96887886999a1f793a29aa5f9667536a87d0a9db4b8984aad750ee416759094",
+      "category": "source",
+      "lines": 197
+    },
+    {
+      "path": "TikTok_Video_Maker.zip!/convex/typeFunctions.ts",
+      "bytes": 10599,
+      "sha256": "016732ea3ab7c6cb0d9712881b4f057df9ee18b89cc3f2731b7aa32f584aed80",
+      "category": "source",
+      "lines": 314
+    },
+    {
+      "path": "TikTok_Video_Maker.zip!/convex/typePlatform.ts",
+      "bytes": 6630,
+      "sha256": "e4dfc5112f15fca3116a1eab0d9a6f4513820f53df6b06bca34b91ec925dc6ab",
+      "category": "source",
+      "lines": 209
+    },
+    {
+      "path": "TikTok_Video_Maker.zip!/convex/typeSchema.ts",
+      "bytes": 808,
+      "sha256": "d004acec26b85edb1ad5f39d66fa4195c573988c21aad1ee5f7625b543116618",
+      "category": "source",
+      "lines": 25
+    },
+    {
+      "path": "TikTok_Video_Maker.zip!/convex/validators.ts",
+      "bytes": 684,
+      "sha256": "956a86f3acbe4044b9b445627f090233cd293f313ad53a40df24ffbae99cdc73",
+      "category": "source",
+      "lines": 24
+    },
+    {
+      "path": "TikTok_Video_Maker.zip!/dist/assets/index-BUjYa2Y3.js",
+      "bytes": 291968,
+      "sha256": "66026a258ba0b2808f002c94526094f88573815c858cd084c77a9477efc10956",
+      "category": "compiled-artifact",
+      "lines": 60
+    },
+    {
+      "path": "TikTok_Video_Maker.zip!/dist/assets/index-Dn8xgPVr.css",
+      "bytes": 11582,
+      "sha256": "6bc0240f4820bad4828d9656e27b48b817f31c14891ece62169ef442d0f6bf31",
+      "category": "compiled-artifact",
+      "lines": 1
+    },
+    {
+      "path": "TikTok_Video_Maker.zip!/dist/index.html",
+      "bytes": 403,
+      "sha256": "449f211cc3bf7d05e88ad472480eae82fd2d229573314309f2c5e6b81b9f9762",
+      "category": "compiled-artifact",
+      "lines": 13
+    },
+    {
+      "path": "TikTok_Video_Maker.zip!/index.html",
+      "bytes": 303,
+      "sha256": "00612d2f6250435aafafd53a9398cf189ea3debe0e04662bd9076dd35995fc03",
+      "category": "source",
+      "lines": 12
+    },
+    {
+      "path": "TikTok_Video_Maker.zip!/package.json",
+      "bytes": 420,
+      "sha256": "d585805792491aa8feb9a26979f1b9547cc34b60fe2e37d64ddfa635c442e212",
+      "category": "source",
+      "lines": 21
+    },
+    {
+      "path": "TikTok_Video_Maker.zip!/src/App.tsx",
+      "bytes": 40432,
+      "sha256": "659f817fdc95c4857e360b3d8d3150808bbc368e20e7c8c85aa1f70f60977a93",
+      "category": "source",
+      "lines": 1159
+    },
+    {
+      "path": "TikTok_Video_Maker.zip!/src/main.tsx",
+      "bytes": 1506,
+      "sha256": "7c5f09febff35ca55c17fcff10f9530994e62dac9451cfc45cf46feaf749a4bd",
+      "category": "source",
+      "lines": 41
+    },
+    {
+      "path": "TikTok_Video_Maker.zip!/src/render.ts",
+      "bytes": 8462,
+      "sha256": "7e5b21f0d7bfce4e9c75e85bddea1363f348947d396244501efc1c1ac80f4e4f",
+      "category": "source",
+      "lines": 269
+    },
+    {
+      "path": "TikTok_Video_Maker.zip!/src/styles.css",
+      "bytes": 14892,
+      "sha256": "7115305d3ab237a594ab21f9a30220474f2fb24f3beb658af30c9a19f51a4f64",
+      "category": "source",
+      "lines": 770
+    },
+    {
+      "path": "TikTok_Video_Maker.zip!/src/type.d.ts",
+      "bytes": 3825,
+      "sha256": "4bd62aceefaa7e11315069a677c121b1f76ab5ce3ac5c44fafc8c4f8f93d6965",
+      "category": "source",
+      "lines": 114
+    },
+    {
+      "path": "TikTok_Video_Maker.zip!/src/typeAuth.tsx",
+      "bytes": 6461,
+      "sha256": "8c6d1f24a52458b8f807d9cc584ac8fc6297e3085479c7c9653fd8ef167b9918",
+      "category": "source",
+      "lines": 232
+    },
+    {
+      "path": "TikTok_Video_Maker.zip!/tsconfig.json",
+      "bytes": 376,
+      "sha256": "30abbf26834586ecd5aef987662f31e255b3b315b451ca0d824f55db6a0f63ab",
+      "category": "source",
+      "lines": 16
+    },
+    {
+      "path": "TikTok_Video_Maker.zip!/vite.config.ts",
+      "bytes": 225,
+      "sha256": "3704b62ade1df416565153f4169ea5788ef3b1422f15b2e96bf83c4344f571bc",
+      "category": "source",
+      "lines": 8
+    },
+    {
+      "path": "TikTok_Video_Maker.zip!/.type/app-config.json",
+      "bytes": 844,
+      "sha256": "e7d4671361a6e662fcbcc5744725c4f38ab55f9b7414394519ee884b54f5fabb",
+      "category": "platform-config",
+      "lines": 21
+    },
+    {
+      "path": "mang noron/01-mang-no-ron-hoc-nhu-the-nao.md",
+      "bytes": 1589,
+      "sha256": "3eeaddf2d7aa440cc9303869571658b86398baeb3c1d4d80930c721f0a56bafe",
+      "category": "knowledge",
+      "lines": 16
+    },
+    {
+      "path": "mang noron/02-3-loi-khien-ai-hoc-lech.md",
+      "bytes": 1663,
+      "sha256": "76c6d695a29c82f5fabb2f355decc06d66a17fd6735d1c2aa93c43528a10f0f7",
+      "category": "knowledge",
+      "lines": 17
+    },
+    {
+      "path": "mang noron/03-cnn-rnn-transformer-khac-nhau.md",
+      "bytes": 1724,
+      "sha256": "0797fdf21a4ae457c70fac758217f71ed5f592d1385848d63ced1e82cb92f51d",
+      "category": "knowledge",
+      "lines": 17
+    },
+    {
+      "path": "mang noron/04-hoi-dap-workflow-ai-agent.md",
+      "bytes": 1636,
+      "sha256": "fe5e530e7bd4121f8bb9a71522969d4dc4138b26e27e02149f9bc73f9dae806d",
+      "category": "knowledge",
+      "lines": 16
+    },
+    {
+      "path": "mang noron/05-mot-ngay-lam-viec-cua-ai-agent-kho.md",
+      "bytes": 1753,
+      "sha256": "de71110e0704d64d4e8c3f285446b1e11aac277f2f8a3eeab3cc52f18266dafa",
+      "category": "knowledge",
+      "lines": 17
+    },
+    {
+      "path": "mang noron/06-5-nguyen-tac-giao-viec-cho-ai-agent.md",
+      "bytes": 1717,
+      "sha256": "e104dd0f56fd2b86ab9b1d272e6cdacb7f30eca87416b4413a2ddfc819117950",
+      "category": "knowledge",
+      "lines": 19
+    },
+    {
+      "path": "mang noron/README.md",
+      "bytes": 2539,
+      "sha256": "befad2fc5db8aa8f547fa23af23da712591787bfb3913273ff711916f8f09602",
+      "category": "knowledge",
+      "lines": 43
+    },
+    {
+      "path": "mang noron/SKILL.md",
+      "bytes": 17185,
+      "sha256": "7b86a535a2a707e83a6409c0164e50387ccdf4b15ff783d6931068134174c004",
+      "category": "knowledge",
+      "lines": 219
+    }
+  ]
+}

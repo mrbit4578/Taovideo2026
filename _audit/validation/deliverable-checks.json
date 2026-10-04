@@ -1,0 +1,89 @@
+{
+  "date": "2026-10-03",
+  "source_records": 107,
+  "originals_and_extracted_sources_unchanged": true,
+  "pilot_plan_frames": 2160,
+  "pilot_runtime_seconds": 90,
+  "local_markdown_links_valid": true,
+  "source_probes_confirmed": 6,
+  "director_function_probes_confirmed": 4,
+  "build": {
+    "command": "npm.cmd run build -- --outDir ../validation/build-dist",
+    "result": "passed TypeScript check and Vite build",
+    "artifacts": [
+      {
+        "path": "assets/index-BUjYa2Y3.js",
+        "sha256": "66026a258ba0b2808f002c94526094f88573815c858cd084c77a9477efc10956",
+        "matches_archive_byte_for_byte": true
+      },
+      {
+        "path": "assets/index-Dn8xgPVr.css",
+        "sha256": "6bc0240f4820bad4828d9656e27b48b817f31c14891ece62169ef442d0f6bf31",
+        "matches_archive_byte_for_byte": true
+      },
+      {
+        "path": "index.html",
+        "sha256": "449f211cc3bf7d05e88ad472480eae82fd2d229573314309f2c5e6b81b9f9762",
+        "matches_archive_byte_for_byte": true
+      }
+    ],
+    "dependency_install_note": "npm install --ignore-scripts in isolated copy; original bun.lock retained; byte-identical output confirmed"
+  },
+  "ffmpeg_smoke": {
+    "result": "passed",
+    "scope": "1s synthetic sine signals, null output; syntax/runtime only"
+  },
+  "not_verified": [
+    "live Type session/backend/publication",
+    "generation providers",
+    "film audiovisual quality",
+    "actual provider cost",
+    "current social-platform policies",
+    "missing neural-network source documents and source index"
+  ],
+  "new_director_integration": {
+    "date": "2026-10-03T15:53:36.072Z",
+    "checks": [
+      {
+        "name": "All 12 brief variants parse, v2 frontmatter stays with each heading",
+        "passed": true
+      },
+      {
+        "name": "Six briefs create six real local projects and correctly ordered continuous timelines",
+        "passed": true
+      },
+      {
+        "name": "Imported VERIFIED cannot be forged through a backend mutation",
+        "passed": true
+      },
+      {
+        "name": "Shot edits and claim edits invalidate earlier approvals and QC",
+        "passed": true
+      },
+      {
+        "name": "Invalid scene order, empty board and invalid hook selection are rejected atomically",
+        "passed": true
+      },
+      {
+        "name": "ASS rounds through second/minute rollover and short cues retain positive duration",
+        "passed": true
+      },
+      {
+        "name": "90s standard plan, short inputs and excessive outlines are bounded",
+        "passed": true
+      },
+      {
+        "name": "Raw brief text cannot launder a numeric claim into approved script facts",
+        "passed": true
+      },
+      {
+        "name": "Export pack keeps claim provenance; override retains character and physics constraints",
+        "passed": true
+      },
+      {
+        "name": "Persisted snapshot reloads and deleting a project cascades only its scenes and brief",
+        "passed": true
+      }
+    ]
+  }
+}

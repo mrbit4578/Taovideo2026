@@ -1,0 +1,307 @@
+--- D:\AI\KIEMTIEN ONLINE\taovideo chatgpt\_audit\tiktok-director-skillpack\director-studio-app\convex\app.ts
++++ D:\AI\KIEMTIEN ONLINE\taovideo chatgpt\_audit\tiktok-director-skillpack-v2\director-studio-app-v2\convex\app.ts
+@@ -3,17 +3,24 @@
+ import {
+   briefFields,
+   captionFields,
++  claimStatus,
+   formatType,
+   hookType,
++  knowledgeFields,
+   projectFields,
++  riskLevel,
+   sceneInputFields,
+   timelapseFields,
+ } from "./schema";
+ 
+ const MAX_TEXT = 8000;
++const MAX_RAW = 20000;
+ const MAX_SCENES = 12;
+ const MAX_HOOKS = 20;
+-const MAX_QC = 60;
++const MAX_QC = 80;
++const MAX_CLAIMS = 40;
++const MAX_ANCHORS = 20;
++const MAX_TIME = 4102444800000;
+ 
+ function assertText(value: string, name: string, max = MAX_TEXT) {
+   if (typeof value !== "string" || value.length > max) {
+@@ -48,6 +55,17 @@
+   note: string;
+ };
+ 
++type Knowledge = {
++  series: string;
++  briefNo: string;
++  source: { docId: string; section: string; anchors: string[] };
++  claims: { text: string; anchors: string[]; status: "verified" | "unverified" | "editorial" }[];
++  risk: { accuracy: "low" | "medium" | "high"; notes: string };
++  outline: { order: number; text: string }[];
++  continuity: string;
++  raw: string;
++};
++
+ function validateScene(s: SceneInput) {
+   assertNum(s.order, "Thứ tự cảnh", 0, MAX_SCENES);
+   assertNum(s.startSec, "Giây bắt đầu", 0, 600);
+@@ -79,6 +97,40 @@
+ function validateTimelapse(t: { boiCanh: string; vatNeo: string; kienTruc: string; chu: string }) {
+   for (const key of ["boiCanh", "vatNeo", "kienTruc", "chu"] as const) assertText(t[key], key);
+ }
++function validateHooks(hooks: { type: string; text: string }[]) {
++  if (hooks.length > MAX_HOOKS) throw new Error(`Tối đa ${MAX_HOOKS} hook`);
++  hooks.forEach((h) => assertText(h.text, "Hook", 600));
++}
++function validateAnchors(anchors: string[], name: string) {
++  if (anchors.length > MAX_ANCHORS) throw new Error(`${name}: quá nhiều anchor`);
++  anchors.forEach((a) => assertText(a, name, 40));
++}
++function validateKnowledge(k: Partial<Knowledge>) {
++  if (k.series !== undefined) assertText(k.series, "Series", 120);
++  if (k.briefNo !== undefined) assertText(k.briefNo, "Mã brief", 20);
++  if (k.source) {
++    assertText(k.source.docId, "doc_id", 120);
++    assertText(k.source.section, "Mục nguồn", 120);
++    validateAnchors(k.source.anchors, "Anchor nguồn");
++  }
++  if (k.claims) {
++    if (k.claims.length > MAX_CLAIMS) throw new Error(`Tối đa ${MAX_CLAIMS} claim`);
++    k.claims.forEach((c) => {
++      assertText(c.text, "Claim", 1000);
++      validateAnchors(c.anchors, "Anchor claim");
++    });
++  }
++  if (k.risk) assertText(k.risk.notes, "Ghi chú rủi ro", 2000);
++  if (k.outline) {
++    if (k.outline.length > MAX_SCENES + 2) throw new Error("Dàn ý quá dài");
++    k.outline.forEach((o) => {
++      assertNum(o.order, "Thứ tự ý", 0, MAX_SCENES + 2);
++      assertText(o.text, "Ý nội dung", 1500);
++    });
++  }
++  if (k.continuity !== undefined) assertText(k.continuity, "Continuity", 4000);
++  if (k.raw !== undefined) assertText(k.raw, "Brief gốc", MAX_RAW);
++}
+ 
+ const sceneDoc = v.object({
+   _id: v.id("scenes"),
+@@ -90,6 +142,23 @@
+   _id: v.id("projects"),
+   _creationTime: v.number(),
+   ...projectFields,
++});
++const briefDoc = v.object({
++  _id: v.id("briefs"),
++  _creationTime: v.number(),
++  projectId: v.id("projects"),
++  ...knowledgeFields,
++});
++
++const emptyKnowledge = (): Knowledge => ({
++  series: "",
++  briefNo: "",
++  source: { docId: "", section: "", anchors: [] },
++  claims: [],
++  risk: { accuracy: "medium", notes: "" },
++  outline: [],
++  continuity: "",
++  raw: "",
+ });
+ 
+ export const status = query({
+@@ -135,6 +204,43 @@
+   },
+ });
+ 
++export const getBrief = query({
++  args: { projectId: v.id("projects") },
++  returns: v.union(v.null(), briefDoc),
++  handler: async (ctx, { projectId }) => {
++    const brief = await ctx.db
++      .query("briefs")
++      .withIndex("by_project", (q) => q.eq("projectId", projectId))
++      .unique();
++    return brief ?? null;
++  },
++});
++
++export const listBriefs = query({
++  args: {},
++  returns: v.array(
++    v.object({
++      projectId: v.id("projects"),
++      series: v.string(),
++      briefNo: v.string(),
++      accuracy: riskLevel,
++      verified: v.number(),
++      unverified: v.number(),
++    }),
++  ),
++  handler: async (ctx) => {
++    const rows = await ctx.db.query("briefs").take(100);
++    return rows.map((b) => ({
++      projectId: b.projectId,
++      series: b.series,
++      briefNo: b.briefNo,
++      accuracy: b.risk.accuracy,
++      verified: b.claims.filter((c) => c.status === "verified").length,
++      unverified: b.claims.filter((c) => c.status !== "verified").length,
++    }));
++  },
++});
++
+ export const createProject = mutation({
+   args: {
+     title: v.string(),
+@@ -149,7 +255,7 @@
+     assertText(args.title, "Tiêu đề", 200);
+     if (!args.title.trim()) throw new Error("Cần tiêu đề dự án");
+     assertNum(args.durationSec, "Thời lượng", 5, 600);
+-    assertNum(args.now, "Thời gian", 0, 4102444800000);
++    assertNum(args.now, "Thời gian", 0, MAX_TIME);
+     if (args.scenes.length > MAX_SCENES) throw new Error(`Tối đa ${MAX_SCENES} cảnh`);
+     args.scenes.forEach(validateScene);
+     const timelapse = args.timelapse ?? { boiCanh: "", vatNeo: "", kienTruc: "", chu: "" };
+@@ -176,6 +282,89 @@
+   },
+ });
+ 
++// Knowledge intake: a parsed source brief becomes a project + scenes + claim ledger in one transaction.
++export const createProjectFromBrief = mutation({
++  args: {
++    title: v.string(),
++    durationSec: v.number(),
++    now: v.number(),
++    brief: v.object(briefFields),
++    hooks: v.array(v.object({ type: hookType, text: v.string() })),
++    selectedHook: v.number(),
++    characterBible: v.string(),
++    scenes: v.array(v.object(sceneInputFields)),
++    knowledge: v.object(knowledgeFields),
++  },
++  returns: v.id("projects"),
++  handler: async (ctx, args) => {
++    assertText(args.title, "Tiêu đề", 200);
++    if (!args.title.trim()) throw new Error("Cần tiêu đề dự án");
++    assertNum(args.durationSec, "Thời lượng", 5, 600);
++    assertNum(args.now, "Thời gian", 0, MAX_TIME);
++    validateBrief(args.brief);
++    validateHooks(args.hooks);
++    assertNum(args.selectedHook, "Hook được chọn", -1, MAX_HOOKS);
++    assertText(args.characterBible, "Character bible");
++    if (args.scenes.length > MAX_SCENES) throw new Error(`Tối đa ${MAX_SCENES} cảnh`);
++    args.scenes.forEach(validateScene);
++    validateKnowledge(args.knowledge);
++
++    const projectId = await ctx.db.insert("projects", {
++      title: args.title.trim(),
++      format: "standard",
++      durationSec: args.durationSec,
++      brief: args.brief,
++      hooks: args.hooks,
++      selectedHook: args.selectedHook,
++      characterBible: args.characterBible,
++      timelapse: { boiCanh: "", vatNeo: "", kienTruc: "", chu: "" },
++      caption: { hook: "", body: "", cta: args.brief.cta, hashtags: "" },
++      qc: [],
++      createdAt: args.now,
++      updatedAt: args.now,
++    });
++    for (const scene of args.scenes) {
++      await ctx.db.insert("scenes", { projectId, ...scene });
++    }
++    await ctx.db.insert("briefs", { projectId, ...args.knowledge });
++    return projectId;
++  },
++});
++
++export const upsertBrief = mutation({
++  args: {
++    projectId: v.id("projects"),
++    now: v.number(),
++    patch: v.object({
++      series: v.optional(v.string()),
++      briefNo: v.optional(v.string()),
++      source: v.optional(knowledgeFields.source),
++      claims: v.optional(knowledgeFields.claims),
++      risk: v.optional(knowledgeFields.risk),
++      outline: v.optional(knowledgeFields.outline),
++      continuity: v.optional(v.string()),
++    }),
++  },
++  returns: v.null(),
++  handler: async (ctx, { projectId, patch, now }) => {
++    const project = await ctx.db.get(projectId);
++    if (!project) throw new Error("Không tìm thấy dự án");
++    assertNum(now, "Thời gian", 0, MAX_TIME);
++    validateKnowledge(patch);
++    const existing = await ctx.db
++      .query("briefs")
++      .withIndex("by_project", (q) => q.eq("projectId", projectId))
++      .unique();
++    if (existing) {
++      await ctx.db.patch(existing._id, patch);
++    } else {
++      await ctx.db.insert("briefs", { projectId, ...emptyKnowledge(), ...patch });
++    }
++    await ctx.db.patch(projectId, { updatedAt: now });
++    return null;
++  },
++});
++
+ export const updateProject = mutation({
+   args: {
+     projectId: v.id("projects"),
+@@ -195,16 +384,13 @@
+   handler: async (ctx, { projectId, patch, now }) => {
+     const project = await ctx.db.get(projectId);
+     if (!project) throw new Error("Không tìm thấy dự án");
+-    assertNum(now, "Thời gian", 0, 4102444800000);
++    assertNum(now, "Thời gian", 0, MAX_TIME);
+     if (patch.title !== undefined) {
+       assertText(patch.title, "Tiêu đề", 200);
+       if (!patch.title.trim()) throw new Error("Tiêu đề không được rỗng");
+     }
+     if (patch.brief) validateBrief(patch.brief);
+-    if (patch.hooks) {
+-      if (patch.hooks.length > MAX_HOOKS) throw new Error(`Tối đa ${MAX_HOOKS} hook`);
+-      patch.hooks.forEach((h) => assertText(h.text, "Hook", 600));
+-    }
++    if (patch.hooks) validateHooks(patch.hooks);
+     if (patch.selectedHook !== undefined) {
+       assertNum(patch.selectedHook, "Hook được chọn", -1, MAX_HOOKS);
+     }
+@@ -247,7 +433,7 @@
+   handler: async (ctx, { sceneId, patch, now }) => {
+     const scene = await ctx.db.get(sceneId);
+     if (!scene) throw new Error("Không tìm thấy cảnh");
+-    assertNum(now, "Thời gian", 0, 4102444800000);
++    assertNum(now, "Thời gian", 0, MAX_TIME);
+     const merged = { ...scene, ...patch };
+     validateScene(merged);
+     await ctx.db.patch(sceneId, patch);
+@@ -266,7 +452,7 @@
+   handler: async (ctx, { projectId, scenes, now }) => {
+     const project = await ctx.db.get(projectId);
+     if (!project) throw new Error("Không tìm thấy dự án");
+-    assertNum(now, "Thời gian", 0, 4102444800000);
++    assertNum(now, "Thời gian", 0, MAX_TIME);
+     if (scenes.length > MAX_SCENES) throw new Error(`Tối đa ${MAX_SCENES} cảnh`);
+     scenes.forEach(validateScene);
+     const existing = await ctx.db
+@@ -291,7 +477,15 @@
+       .withIndex("by_project", (q) => q.eq("projectId", projectId))
+       .take(50);
+     for (const s of existing) await ctx.db.delete(s._id);
++    const briefs = await ctx.db
++      .query("briefs")
++      .withIndex("by_project", (q) => q.eq("projectId", projectId))
++      .take(5);
++    for (const b of briefs) await ctx.db.delete(b._id);
+     await ctx.db.delete(projectId);
+     return null;
+   },
+ });
++
++// Keep validators referenced so schema and functions stay in lockstep.
++void claimStatus;

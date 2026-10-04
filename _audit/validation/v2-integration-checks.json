@@ -1,0 +1,86 @@
+{
+  "source_containers_unchanged": true,
+  "source_members_preserved": 35,
+  "rar_all_eight_duplicate": true,
+  "integrated_project": "D:\\AI\\KIEMTIEN ONLINE\\taovideo chatgpt\\apps\\director-studio",
+  "build": {
+    "command": "npm.cmd run build",
+    "result": "passed (observed exit 0)",
+    "artifacts": [
+      {
+        "path": "dist/assets/index-BGaq1NtK.css",
+        "bytes": 15358,
+        "sha256": "36e27c6a1611fb894363226ec6d687c225d6a8e90ce1a614ae7688fce919817e"
+      },
+      {
+        "path": "dist/assets/index-DuGER0zl.js",
+        "bytes": 393497,
+        "sha256": "ae55ae3d4b0cbd097cf698ac38a8ce5f8d217ee135293b1566b18f84d01ae554"
+      },
+      {
+        "path": "dist/index.html",
+        "bytes": 417,
+        "sha256": "8f950f36845ae50f725ef463523cfa94e3a15f70254a8ffc04e41c78a3036c07"
+      }
+    ]
+  },
+  "test_groups": [
+    {
+      "name": "All 12 brief variants parse, v2 frontmatter stays with each heading",
+      "passed": true
+    },
+    {
+      "name": "Six briefs create six real local projects and correctly ordered continuous timelines",
+      "passed": true
+    },
+    {
+      "name": "Imported VERIFIED cannot be forged through a backend mutation",
+      "passed": true
+    },
+    {
+      "name": "Shot edits and claim edits invalidate earlier approvals and QC",
+      "passed": true
+    },
+    {
+      "name": "Invalid scene order, empty board and invalid hook selection are rejected atomically",
+      "passed": true
+    },
+    {
+      "name": "ASS rounds through second/minute rollover and short cues retain positive duration",
+      "passed": true
+    },
+    {
+      "name": "90s standard plan, short inputs and excessive outlines are bounded",
+      "passed": true
+    },
+    {
+      "name": "Raw brief text cannot launder a numeric claim into approved script facts",
+      "passed": true
+    },
+    {
+      "name": "Export pack keeps claim provenance; override retains character and physics constraints",
+      "passed": true
+    },
+    {
+      "name": "Persisted snapshot reloads and deleting a project cascades only its scenes and brief",
+      "passed": true
+    }
+  ],
+  "browser": {
+    "observed": "six projects, two series; brief 06 90s/eight scenes; VERIFIED disabled without evidence; reload persistence; console error list empty",
+    "screenshot": "D:\\AI\\KIEMTIEN ONLINE\\taovideo chatgpt\\_audit\\validation\\director-v2-preview.jpg",
+    "download_automation": "timeout; not confirmed"
+  },
+  "ffmpeg_xfade_smoke": {
+    "r_frame_rate": "24/1",
+    "duration": "2.000000",
+    "nb_frames": "48"
+  },
+  "limitations": [
+    "no full film/media-provider job",
+    "no full production-pack render",
+    "Type deployment not configured",
+    "source documents/index missing",
+    "local backup restore UI not implemented"
+  ]
+}

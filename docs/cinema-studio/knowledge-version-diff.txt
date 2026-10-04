@@ -1,0 +1,397 @@
+--- archive-v2/tiktok-viral-video/SKILL.md
++++ root-v3/SKILL.md
+@@ -1,13 +1,8 @@
+----
+-name: tiktok-viral-video
+-description: |-
+-  Quy trình tạo video/hình ảnh TikTok viral dạng faceless cho hay (v2): brief, công thức hook, timeline 15-60s, shot list kiểu đạo diễn, keyframe photorealistic 9:16, kiểm tra logic vật lý, lời đọc + phụ đề tiếng Việt, mix beat có ducking, ghép ffmpeg 1080x1920, caption + hashtag, QC và ghi chú đăng bài. Dùng khi hay nói: (1) "tạo cho tôi video/hình ảnh với prompt ...", (2) làm video TikTok/Reels/Shorts dọc, (3) viết kịch bản, hook, shot list, lời thuyết minh hoặc caption TikTok, (4) tạo thumbnail/cover TikTok, (5) video timelapse công trình kiểu Nể phục, (6) dựng video từ asset CapCut (giọng đọc, clip Seedance), (7) đổi nhân vật trong clip (character swap), hoặc bất kỳ việc sản xuất video ngắn nào cho kênh Kiemtien2026.
+----
+-
+-# TikTok Viral Video — Skill tạo video/hình ảnh cho hay (v2)
++# TikTok Viral Video — Skill tạo video/hình ảnh cho hay (v3)
+ 
+ Dùng khi hay ra lệnh dạng "tạo cho tôi video/hình ảnh với prompt ...", mục tiêu đăng TikTok để viral.
+ Nguồn tri thức: `content-playbook-2026.md` + `he-thong-video-faceless-tu-nguon-viral.md` + platform Kiemtien2026.
++Tổng hợp từ toàn bộ quá trình làm việc 2026-09-28 → 2026-10-03: 7 video đã bàn giao (giấc ngủ, người cao tuổi, hóa đơn, iPhone 18 Pro Max v1/v2/v3...), pipeline nhà sản xuất phim (từ phân tích VeoGenie), failover, quy trình tách CapCut.
+ 
+ ## 0. Chạy trên Type (đọc trước)
+ 
+@@ -17,6 +12,15 @@
+ - `snapshot_id` → không có; giữ liên tục bằng **character bible** paste nguyên văn vào mọi prompt (`references/san-xuat-dien-anh.md`).
+ - TTS `/opt/hatch/bin/tts` và file beat `~/workspace/user/files/...` không có sẵn trên Type → hay gửi file giọng đọc (CapCut) và file beat vào thread; Muse/AI dựng bằng ffmpeg trong sandbox.
+ - Ghép, phụ đề, mix tiếng: ffmpeg trong managed sandbox, upload MP4 thành phẩm vào thread.
++
++## 0b. Cách làm việc với hay (quy ước đã chốt)
++
++- **hay bắn task mới = trả lời câu hỏi cũ.** Không hỏi lại, làm luôn task mới.
++- Báo cáo **ngắn gọn** bằng tiếng Việt; quyết định lớn hỏi qua options một chạm.
++- File hay upload kèm "từ giờ" = **default bền vững** — ghi nhớ ngay trong ngày.
++- **Không tự ý** đăng bài, gửi tin, deploy production Kiemtien2026 — chỉ làm trên bản sao workspace.
++- File bàn giao: **file thật** (không symlink — chat không theo symlink), `chmod 644`, gửi bằng `![tên](sandbox://workspace/your_files/<file>)` đặt trên dòng riêng.
++- Mỗi lần bàn giao video: đính kèm caption + **nhắc bật nhãn nội dung AI** khi đăng.
+ 
+ ## 1. Brief nhanh (tự trả lời trước khi generate)
+ 
+@@ -83,7 +87,7 @@
+ - **Ảnh trước, video sau**: keyframe photorealistic cho mỗi cảnh rồi animate (image-to-video) — chân thực hơn text-to-video thuần.
+ - **Bố cục dọc**: chủ thể ở giữa khung, chừa lề trên/dưới cho caption TikTok và UI (like/comment che bên phải).
+ - **Chuyển động đơn giản**: camera push-in/pull-out chậm, chuyển động nhẹ. Tránh cận mặt động mạnh, bàn tay chi tiết (AI hay biến dạng).
+-- **Không chữ trong ảnh/video AI**: AI render chữ rất xấu — chèn chữ bằng ffmpeg (file `.ass`, xem mục 15).
++- **Không chữ trong ảnh/video AI**: AI render chữ rất xấu — chèn chữ bằng ffmpeg (file `.ass`, xem mục 15). Chữ trên màn hình hay yêu cầu viết rõ trong prompt → chèn vào Label sub, **không** bake vào clip AI.
+ - **Âm thanh**: mô tả mood khớp nội dung.
+ - **Nhất quán**: character bible giữ nhân vật/màu sắc/phong cách xuyên suốt + cho cả series.
+ 
+@@ -126,8 +130,14 @@
+   1. **Over-the-shoulder**: máy quay sau vai → thấy nội dung màn hình (vai/tóc mờ tiền cảnh).
+   2. **Chính diện người xem**: thấy mặt họ nhìn vào màn hình → chỉ thấy LƯNG thiết bị.
+   3. **PiP**: mặt người xem + khung nhỏ ở góc hiện nội dung.
+-- **Khóa hướng màn hình trong prompt**: viết "phone screen facing toward her" — "in front of her" không đủ.
++- **Khóa hướng màn hình trong prompt**: viết "screen facing toward her" — "in front of her" không đủ.
+ - **QC soi logic riêng**: dành một lượt chỉ kiểm tra tay/mắt/vật, đặc biệt **hướng nhìn ↔ hướng màn hình**.
++
++## 7e. Sản phẩm thật — không vẽ lại theo trí nhớ (bài học iPhone 18 Pro Max 2026-10-03)
++
++- Video có sản phẩm thật (điện thoại, xe, máy móc...): **verify hình dáng** qua ảnh hay gửi hoặc image search **trước** khi dựng keyframe. Mô tả chi tiết đặc điểm nhận diện (VD: cụm camera tràn ngang) + đưa ảnh ref vào prompt keyframe.
++- Image-to-video có thể **tự vẽ lại sản phẩm** thành thiết kế khác giữa chừng → kiểm tra frame giữa mỗi clip; sai → retry với motion gần như tĩnh + lệnh giữ nguyên thiết kế; vẫn sai → **Ken Burns từ keyframe đã duyệt** để giữ 100% fidelity.
++- Chữ hay yêu cầu hiện trên màn hình: chèn vào Label sub, không bake vào clip AI.
+ 
+ ## 8. Quy trình thực hiện (mỗi lệnh)
+ 
+@@ -137,9 +147,9 @@
+ 4. **Keyframe** — `generate_image` mỗi cảnh: photorealistic, 9:16, chủ thể giữa khung.
+    ⚠️ **BẮT BUỘC xem lại từng keyframe và kiểm tra logic vật lý (7d) TRƯỚC khi animate.** Cảnh có màn hình: nội dung chỉ nằm trên mặt màn hình, màn hình đối diện người xem.
+ 5. **Animate** — clip động thật (CapCut/Seedance do hay sinh, hoặc công cụ khả dụng); fallback Ken Burns bằng ffmpeg. Bỏ audio AI, upscale lên 1080x1920.
+-   ⚠️ **Trích 1 frame giữa mỗi clip trước khi ghép** — clip biến dạng thì sinh lại, không ghép.
++   ⚠️ **Trích 1 frame giữa mỗi clip trước khi ghép** — clip biến dạng/vẽ sai sản phẩm thì sinh lại, không ghép.
+ 6. **Ghép** — ffmpeg: nối clip → scale/pad 1080x1920 → H.264 CRF 20.
+-7. **Lời đọc + phụ đề + beat** — theo `references/loi-doc-phu-de-mix.md` (mặc định cho mọi video).
++7. **Lời đọc + phụ đề + beat** — theo `references/loi-doc-phu-de-mix.md` (mặc định cho mọi video). Kỷ luật trim: rút gọn lời vừa slot, **giữ nguyên mọi claim/disclaimer**, báo rõ chỗ trim, offer bản đầy đủ.
+ 8. **Caption** — hook + 2–3 câu + CTA + 5–8 hashtag tiếng Việt.
+ 9. **Checklist bàn giao** (mục 9) + QC 4 lượt rồi mới gửi.
+ 
+@@ -154,9 +164,10 @@
+ - [ ] Không dùng lại nhạc/hình/lời của nguồn nào?
+ - [ ] Nội dung AI chân thực → đã ghi chú "cần gắn nhãn AI khi đăng"?
+ - [ ] Caption có từ khóa tự nhiên + hashtag?
+-- [ ] File MP4 1080x1920, ≤100MB?
++- [ ] File MP4 1080x1920, ≤100MB, file thật (không symlink)?
+ - [ ] QC hình: trích frame đầu, giữa, cuối và **ranh giới các cảnh** — bố cục, sub không che chủ thể, không frame trắng/sai cảnh.
+ - [ ] **Logic vật lý**: tay/mắt/vật khớp nhau?
++- [ ] Sản phẩm thật (nếu có): đúng thiết kế trong mọi cảnh?
+ 
+ ## 10. Ghi chú đăng bài (đính kèm mỗi video)
+ 
+@@ -171,7 +182,7 @@
+ 
+ ## 12. Video timelapse công trình (format "Nể phục")
+ 
+-Before → after, 1 góc camera cố định. Skill gốc dùng file `shot-list-30-keyframes.md` (30 keyframe, 8 pha theo % thời lượng, prompt khóa camera + 5 luật sắt) — **file này chưa được tải lên**; nếu hay cần format này, xin hay gửi file để bổ sung vào skill.
++Before → after, 1 góc camera cố định. Đọc `shot-list-30-keyframes.md` trong bộ skill — 30 keyframe kèm prompt điền sẵn, chia 8 pha theo % thời lượng, prompt khóa camera + 5 luật sắt.
+ Hỏi hay 4 ô: [BỐI CẢNH] [VẬT NEO] [KIẾN TRÚC] [CHỮ] + thời lượng (45–60s hay 5 phút).
+ 
+ ## 13. Character Swap
+@@ -187,9 +198,22 @@
+ - Không hứa hẹn thu nhập/lợi nhuận chắc chắn.
+ - Prompt của user giữ nguyên ý — chỉ mở rộng kỹ thuật, không đổi nội dung họ yêu cầu.
+ 
++## 15. Lời đọc + phụ đề (mặc định cho mọi video)
++
++Đọc `references/loi-doc-phu-de-mix.md` ở bước 7 của mọi video.
++
++## 16. Quy trình tách CapCut
++
++Đọc `references/capcut-workflow.md` khi hay sinh asset bằng CapCut.
++
++## 17. Sản xuất kiểu nhà sản xuất phim
++
++Đọc `references/san-xuat-dien-anh.md` cho dự án dài/nhiều cảnh.
++
+ ## Tài liệu tham chiếu (đọc khi cần)
+ 
+-- `references/loi-doc-phu-de-mix.md` — mục 15: lời đọc, phụ đề `.ass`, mix beat + ducking. Đọc ở bước 7 mọi video.
+-- `references/capcut-workflow.md` — mục 16: phân công hay (CapCut) / AI (kịch bản + dựng), handoff contract. Đọc khi hay sinh asset bằng CapCut.
++- `references/loi-doc-phu-de-mix.md` — mục 15: lời đọc, phụ đề `.ass`, mix beat + ducking, kỷ luật trim.
++- `references/capcut-workflow.md` — mục 16: phân công hay (CapCut) / AI (kịch bản + dựng), handoff contract.
+ - `references/san-xuat-dien-anh.md` — mục 17: tiền kỳ/quay/dựng/hậu kỳ, QC 4 lượt, failover.
+-- `references/character-swap.md` — mục 13: đổi nhân vật MiniMax-H3 LoRA.+- `references/character-swap.md` — mục 13: đổi nhân vật MiniMax-H3 LoRA.
++- `shot-list-30-keyframes.md` — mục 12: bảng 30 keyframe timelapse công trình.
+--- archive-v2/tiktok-viral-video/references/san-xuat-dien-anh.md
++++ root-v3/san-xuat-dien-anh.md
+@@ -1,44 +1,71 @@
+-# 17. Sản xuất kiểu nhà sản xuất phim (kaizen 2026-10-03)
++# Sản xuất kiểu nhà sản xuất phim (kaizen 2026-10-03 từ phân tích VeoGenie)
+ 
+-Mỗi video chạy qua 4 giai đoạn tiền kỳ / quay / dựng / hậu kỳ với cổng kiểm tra rõ ràng.
++VeoGenie là tool node-based dựng video AI hàng loạt: sheet nhân vật khóa một lần ở đầu graph
++→ prompt từng shot → fan-out nhiều job sinh song song → gom về kho media. Cách làm đó chính là
++pipeline điện ảnh thu nhỏ. Từ nay mỗi video chạy qua 4 giai đoạn tiền kỳ/quay/dựng/hậu kỳ với
++cổng kiểm tra đặt tên rõ ràng — không còn làm theo cảm tính từng bước rời rạc.
+ 
+-## 17.1 Tiền kỳ — quyết định 70% chất lượng
++## 17.1 Tiền kỳ (pre-production) — quyết định 70% chất lượng
+ 
+-- **Character bible (khóa casting một lần)**: trước keyframe đầu tiên, viết 1 đoạn mô tả nhân vật DUY NHẤT (tuổi, tóc, trang phục từng cảnh, đặc điểm nhận dạng) và **paste nguyên văn** vào mọi prompt keyframe. Đổi 1 chữ = đổi nhân vật.
+-- **Production board**: shot list dạng bảng, mỗi shot có trạng thái `keyframe ☐ → take ☐ → duyệt ☐ → ghép ☐`. Không shot nào được ghép khi chưa duyệt.
+-- **Coverage cho cảnh chốt**: hook (0–3s) và CTA (52–60s) luôn có 2 phương án (2 góc hoặc 2 action).
+-- Prop/bối cảnh theo 7c; logic staging theo 7d — xong trên giấy trước khi generate.
+-- **Sản phẩm thật: verify hình dáng trước khi vẽ** (bài học video iPhone): KHÔNG vẽ theo trí nhớ — đối chiếu ảnh thật hay gửi hoặc image search. Sai chi tiết nhận diện (VD: cụm camera) = dựng lại toàn bộ. Hay đã gửi ảnh thật thì dùng ảnh đó làm keyframe/composite.
++- **Character bible (khóa casting một lần)**: trước keyframe đầu tiên, viết 1 đoạn mô tả nhân vật
++  DUY NHẤT (tuổi, tóc, trang phục từng cảnh, đặc điểm nhận dạng) và **paste nguyên văn** vào mọi
++  prompt keyframe — tương đương checkbox "Giữ nguyên nhân vật" của VeoGenie. Đổi 1 chữ trong
++  bible = đổi nhân vật. (Trên Type không có snapshot_id → bible là cơ chế giữ liên tục duy nhất.)
++- **Production board**: shot list viết dưới dạng bảng theo dõi, mỗi shot có trạng thái
++  `keyframe ☐ → take ☐ → duyệt ☐ → ghép ☐`. Không shot nào được ghép khi chưa duyệt.
++- **Coverage cho cảnh chốt**: hook (0–3s) và CTA (52–60s) luôn có 2 phương án (2 góc hoặc 2 action)
++  để lúc dựng có cái mà chọn — như quay coverage trong phim.
++- Prop/bối cảnh theo 7c; logic staging theo 7d — đều thuộc tiền kỳ, phải xong trên giấy trước khi generate.
++- **Sản phẩm thật: verify hình dáng trước khi vẽ** (bài học 2026-10-03, video iPhone): khi video có
++  sản phẩm thật (điện thoại, xe, máy móc...), KHÔNG tự vẽ theo trí nhớ — đối chiếu ảnh thật do hay
++  gửi hoặc image search trước khi dựng keyframe. Sai chi tiết nhận diện (VD: cụm camera) là lỗi nặng,
++  phải dựng lại toàn bộ. Nếu hay đã gửi ảnh thật thì dùng ảnh đó làm keyframe/composite, không
++  generate lại sản phẩm. (Xem thêm 7e trong SKILL.md.)
+ 
+-## 17.2 Quay — batch và dailies
++## 17.2 Quay (production) — batch và dailies
+ 
+-- **Batch theo lớp**: sinh TẤT CẢ keyframes → verify tất cả → mới sinh TẤT CẢ clip. Không cuốn chiếu.
+-- **2 takes cho cảnh hero** (hook, CTA, cảnh có màn hình); cảnh thường 1 take.
+-- **Dailies**: frame giữa mỗi clip — kiểm tra biến dạng, logic 7d, màu sắc. Take lỗi → sinh lại.
+-- **Motion có kiểm soát**: mặc định motion NHẸ (camera chậm, 1 action). Motion mạnh = dễ biến dạng.
++- **Batch theo lớp**: sinh TẤT CẢ keyframes → verify tất cả (17.4) → mới sinh TẤT CẢ clip.
++  Không cuốn chiếu từng cảnh (sai 1 cảnh cuối mới phát hiện thì đã muộn).
++- **2 takes cho cảnh hero** (hook, CTA, cảnh có màn hình): sinh 2 biến thể motion khác nhau,
++  lúc dựng chọn take đẹp nhất. Cảnh thường 1 take.
++- **Dailies**: frame giữa mỗi clip = buổi xem dailies — kiểm tra biến dạng, logic 7d, màu sắc,
++  thiết kế sản phẩm. Take nào lỗi → quay lại (sinh lại), không "để dựng rồi tính".
++- **Motion có kiểm soát**: VeoGenie cho chỉnh "độ chuyển động" — bên mình mặc định motion NHẸ
++  (camera chậm, 1 action). Motion mạnh = nguy cơ AI biến dạng tăng — chỉ dùng khi cảnh cần.
+ 
+-## 17.3 Dựng — chọn take và giữ liên tục
++## 17.3 Dựng (edit) — chọn take và giữ liên tục
+ 
+-- **Pick take tốt nhất** cho mỗi cảnh rồi mới concat.
+-- **Continuity**: quy tắc **180°** trong cùng không gian; màu/ánh sáng đồng tone giữa các cảnh trừ khi có lý do kể chuyện.
+-- **Nhịp**: mỗi 3–8s có thay đổi có ý nghĩa; không 2 cảnh liên tiếp cùng cỡ shot.
++- **Pick take tốt nhất** cho mỗi cảnh (nhất là 2 takes của cảnh hero) rồi mới concat.
++- **Continuity**: kiểm tra **quy tắc 180°** — trong cùng một không gian, camera không nhảy sang
++  phía đối diện của trục hành động gây rối hướng nhìn. Màu sắc/ánh sáng các cảnh phải đồng tone
++  (không cảnh vàng ấm kế cảnh xanh lạnh trừ khi có lý do kể chuyện).
++- **Nhịp**: giữ checklist retention (mục 6 SKILL.md) — mỗi 3–8s có thay đổi có ý nghĩa;
++  không để 2 cảnh liên tiếp cùng cỡ shot.
+ 
+-## 17.4 Hậu kỳ & QC 4 lượt (theo thứ tự)
++## 17.4 Hậu kỳ & QC 4 lượt (test screening)
+ 
++QC theo đúng thứ tự, mỗi lượt một việc:
+ 1. **Logic**: tay–mắt–vật, hướng màn hình (7d) — xem frame ranh giới các cảnh.
+ 2. **Chữ**: sub không che chủ thể, label đúng chính tả, không tràn khung.
+-3. **Tiếng**: voiceover rõ, beat nhỏ hơn lời, không clipping.
+-4. **Kỹ thuật**: 1080x1920, đúng thời lượng (±0.5s), ≤100MB, file thật không symlink.
++3. **Tiếng**: nghe toàn bộ — voiceover rõ, beat nhỏ hơn lời, không clipping.
++4. **Kỹ thuật**: 1080x1920, đúng 60s (±0.5s), ≤100MB, file thật không symlink.
+ 
+-## 17.5 Failover khi job lỗi — thử lại → hạ cấp, không bỏ cảnh
++## 17.5 Failover khi job lỗi (học nguyên tắc từ VeoGenie)
+ 
+-- **Sinh video lỗi**: thử lại 1 lần với motion đơn giản hơn. Vẫn lỗi → Ken Burns từ keyframe.
+-- **Sinh ảnh lỗi**: thử lại 1 lần với prompt rút gọn.
+-- **TTS lỗi**: thử lại 1 lần → đổi voice dự phòng (giọng nam miền Bắc).
+-- **Batch theo đợt**: tối đa 4 job media song song — video 6 cảnh chia 2 đợt.
+-- **Ghi log** retry/fallback vào production board để QC soi kỹ take hạ cấp.
++VeoGenie tự chuyển tài khoản khi job lỗi — bên mình không có tài khoản/proxy Seedance để xoay
++(generate qua media pipeline riêng, không qua web automation), nên áp dụng **nguyên tắc failover**
++theo cách của mình: job lỗi → thử lại → hạ cấp, không bao giờ bỏ cảnh.
+ 
+-## Ranh giới
++- **generate_video lỗi**: thử lại 1 lần với motion đơn giản hơn (bỏ action phức tạp, chỉ giữ camera
++  chậm). Vẫn lỗi → fallback Ken Burns từ keyframe.
++- **generate_image lỗi**: thử lại 1 lần với prompt rút gọn (bỏ chi tiết phụ).
++- **TTS lỗi**: thử lại 1 lần → đổi voice dự phòng (vẫn giọng nam miền Bắc).
++- **Batch theo đợt**: tối đa 4 job media song song mỗi lượt (giới hạn tool) — video 6 cảnh chia 2 đợt.
++- **Ghi log**: cảnh nào đã retry/fallback ghi vào production board (17.1) để lúc QC biết take đó
++  là bản hạ cấp, soi kỹ hơn.
+ 
+-- Không dùng kỹ thuật xoay proxy / chuyển tài khoản / multi-profile để lách giới hạn tool bên thứ ba.
+-- API key quản lý qua AI Pro của Kiemtien2026 (mã hóa server-side), không lưu key local.
++## Ranh giới (không lấy từ VeoGenie)
++
++- Các tính năng xoay proxy / chuyển tài khoản khi lỗi / multi-profile Dola là kỹ thuật lách giới
++  hạn của tool bên thứ ba — **không áp dụng** vào pipeline của mình.
++- Quản lý API key vẫn qua AI Pro của Kiemtien2026 (mã hóa server-side), không lưu key local.
+--- archive-v2/tiktok-viral-video/references/loi-doc-phu-de-mix.md
++++ root-v3/loi-doc-phu-de-mix.md
+@@ -1,23 +1,79 @@
+-# 15. Lời đọc + phụ đề tiếng Việt (mặc định từ 2026-09-30, theo yêu cầu của hay)
++# Lời đọc + phụ đề + mix tiếng (mặc định cho mọi video)
+ 
+-Mọi video mới đều có **lời đọc thuyết minh tiếng Việt** + **phụ đề tiếng Việt burn-in**. Thay thế default cũ "không chữ overlay / không lời thoại".
+-Quy trình sau bước ghép:
++Quy trình sau bước ghép clip (mục 8 bước 6 của SKILL.md). Đọc ở bước 7 mọi video.
+ 
+-1. **Kịch bản lời đọc**: viết theo từng cảnh, tổng ~140–160 từ cho 60s, khớp nội dung từng keyframe, không claim y tế/tài chính chưa kiểm chứng. Viết số/thời gian bằng chữ để TTS đọc đúng.
+-2. **Giọng đọc**: trên Muse dùng `/opt/hatch/bin/tts speak --language vi --voice avocado_v2:briggs` (nam, ấm). Trên Type: hay sinh giọng bằng CapCut Pro (xem `capcut-workflow.md`) rồi gửi file mp3/wav. Test 1 câu trước khi làm cả bài. Giọng dự phòng: vẫn giọng nam miền Bắc.
+-3. **Phụ đề**: tạo `.srt` căn theo từng cảnh (mỗi cảnh ≈ 10s → 1–2 dòng sub), rồi **convert sang `.ass` với `PlayResX: 1080` / `PlayResY: 1920`** — BẮT BUỘC.
+-   Lý do (bài học 2026-09-30): filter `subtitles` với `.srt` dùng PlayRes mặc định 384x288 của libass → mọi giá trị px cho 1080x1920 đều sai: `MarginV=300` đẩy sub ra khỏi khung, chữ top phóng to ~6x và xuống dòng từng từ.
+-   Burn: `subtitles=labels.ass` rồi `subtitles=subs.ass` (2 style: Label top-center size 54, Sub bottom-center size 46, font DejaVu Sans Bold, viền đen).
+-   KHÔNG dùng `drawtext` cho câu tiếng Việt dài (không tự xuống dòng, dễ tràn khung).
+-4. **Mix tiếng**: narration giữ nguyên volume. Nhạc nền = **file beat mặc định của hay, đã lưu trên Type**: `josepmonter-mariage-damour-2186.mp3`, **fileId `file_01m4065qy6ebqvpt29s58c1s4a`** (dài ~6:32, 12.5MB, hay gửi 2026-10-03). Mỗi video: `materialize_attachment(fileId=file_01m4065qy6ebqvpt29s58c1s4a, path=/tmp/<job>/beat.mp3)` — KHÔNG hỏi lại hay, KHÔNG tự tổng hợp nhạc thay thế. Nếu tải lỗi thì thử lại 1 lần rồi mới báo hay. Cắt `atrim=0:<DUR>` khớp video, fade-out 2–3s cuối; **TẮT tiếng ambient AI của clip**.
+-   **Beat LUÔN nhỏ hơn lời thuyết minh** — công thức đã validate:
+-   ```
+-   [1:a]atrim=0:60,asetpts=PTS-STARTPTS,volume=0.15[beat];
+-   [narr]asplit=2[nkey][narr2];
+-   [beat][nkey]sidechaincompress=threshold=0.02:ratio=8:attack=200:release=800:makeup=1[ducked];
+-   [narr2][ducked]amix=inputs=2:duration=first:normalize=0,alimiter=limit=0.95[aout]
+-   ```
+-   (beat lùi ~20dB dưới narration, tự dìm thêm khi có tiếng nói).
+-   **BẮT BUỘC `normalize=0`** trên mọi `amix` — mặc định `normalize=1` chia nhỏ tín hiệu theo số input (5 input ≈ -14dB) khiến lời đọc lí nhí; `alimiter=limit=0.95` cuối chuỗi chống clipping. Ví dụ ghép narration nhiều đoạn:
+-   `[n1][n2][n3][n4][n5]amix=inputs=5:duration=longest:dropout_transition=0:normalize=0[narr]`
+-5. **QC**: nghe toàn bộ, kiểm tra sub không che chủ thể (sub vùng dưới, chừa lề UI TikTok).
++## 1. Kịch bản lời đọc
++
++- Viết theo từng cảnh, tổng ~140–160 từ cho 60s, khớp nội dung từng keyframe.
++- **Kỷ luật trim (đã chốt từ 3 video liên tiếp)**: lời đọc vượt slot → rút gọn câu thoại cho vừa,
++  **giữ nguyên mọi claim, số liệu, disclaimer** (đặc biệt disclaimer y tế/pháp lý). Báo rõ cho hay
++  chỗ nào đã trim + offer bản đầy đủ nếu muốn.
++- Viết số/thời gian bằng chữ để TTS đọc đúng ("ba mươi giây", "tám trên mười").
++- Không claim y tế/tài chính chưa kiểm chứng.
++
++## 2. TTS
++
++```
++/opt/hatch/bin/tts speak --language vi --voice avocado_v2:briggs --output vo-canhN.mp3
++```
++- Giọng mặc định của hay: `avocado_v2:briggs` (nam miền Bắc, ấm, đọc tiếng Việt).
++- Test thử **1 câu** trước khi render cả bài.
++- Trên Type (không có tts): hay gửi file giọng đọc CapCut vào thread, dựng theo hợp đồng handoff trong `capcut-workflow.md`.
++
++## 3. Phụ đề burn-in (.ass — bắt buộc)
++
++**Bài học 2026-09-30**: filter `subtitles` với file `.srt` dùng PlayRes mặc định 384x288 của
++libass (SRT không chứa thông tin resolution) → mọi giá trị px tính cho 1080x1920 đều sai:
++`MarginV=300` đẩy phụ đề bottom ra khỏi khung hình, chữ top bị phóng to ~6x và xuống dòng từng từ.
++→ Tự viết file `.ass` với header **PlayResX: 1080 / PlayResY: 1920** thì
++`FontSize`/`MarginV`/`Alignment` mới chính xác theo pixel video.
++**KHÔNG dùng `drawtext`** cho câu tiếng Việt dài (không tự xuống dòng, dễ tràn khung).
++
++Template 2 style (Label trên + Sub dưới), chèn chữ hay yêu cầu vào Label:
++
++```
++[Script Info]
++ScriptType: v4.00+
++PlayResX: 1080
++PlayResY: 1920
++WrapStyle: 0
++ScaledBorderAndShadow: yes
++
++[V4+ Styles]
++Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
++Style: Label,DejaVu Sans,54,&H0000FFFF,&H000000FF,&H80000000,&H80000000,-1,0,0,0,100,100,1,0,1,3,0,8,60,60,120,1
++Style: Sub,DejaVu Sans,46,&H00FFFFFF,&H000000FF,&H80000000,&H80000000,-1,0,0,0,100,100,1,0,1,3,0,2,60,60,300,1
++
++[Events]
++Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
++Dialogue: 0,0:00:00.00,0:00:03.00,Label,,0,0,0,,{\q2}Hook: chữ màn hình hay yêu cầu
++Dialogue: 0,0:00:00.00,0:00:06.00,Sub,,0,0,0,,{\q2}Lời thoại câu 1
++```
++
++- Label: vàng, trên-center (Alignment 8), size 54 — chữ màn hình hay yêu cầu, điểm số.
++- Sub: trắng, dưới-center (Alignment 2), size 46, MarginV 300 — lời thoại, chừa lề UI TikTok.
++- Burn: `subtitles=labels.ass` rồi `subtitles=subs.ass` (2 lần filter liên tiếp).
++
++## 4. Mix tiếng — beat LUÔN nhỏ hơn lời thuyết minh
++
++- Narration giữ nguyên volume.
++- Nhạc nền = beat mặc định của hay (`~/workspace/user/files/josepmonter-mariage-damour-2186_0_7hvz.mp3`,
++  cắt `atrim=0:<DUR>` khớp video). **TẮT tiếng ambient AI của clip** (không mix chung).
++- Công thức đã validate 2026-09-30 (beat lùi ~20dB dưới narration + tự dìm khi có tiếng nói):
++
++```
++[beat_in]atrim=0:60,asetpts=PTS-STARTPTS,volume=0.15[beat];
++[narr]asplit=2[nkey][narr2];
++[beat][nkey]sidechaincompress=threshold=0.02:ratio=8:attack=200:release=800:makeup=1[ducked];
++[narr2][ducked]amix=inputs=2:duration=first:normalize=0,alimiter=limit=0.95[aout]
++```
++
++- **BẮT BUỘC `normalize=0` trên mọi `amix`** — mặc định `normalize=1` chia nhỏ tín hiệu
++  theo số input (5 input ≈ -14dB) khiến lời đọc lí nhí.
++- Thêm `alimiter=limit=0.95` cuối chuỗi chống clipping.
++- Narration nhiều đoạn: `[n1][n2]...amix=inputs=N:duration=longest:dropout_transition=0:normalize=0[narr]`,
++  căn thời gian bằng `adelay=<ms>|<ms>` theo timeline cảnh.
++
++## 5. QC tiếng
++
++Nghe thử toàn bộ — voiceover rõ, beat nhỏ hơn lời, không clipping; sub không che chủ thể.
+--- archive-v2/tiktok-viral-video/references/capcut-workflow.md
++++ root-v3/capcut-workflow.md
+@@ -1,15 +1,30 @@
+-# 16. Quy trình tách CapCut (hay tự sinh, AI lo kịch bản + dựng) — chốt 2026-09-30
++# Quy trình tách CapCut (hay tự sinh, Muse lo kịch bản + dựng)
+ 
+-Bối cảnh: CapCut không có API công khai → tách pipeline: hay dùng CapCut Pro (web/app) sinh giọng đọc + clip/ảnh AI, AI viết kịch bản và dựng video cuối bằng ffmpeg. Trên Type đây là **quy trình mặc định** cho clip chuyển động thật.
++Chốt 2026-09-30. Bối cảnh: key Gemini hết quota free; ExperientialLabs/Apmix/Muse chỉ chat-only;
++CapCut không có API công khai → tách pipeline: hay dùng CapCut Pro (web/app) để sinh
++giọng đọc + clip/ảnh AI, Muse viết kịch bản và dựng video cuối bằng ffmpeg.
+ 
+-**Phân công:**
+-- hay (CapCut Pro): sinh **giọng đọc** (TTS "Chuyển văn bản thành lời nói", voice tiếng Việt) + **clip/ảnh AI** (Seedance / AI image) theo từng cảnh.
+-- AI: viết **kịch bản lời đọc tiếng Việt theo từng cảnh** + prompt ảnh/clip từng cảnh để hay paste vào CapCut → nhận asset → **dựng** 1080x1920 theo `loi-doc-phu-de-mix.md` (voiceover + sub burn-in + beat 0.15 + ducking, tắt ambient AI).
++## Phân công
+ 
+-**Handoff contract (hay gửi cho AI):**
+-- Voice: 1 file mp3/wav cho cả video HOẶC từng đoạn `vo-canh1.mp3`, `vo-canh2.mp3`... (khớp thứ tự cảnh).
+-- Clip/ảnh: `canh1.mp4` (hoặc .png), `canh2.mp4`... đúng thứ tự; ưu tiên 9:16, nếu 16:9 thì crop center sang 9:16.
+-- Kèm kịch bản đã duyệt (nếu hay sửa lời sau khi nghe thử).
+-- Dựng: timeline voice khớp hình (cắt/ghép clip theo độ dài voice từng cảnh), sub burn-in từ đúng text voice, beat mặc định + ducking.
++- **hay** (CapCut Pro): sinh **giọng đọc** (TTS "Chuyển văn bản thành lời nói", chọn voice
++  tiếng Việt) + **clip/ảnh AI** (Seedance / AI image) theo từng cảnh trong kịch bản.
++- **Muse**: viết **kịch bản lời đọc tiếng Việt theo từng cảnh** (+ prompt ảnh/clip cho từng
++  cảnh để hay paste vào CapCut) → nhận asset từ hay → **dựng** 1080x1920 theo đúng
++  default `loi-doc-phu-de-mix.md` (voiceover + sub burn-in + beat 0.15 + ducking, tắt ambient AI).
+ 
+-**Lưu ý:** bản CapCut free có thể dính watermark — hay đang Pro nên xuất không watermark; luôn bật nhãn "nội dung do AI tạo" khi đăng TikTok.
++## Handoff contract (hay gửi cho Muse)
++
++- Voice: 1 file mp3/wav cho cả video HOẶC từng đoạn `vo-canh1.mp3`, `vo-canh2.mp3`...
++  (khớp thứ tự cảnh trong kịch bản).
++- Clip/ảnh: `canh1.mp4` (hoặc .png), `canh2.mp4`... đúng thứ tự cảnh; ưu tiên 9:16,
++  nếu 16:9 thì Muse crop center sang 9:16.
++- Kèm kịch bản đã duyệt (nếu hay sửa lời sau khi nghe thử trên CapCut).
++- Muse dựng: timeline voice khớp hình (cắt/ghép clip theo độ dài voice từng cảnh),
++  sub burn-in từ đúng text voice, beat mặc định + ducking.
++
++## Lưu ý
++
++- Asset CapCut có thể dính watermark/logo nếu dùng bản free — hay đang Pro nên xuất không watermark.
++- Clip CapCut mang track audio AI → **bỏ track audio** khi ghép (chỉ giữ voiceover + beat).
++- Luôn bật nhãn "nội dung do AI tạo" khi đăng TikTok.
++- Không dùng tool GitHub không chính thức để tự động hóa CapCut (nguy cơ khóa acc Pro).
+--- archive-v2/tiktok-viral-video/references/character-swap.md
++++ root-v3/character-swap.md
+@@ -1,11 +1,18 @@
+-# 13. Character Swap — đổi nhân vật trong clip (MiniMax-H3 LoRA)
++# Character Swap — đổi nhân vật trong clip (MiniMax-H3 LoRA)
+ 
+-Dùng khi hay muốn **cùng 1 nhân vật xuất hiện xuyên suốt các clip** (tăng nhận diện kênh), hoặc đưa 1 nhân vật (cameo/thương hiệu) vào clip có sẵn.
++Khi hay muốn **cùng 1 nhân vật xuất hiện xuyên suốt các clip** (tăng nhận diện kênh),
++hoặc đưa 1 nhân vật (cameo/thương hiệu) vào clip có sẵn:
+ 
+-- Backend Kiemtien2026: `POST /video/character-swap` (NestJS, Gradio API tới HF Space `hugging-apps/minimax-h3-character-swap-lora`). Spec: `docs/character-swap-minimax-h3.md`. (Chưa kết nối trên Type — cần hay cấp quyền/endpoint nếu muốn chạy từ đây.)
+-- Cách dùng: render từng clip ngắn **≤14s** → swap nhân vật từng clip (prompt phải nhắc `<Video 1>` và `<Picture 1>`, canvas `768x1344 · 9:16 full` cho dọc) → ghép bằng ffmpeg như pipeline thường.
+-- Ảnh tham chiếu: chân dung rõ mặt, nền đơn giản, ánh sáng trung tính.
+-- **BẮT BUỘC consent văn bản** của người thật (`consentConfirmed=true`); không consent → không làm. Mặc định REJECT, kể cả người nổi tiếng.
+-- Model thử nghiệm: motion timing & biểu cảm có thể lỗi — **luôn xem lại thủ công** từng clip sau swap.
+-- Provider free (ZeroGPU): xếp hàng, có thể timeout — không hứa thời gian; check `GET /video/character-swap/status` trước khi chạy hàng loạt.
+-- Mọi clip swap là AI-generated: nhắc hay **bật nhãn AI** khi đăng TikTok.
++- Backend đã đấu nối trên Kiemtien2026: `POST /video/character-swap` (NestJS, Gradio API tới
++  HF Space `hugging-apps/minimax-h3-character-swap-lora`). Spec: `docs/character-swap-minimax-h3.md`.
++- Cách dùng: render từng clip ngắn **≤14s** → swap nhân vật từng clip
++  (prompt phải nhắc `<Video 1>` và `<Picture 1>`, canvas `768x1344 · 9:16 full` cho dọc)
++  → ghép lại bằng ffmpeg như pipeline timelapse thường.
++- Ảnh nhân vật tham chiếu: chân dung rõ mặt, nền đơn giản, ánh sáng trung tính.
++- **BẮT BUỘC consent văn bản** của người thật được đưa vào (`consentConfirmed=true`);
++  không consent → không làm. Mặc định REJECT, kể cả người nổi tiếng.
++- Model còn thử nghiệm: motion timing & biểu cảm mặt có thể lỗi — **luôn xem lại thủ công**
++  từng clip sau swap trước khi ghép/đăng.
++- Provider free (ZeroGPU): xếp hàng, có thể timeout — không hứa thời gian với hay;
++  check `GET /video/character-swap/status` trước khi chạy hàng loạt.
++- Mọi clip swap đều là AI-generated: nhắc hay **bật nhãn AI** khi đăng TikTok.

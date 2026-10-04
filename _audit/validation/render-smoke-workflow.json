@@ -1,0 +1,94 @@
+{
+  "version": 1,
+  "page": {
+    "id": "local-render-smoke",
+    "name": "Local render smoke · 4 giây",
+    "snapshot": {
+      "nodes": [
+        {
+          "id": "prompt-1",
+          "type": "textPrompt",
+          "position": {
+            "x": 0,
+            "y": 100
+          },
+          "data": {
+            "prompt": "Local render test 1"
+          }
+        },
+        {
+          "id": "shot-1",
+          "type": "videoGenerate",
+          "position": {
+            "x": 300,
+            "y": 100
+          },
+          "data": {
+            "duration": 2,
+            "aspectRatio": "16:9",
+            "provider": "local",
+            "model": "test",
+            "customName": "Smoke clip 1"
+          }
+        },
+        {
+          "id": "prompt-2",
+          "type": "textPrompt",
+          "position": {
+            "x": 0,
+            "y": 200
+          },
+          "data": {
+            "prompt": "Local render test 2"
+          }
+        },
+        {
+          "id": "shot-2",
+          "type": "videoGenerate",
+          "position": {
+            "x": 300,
+            "y": 200
+          },
+          "data": {
+            "duration": 2,
+            "aspectRatio": "16:9",
+            "provider": "local",
+            "model": "test",
+            "customName": "Smoke clip 2"
+          }
+        },
+        {
+          "id": "merge",
+          "type": "videoMerge",
+          "position": {
+            "x": 600,
+            "y": 100
+          },
+          "data": {}
+        }
+      ],
+      "edges": [
+        {
+          "id": "text-1",
+          "source": "prompt-1",
+          "target": "shot-1"
+        },
+        {
+          "id": "merge-1",
+          "source": "shot-1",
+          "target": "merge"
+        },
+        {
+          "id": "text-2",
+          "source": "prompt-2",
+          "target": "shot-2"
+        },
+        {
+          "id": "merge-2",
+          "source": "shot-2",
+          "target": "merge"
+        }
+      ]
+    }
+  }
+}

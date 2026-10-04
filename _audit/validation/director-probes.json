@@ -1,0 +1,44 @@
+{
+  "date": "2026-10-03",
+  "scope": "Pure functions extracted from actual Director Studio App.tsx and transpiled with TypeScript; no Type runtime, no provider",
+  "checks": [
+    {
+      "name": "timelapse plan is 60s but generated xfade schedule/audio trim is 57.2s",
+      "result": "confirmed",
+      "scenes": 8,
+      "plannedSeconds": 60,
+      "renderScheduleSeconds": 57.2
+    },
+    {
+      "name": "ASS centiseconds rounding does not carry into seconds",
+      "result": "confirmed",
+      "input": 1.999,
+      "output": "0:00:01.100"
+    },
+    {
+      "name": "subtitle cue allocation can produce zero-duration cues",
+      "result": "confirmed",
+      "cues": [
+        {
+          "start": 0,
+          "end": 0.8,
+          "text": "A."
+        },
+        {
+          "start": 0.8,
+          "end": 1,
+          "text": "B."
+        },
+        {
+          "start": 1,
+          "end": 1,
+          "text": "C."
+        }
+      ]
+    },
+    {
+      "name": "standard script has no VO pad/trim and uses limiter auto-level default",
+      "result": "confirmed"
+    }
+  ]
+}

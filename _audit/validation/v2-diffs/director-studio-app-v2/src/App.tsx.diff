@@ -1,0 +1,2074 @@
+--- D:\AI\KIEMTIEN ONLINE\taovideo chatgpt\_audit\tiktok-director-skillpack\director-studio-app\src\App.tsx
++++ D:\AI\KIEMTIEN ONLINE\taovideo chatgpt\_audit\tiktok-director-skillpack-v2\director-studio-app-v2\src\App.tsx
+@@ -7,24 +7,31 @@
+ // ───────────────────────── Types ─────────────────────────
+ type Project = Doc<"projects">;
+ type Scene = Doc<"scenes">;
++type Brief = Doc<"briefs">;
+ type SceneInput = Omit<Scene, "_id" | "_creationTime" | "projectId">;
++type Knowledge = Omit<Brief, "_id" | "_creationTime" | "projectId">;
+ type HookType = Project["hooks"][number]["type"];
+ type ShotSize = Scene["shotSize"];
+ type CameraMove = Scene["camera"];
+ type ScreenLayout = Scene["screenLayout"];
+ type Format = Project["format"];
+-type StepId = "brief" | "hook" | "cast" | "shots" | "prompts" | "audio" | "caption" | "qc";
++type ClaimStatus = Brief["claims"][number]["status"];
++type RiskLevel = Brief["risk"]["accuracy"];
++type StepId = "brief" | "claims" | "hook" | "cast" | "shots" | "prompts" | "audio" | "caption" | "qc";
++type ScenePatch = Partial<Omit<SceneInput, "order" | "startSec" | "endSec">>;
++type View = { kind: "welcome" } | { kind: "intake" } | { kind: "project"; id: Id<"projects"> };
+ 
+ // ───────────────────────── Knowledge (from the skill) ─────────────────────────
+ const STEPS: { id: StepId; label: string }[] = [
+   { id: "brief", label: "1 · Brief" },
+-  { id: "hook", label: "2 · Hook" },
+-  { id: "cast", label: "3 · Casting" },
+-  { id: "shots", label: "4 · Shot list" },
+-  { id: "prompts", label: "5 · Prompt" },
+-  { id: "audio", label: "6 · Lời đọc & sub" },
+-  { id: "caption", label: "7 · Caption" },
+-  { id: "qc", label: "8 · QC & bàn giao" },
++  { id: "claims", label: "2 · Claim ledger" },
++  { id: "hook", label: "3 · Hook" },
++  { id: "cast", label: "4 · Casting" },
++  { id: "shots", label: "5 · Shot list" },
++  { id: "prompts", label: "6 · Prompt" },
++  { id: "audio", label: "7 · Lời đọc & sub" },
++  { id: "caption", label: "8 · Caption" },
++  { id: "qc", label: "9 · QC & bàn giao" },
+ ];
+ 
+ const HOOK_TYPES: { key: HookType; label: string; example: string }[] = [
+@@ -63,6 +70,16 @@
+     label: "PiP (mặt + khung nhỏ)",
+     en: "the person's face looking at the device, screen facing toward them; keep one clean corner free for a picture-in-picture inset added later",
+   },
++};
++const CLAIM_STATUS: Record<ClaimStatus, { label: string; badge: string }> = {
++  verified: { label: "VERIFIED", badge: "badge-success" },
++  unverified: { label: "UNVERIFIED", badge: "badge-error" },
++  editorial: { label: "EDITORIAL (biên soạn)", badge: "badge-warning" },
++};
++const RISK: Record<RiskLevel, { label: string; badge: string }> = {
++  low: { label: "Rủi ro sai lệch: thấp", badge: "badge-success" },
++  medium: { label: "Rủi ro sai lệch: trung bình", badge: "badge-warning" },
++  high: { label: "Rủi ro sai lệch: cao", badge: "badge-error" },
+ };
+ 
+ const TIMELAPSE_CAMERA_LOCK =
+@@ -106,6 +123,7 @@
+   },
+ ];
+ 
++// Keys are "<group>-<item>" and stored on the project; append new groups at the END only.
+ const QC_GROUPS: { title: string; items: string[] }[] = [
+   {
+     title: "Lượt 1 — Logic (7d)",
+@@ -152,12 +170,48 @@
+       "Ghi chú kèm video: GẮN NHÃN AI khi đăng; bật Commercial Disclosure nếu có affiliate",
+     ],
+   },
++  {
++    title: "Lượt 5 — Claim & series (lớp tri thức)",
++    items: [
++      "Mọi số liệu / nhận định trong lời đọc có anchor VERIFIED trong claim ledger, hoặc ghi rõ 'mô phỏng minh họa'",
++      "Không còn claim UNVERIFIED trong kịch bản; claim EDITORIAL được diễn đạt như ý kiến biên soạn",
++      "Ví dụ giả lập (mã đơn, số liệu doanh nghiệp) được ghi 'minh họa' trong caption",
++      "Mốc năm / số liệu nhất quán với các video trước trong series (continuity notes)",
++    ],
++  },
+ ];
+ 
+ const WORDS_PER_SEC = 2.5; // 140–160 từ / 60s
++const MIN_SCENE_SEC = 8;
+ 
+ // ───────────────────────── Scene templates ─────────────────────────
+ const blankStatus = () => ({ keyframe: false, take: false, approved: false, assembled: false });
++const SIZE_CYCLE: ShotSize[] = ["trung", "toan", "can", "trung", "toan", "can", "trung", "toan"];
++const CAM_CYCLE: CameraMove[] = ["push_in", "pan", "pull_out", "push_in", "pan", "push_in", "pan", "pull_out"];
++
++function blankScene(order: number, start: number, end: number, role: string, hero: boolean): SceneInput {
++  return {
++    order,
++    startSec: start,
++    endSec: end,
++    role,
++    hero,
++    shotSize: SIZE_CYCLE[order % SIZE_CYCLE.length],
++    camera: CAM_CYCLE[order % CAM_CYCLE.length],
++    action: "",
++    subject: "",
++    environment: "",
++    prop: "",
++    animal: "",
++    screenLayout: "none",
++    voiceover: "",
++    label: "",
++    promptOverride: "",
++    status: blankStatus(),
++    takes: hero ? 2 : 1,
++    note: "",
++  };
++}
+ 
+ function standardScenes(duration: number): SceneInput[] {
+   const plan: [string, number, number, boolean][] =
+@@ -184,29 +238,7 @@
+             ["Ý 2 + tóm tắt", 19, 26, false],
+             ["CTA duy nhất", 26, 30, true],
+           ];
+-  const sizes: ShotSize[] = ["trung", "toan", "can", "trung", "toan", "can"];
+-  const cams: CameraMove[] = ["push_in", "pan", "pull_out", "push_in", "pan", "push_in"];
+-  return plan.map(([role, start, end, hero], i) => ({
+-    order: i,
+-    startSec: start,
+-    endSec: end,
+-    role,
+-    hero,
+-    shotSize: sizes[i % sizes.length],
+-    camera: cams[i % cams.length],
+-    action: "",
+-    subject: "",
+-    environment: "",
+-    prop: "",
+-    animal: "",
+-    screenLayout: "none",
+-    voiceover: "",
+-    label: "",
+-    promptOverride: "",
+-    status: blankStatus(),
+-    takes: hero ? 2 : 1,
+-    note: "",
+-  }));
++  return plan.map(([role, start, end, hero], i) => blankScene(i, start, end, role, hero));
+ }
+ 
+ function timelapseScenes(t: Project["timelapse"]): SceneInput[] {
+@@ -214,48 +246,219 @@
+     s.replaceAll("[BC]", t.boiCanh || "[BỐI CẢNH]").replaceAll("[VN]", t.vatNeo || "[VẬT NEO]").replaceAll("[KT]", t.kienTruc || "[KIẾN TRÚC]");
+   const per = 57 / TIMELAPSE_KF.length;
+   const scenes: SceneInput[] = TIMELAPSE_KF.map((k, i) => ({
+-    order: i,
+-    startSec: Math.round(i * per * 10) / 10,
+-    endSec: Math.round((i + 1) * per * 10) / 10,
+-    role: `${k.kf} — ${k.role}`,
+-    hero: i === 0 || i === TIMELAPSE_KF.length - 1,
++    ...blankScene(i, Math.round(i * per * 10) / 10, Math.round((i + 1) * per * 10) / 10, `${k.kf} — ${k.role}`, i === 0 || i === TIMELAPSE_KF.length - 1),
+     shotSize: "toan",
+     camera: "static",
+     action: i === 0 ? "giữ yên, chỉ bụi/cỏ lay nhẹ" : "morph từ keyframe trước (start frame → end frame), cross-dissolve 8–12 frame",
+     subject: i === 0 ? "công trình hoang" : "công trình đang hình thành",
+     environment: t.boiCanh,
+     prop: t.vatNeo,
+-    animal: "",
+-    screenLayout: "none",
+-    voiceover: "",
+     label: t.chu,
+     promptOverride: `${TIMELAPSE_CAMERA_LOCK}\n${fill(k.body)}`,
+-    status: blankStatus(),
+-    takes: i === 0 || i === TIMELAPSE_KF.length - 1 ? 2 : 1,
+-    note: "",
+   }));
+   scenes.push({
+-    order: scenes.length,
+-    startSec: 57,
+-    endSec: 60,
+-    role: "KF30 — End card",
+-    hero: false,
++    ...blankScene(scenes.length, 57, 60, "KF30 — End card", false),
+     shotSize: "toan",
+     camera: "static",
+     action: "nền đen, chữ giữ yên",
+-    subject: "",
+-    environment: "",
+-    prop: "",
+-    animal: "",
+-    screenLayout: "none",
+-    voiceover: "",
+     label: t.chu,
+     promptOverride: "KHÔNG generate AI. End card dựng bằng ffmpeg: nền đen + chữ \"" + (t.chu || "[CHỮ]") + "\" (Label trong .ass). 3 giây.",
+-    status: blankStatus(),
+     takes: 1,
+-    note: "",
+   });
+   return scenes;
++}
++
++// ───────────────────────── Brief parser (knowledge intake) ─────────────────────────
++type ParsedClaim = { text: string; anchors: string[]; status: ClaimStatus };
++type ParsedBrief = {
++  briefNo: string;
++  title: string;
++  series: string;
++  audience: string;
++  angle: string;
++  hook: string;
++  hookType: HookType;
++  cta: string;
++  outline: string[];
++  claims: ParsedClaim[];
++  riskAccuracy: RiskLevel;
++  riskNotes: string;
++  source: { docId: string; section: string; anchors: string[] };
++  durationSec: number;
++  continuity: string;
++  raw: string;
++  warnings: string[];
++};
++
++function slug(s: string) {
++  return (
++    s
++      .normalize("NFD")
++      .replace(/[\u0300-\u036f]/g, "")
++      .replace(/đ/gi, "d")
++      .toLowerCase()
++      .replace(/[^a-z0-9]+/g, "-")
++      .replace(/^-|-$/g, "") || "video"
++  );
++}
++const anchorsIn = (s: string) => Array.from(new Set((s.match(/\[(\d{1,3})\]/g) ?? []).map((a) => a.replace(/[[\]]/g, ""))));
++const stripQuotes = (s: string) => s.trim().replace(/^[“"'`]+|[”"'`]+$/g, "").trim();
++// Numbers that read as facts: percentages, decimals, integers ≥ 10. Small counts ("3 lỗi", "4 bước", "8 giờ") are structure, not claims.
++const numbersIn = (s: string) => Array.from(new Set((s.match(/\d+(?:[.,]\d+)?\s*%|\d+[.,]\d+|\d{2,}/g) ?? []).map((n) => n.replace(/\s+/g, ""))));
++
++function guessHookType(hook: string): HookType {
++  const h = hook.toLowerCase();
++  if (/\?\s*$/.test(hook)) return "cau_hoi";
++  if (/bí quyết|sau \d+|kết quả|thay đổi|giỏi lên/.test(h)) return "ket_qua";
++  if (/lỗi|sai lầm|làm sai|sai bét|coi chừng|đừng/.test(h)) return "sai_lam";
++  if (/\d+\s*(h|giờ)|một ngày|nhật ký|câu chuyện/.test(h)) return "cau_chuyen";
++  if (/cùng (một|1).*khác|nhưng|chưa chắc/.test(h)) return "doi_lap";
++  if (/trước.*sau|demo|xem thử/.test(h)) return "demo";
++  return "ket_qua";
++}
++
++function parseBrief(md: string): ParsedBrief {
++  const warnings: string[] = [];
++  let body = md.replace(/\r\n?/g, "\n");
++  const fm: Record<string, string> = {};
++  const fmMatch = body.match(/^---\n([\s\S]*?)\n---\n?/);
++  if (fmMatch) {
++    for (const line of fmMatch[1].split("\n")) {
++      const m = line.match(/^([A-Za-z_][\w]*):\s*(.*)$/);
++      if (m) fm[m[1].toLowerCase()] = m[2].trim().replace(/^["']|["']$/g, "");
++    }
++    body = body.slice(fmMatch[0].length);
++  }
++
++  const titleRaw = body.match(/^#\s+(.+)$/m)?.[1]?.trim() ?? "";
++  const noMatch = titleRaw.match(/brief\s*(\d+)/i);
++  const briefNo = fm.brief_id ?? (noMatch ? noMatch[1].padStart(2, "0") : "");
++  const title = titleRaw.replace(/^video brief\s*\d+\s*[—–-]\s*/i, "").trim() || "Brief chưa có tiêu đề";
++
++  // Top-level "- **Field:** value" blocks; nested lines belong to the current block.
++  const blocks: Record<string, string[]> = {};
++  let current: string | null = null;
++  for (const line of body.split("\n")) {
++    const head = line.match(/^-\s*\*\*(.+?)\*\*\s*(.*)$/);
++    if (head) {
++      current = slug(head[1]);
++      blocks[current] = head[2].trim() ? [head[2].trim()] : [];
++    } else if (current && line.trim() && !/^#/.test(line)) {
++      blocks[current].push(line);
++    }
++  }
++  const block = (prefix: string) => {
++    const key = Object.keys(blocks).find((k) => k.startsWith(prefix));
++    return key ? blocks[key] : [];
++  };
++  const text = (lines: string[]) => lines.map((l) => l.trim()).join(" ").trim();
++
++  const nguon = text(block("nguon"));
++  const docId = fm.doc_id ?? nguon.match(/`([^`]+)`/)?.[1] ?? "";
++  const sectionMatch = nguon.match(/mục\s*([\d.]+(?:\s*\([^)]*\))?)/i);
++  const section = fm.section ? `mục ${fm.section}` : sectionMatch ? `mục ${sectionMatch[1]}`.trim() : "";
++  const sourceAnchors = fm.anchors ? Array.from(new Set(fm.anchors.match(/\d{1,3}/g) ?? [])) : anchorsIn(nguon);
++
++  const audience = fm.audience ?? text(block("doi-tuong"));
++  const angle = text(block("goc-moi"));
++  const hook = stripQuotes(text(block("hook")));
++  const hookType = (fm.hook_type as HookType | undefined) && HOOK_TYPES.some((h) => h.key === fm.hook_type) ? (fm.hook_type as HookType) : guessHookType(hook);
++
++  const outline = block("dan-y")
++    .map((l) => l.match(/^\s*\d+[.)]\s*(.+)$/)?.[1]?.trim() ?? "")
++    .filter(Boolean);
++
++  const claims: ParsedClaim[] = block("claim")
++    .map((l) => l.replace(/^\s*-\s*/, "").trim())
++    .filter((l) => l && !/^claim ledger/i.test(l))
++    .map((l) => {
++      const m = l.match(/^[“"'](.+?)[”"']\s*[—–-]+\s*(.*)$/);
++      const textPart = m ? m[1].trim() : l;
++      const rest = m ? m[2] : "";
++      const anchors = anchorsIn(rest);
++      let status: ClaimStatus = /UNVERIFIED/i.test(rest) ? "unverified" : /VERIFIED/i.test(rest) ? "verified" : "unverified";
++      if (/EDITORIAL|biên soạn/i.test(rest)) status = "editorial";
++      if (status === "verified" && anchors.length === 0) {
++        status = "editorial";
++        warnings.push(`Claim "${textPart.slice(0, 50)}…" chỉ tham chiếu mục, không có mã nguồn [NN] → chuyển EDITORIAL.`);
++      }
++      return { text: textPart, anchors, status };
++    });
++
++  const riskNotes = text(block("rui-ro"));
++  const riskWord = fm.risk_accuracy ?? riskNotes.match(/(?:accuracy|rủi ro|độ chính xác)\s*[:\-]?\s*(thấp|trung bình|cao|low|medium|high)/i)?.[1] ?? "";
++  const riskAccuracy: RiskLevel = /cao|high/i.test(riskWord) ? "high" : /trung|medium/i.test(riskWord) ? "medium" : /thấp|low/i.test(riskWord) ? "low" : "medium";
++  if (!riskWord) warnings.push("Không đọc được mức rủi ro — mặc định trung bình.");
++
++  const fmt = text(block("thoi-luong"));
++  const durationSec = Number(fm.duration) || Number(fmt.match(/(\d{2,3})\s*s\b/)?.[1]) || 60;
++
++  const continuityParts = [fm.continuity ?? "", ...riskNotes.split(/[;.]\s+/).filter((s) => /video trước|nhất quán|series/i.test(s))].filter(Boolean);
++  const continuity = continuityParts.join(" ").trim();
++
++  const cta = fm.cta ?? "";
++  if (!cta) warnings.push("Brief không có CTA — sẽ dùng CTA mặc định của series (skill §1: một CTA duy nhất).");
++  const hookNums = numbersIn(hook).filter((n) => !claims.some((c) => c.text.includes(n)));
++  if (hookNums.length) warnings.push(`Hook chứa số liệu ${hookNums.join(", ")} chưa có anchor trong claim ledger — cần nguồn hoặc viết dạng giả định rõ.`);
++  if (!outline.length) warnings.push("Không tìm thấy 'Dàn ý cảnh' — dùng template chuẩn.");
++  const ideaCount = outline.filter((o, i) => !(i === outline.length - 1 && /^kết\b/i.test(o))).length;
++  if (ideaCount > 3 && durationSec <= 60) warnings.push(`${ideaCount} ý trong ${durationSec}s → mỗi cảnh < ${MIN_SCENE_SEC}s. Cân nhắc 90s hoặc gộp còn 3 ý (+ phần 2).`);
++  if (claims.length === 0) warnings.push("Không có claim ledger — mọi số liệu trong lời đọc sẽ bị đánh UNVERIFIED.");
++  if (!docId) warnings.push("Không đọc được doc_id nguồn.");
++  if (/giả lập|mô phỏng|minh họa/i.test(riskNotes)) warnings.push("Brief có ví dụ giả lập → caption phải ghi 'mô phỏng minh họa'.");
++
++  return {
++    briefNo,
++    title,
++    series: fm.series ?? "",
++    audience,
++    angle,
++    hook,
++    hookType,
++    cta,
++    outline,
++    claims,
++    riskAccuracy,
++    riskNotes,
++    source: { docId, section, anchors: sourceAnchors },
++    durationSec,
++    continuity,
++    raw: md.slice(0, 20000),
++    warnings,
++  };
++}
++
++const shortRole = (txt: string, prefix: string) => {
++  const head = txt.split(/[:—–(,]/)[0].trim();
++  return `${prefix} — ${head.length > 42 ? head.slice(0, 40) + "…" : head}`;
++};
++
++function scenesFromBrief(b: ParsedBrief, duration: number, cta: string): { scenes: SceneInput[]; outline: { order: number; text: string }[] } {
++  if (!b.outline.length) {
++    const scenes = standardScenes(duration);
++    return { scenes, outline: [{ order: 0, text: `Hook: ${b.hook}` }, { order: scenes.length - 1, text: `CTA: ${cta}` }] };
++  }
++  const items = [...b.outline];
++  const summary = items.length && /^kết\b/i.test(items[items.length - 1]) ? items.pop()! : null;
++  const hookDur = 10;
++  const ctaDur = 5;
++  const sumDur = summary ? Math.min(10, Math.max(6, (duration - 15) / (items.length + 1))) : 0;
++  const per = items.length ? (duration - hookDur - ctaDur - sumDur) / items.length : 0;
++  const r1 = (x: number) => Math.round(x * 10) / 10;
++  const plan: { role: string; start: number; end: number; hero: boolean; beat: string }[] = [];
++  plan.push({ role: "HOOK + định hướng", start: 0, end: hookDur, hero: true, beat: `Hook: ${b.hook}` });
++  let t = hookDur;
++  items.forEach((txt, i) => {
++    plan.push({ role: shortRole(txt, `Ý ${i + 1}`), start: r1(t), end: r1(t + per), hero: false, beat: txt });
++    t += per;
++  });
++  if (summary) {
++    plan.push({ role: "Tóm tắt một câu", start: r1(t), end: r1(t + sumDur), hero: false, beat: summary });
++    t += sumDur;
++  }
++  plan.push({ role: "CTA duy nhất", start: r1(t), end: duration, hero: true, beat: `CTA: ${cta}` });
++  const scenes = plan.map((p, i) => blankScene(i, p.start, p.end, p.role, p.hero));
++  return { scenes, outline: plan.map((p, i) => ({ order: i, text: p.beat })) };
+ }
+ 
+ // ───────────────────────── Generators ─────────────────────────
+@@ -321,9 +524,13 @@
+   return assHeader(p.format) + lines.join("\n") + "\n";
+ }
+ 
+-function keyframePrompt(p: Project, s: Scene) {
++const beatOf = (brief: Brief | null | undefined, order: number) => brief?.outline.find((o) => o.order === order)?.text ?? "";
++
++function keyframePrompt(p: Project, s: Scene, brief?: Brief | null) {
+   if (s.promptOverride.trim()) return s.promptOverride.trim();
+   const parts: string[] = [];
++  const beat = beatOf(brief, s.order);
++  if (beat) parts.push(`SCENE INTENT (for staging only, never render text): ${beat}`);
+   if (p.characterBible.trim()) parts.push(`CHARACTER (paste verbatim, keep identical in every scene): ${p.characterBible.trim()}`);
+   parts.push(`SUBJECT: ${s.subject.trim() || "[chưa điền — ai đang làm gì]"}`);
+   parts.push(`ENVIRONMENT: ${s.environment.trim() || "[chưa điền — ở đâu, chi tiết cụ thể]"}`);
+@@ -451,11 +658,19 @@
+   return lines.join("\n") + "\n";
+ }
+ 
+-function buildHandoff(p: Project, scenes: Scene[]) {
++function buildHandoff(p: Project, scenes: Scene[], brief: Brief | null) {
+   const hook = p.selectedHook >= 0 ? p.hooks[p.selectedHook] : undefined;
+   const L: string[] = [];
+   L.push(`# ${p.title} — Production pack (${p.durationSec}s · ${p.format === "timelapse" ? "Timelapse công trình" : "Video giải thích"} · 1080x1920)`);
+   L.push("");
++  if (brief) {
++    L.push("## Nguồn tri thức");
++    L.push(`- Series: ${brief.series || "—"} · Brief: ${brief.briefNo || "—"}`);
++    L.push(`- doc_id: \`${brief.source.docId || "—"}\` · ${brief.source.section || ""} · anchor: ${brief.source.anchors.map((a) => `[${a}]`).join(" ") || "—"}`);
++    L.push(`- ${RISK[brief.risk.accuracy].label}${brief.risk.notes ? ` — ${brief.risk.notes}` : ""}`);
++    if (brief.continuity) L.push(`- Continuity: ${brief.continuity}`);
++    L.push("");
++  }
+   L.push("## Brief (một mục tiêu)");
+   L.push(`- Giúp ai: ${p.brief.audience || "—"}`);
+   L.push(`- Nỗi đau / việc cần giải quyết: ${p.brief.pain || "—"}`);
+@@ -473,17 +688,24 @@
+     });
+   }
+   L.push("");
++  if (brief && brief.claims.length) {
++    L.push("## Claim ledger");
++    L.push("| Claim | Anchor | Trạng thái |");
++    L.push("|---|---|---|");
++    brief.claims.forEach((c) => L.push(`| ${c.text} | ${c.anchors.map((a) => `[${a}]`).join(" ") || "—"} | ${CLAIM_STATUS[c.status].label} |`));
++    L.push("");
++  }
+   L.push("## Character bible (paste nguyên văn vào mọi prompt)");
+   L.push(p.characterBible.trim() || "_chưa viết_");
+   L.push("");
+   L.push("## Production board");
+-  L.push("| # | Thời gian | Vai trò | Shot | Camera | Action | Cast / Env / Prop | Label | Takes | KF | Take | Duyệt | Ghép |");
+-  L.push("|---|---|---|---|---|---|---|---|---|---|---|---|---|");
++  L.push("| # | Thời gian | Vai trò | Ý nội dung | Shot | Camera | Action | Cast / Env / Prop | Label | Takes | KF | Take | Duyệt | Ghép |");
++  L.push("|---|---|---|---|---|---|---|---|---|---|---|---|---|---|");
+   scenes.forEach((s) => {
+     const cast = [s.subject, s.environment, s.prop, s.animal].filter(Boolean).join(" · ");
+     const b = (x: boolean) => (x ? "☑" : "☐");
+     L.push(
+-      `| ${s.order + 1} | ${s.startSec}–${s.endSec}s | ${s.role}${s.hero ? " ★" : ""} | ${SHOT_SIZES[s.shotSize].label} | ${CAMERAS[s.camera].label} | ${s.action || "—"} | ${cast || "—"} | ${s.label || "—"} | ${s.takes} | ${b(s.status.keyframe)} | ${b(s.status.take)} | ${b(s.status.approved)} | ${b(s.status.assembled)} |`,
++      `| ${s.order + 1} | ${s.startSec}–${s.endSec}s | ${s.role}${s.hero ? " ★" : ""} | ${beatOf(brief, s.order) || "—"} | ${SHOT_SIZES[s.shotSize].label} | ${CAMERAS[s.camera].label} | ${s.action || "—"} | ${cast || "—"} | ${s.label || "—"} | ${s.takes} | ${b(s.status.keyframe)} | ${b(s.status.take)} | ${b(s.status.approved)} | ${b(s.status.assembled)} |`,
+     );
+   });
+   L.push("");
+@@ -498,7 +720,7 @@
+     L.push(`### Cảnh ${s.order + 1} · ${s.startSec}–${s.endSec}s · ${s.role}`);
+     L.push("**Keyframe prompt (ảnh trước):**");
+     L.push("```");
+-    L.push(keyframePrompt(p, s));
++    L.push(keyframePrompt(p, s, brief));
+     L.push("```");
+     L.push("**Motion prompt (image-to-video):**");
+     L.push("```");
+@@ -524,7 +746,7 @@
+ 
+ // ───────────────────────── Lint (director's eye) ─────────────────────────
+ type Lint = { level: "warn" | "info"; text: string };
+-function lintProject(p: Project, scenes: Scene[]): Lint[] {
++function lintProject(p: Project, scenes: Scene[], brief: Brief | null): Lint[] {
+   const out: Lint[] = [];
+   const isTl = p.format === "timelapse";
+   if (!p.brief.audience.trim() || !p.brief.cta.trim()) out.push({ level: "warn", text: "Brief chưa đủ: cần rõ 'giúp ai' và 'CTA duy nhất'." });
+@@ -535,18 +757,25 @@
+     if (!isTl && scenes[i].shotSize === scenes[i - 1].shotSize)
+       out.push({ level: "warn", text: `Cảnh ${i} và ${i + 1} cùng cỡ shot (${SHOT_SIZES[scenes[i].shotSize].label}) — xen kẽ toàn/trung/cận.` });
+   }
++  const claimText = brief ? brief.claims.map((c) => c.text).join(" ") + " " + brief.raw : "";
+   scenes.forEach((s) => {
+     const n = s.order + 1;
+     const txt = `${s.subject} ${s.prop} ${s.action}`.toLowerCase();
+     if (/màn hình|điện thoại|laptop|máy tính|screen|phone|tv|gọi video|ipad/.test(txt) && s.screenLayout === "none")
+       out.push({ level: "warn", text: `Cảnh ${n} có màn hình nhưng chưa khóa bố cục (OTS / chính diện / PiP) — luật 7d.` });
+-    if (/giấy|hợp đồng|hóa đơn|tài liệu|bảng|checklist|document|paper|invoice/.test(txt) && !/tay|người|hand|person|woman|man/.test(txt))
+-      out.push({ level: "info", text: `Cảnh ${n} chỉ có đồ vật/giấy tờ — thêm bàn tay hoặc người đang thao tác (7c).` });
++    if (/giấy|hợp đồng|hóa đơn|tài liệu|bảng|checklist|document|paper|invoice|chart|diagram/.test(txt) && !/tay|người|hand|person|woman|man/.test(txt))
++      out.push({ level: "info", text: `Cảnh ${n} chỉ có đồ vật/giấy tờ/sơ đồ — thêm bàn tay hoặc người đang thao tác (7c).` });
+     if (s.hero && s.takes < 2) out.push({ level: "info", text: `Cảnh ${n} là cảnh hero — nên sinh 2 take để có coverage.` });
+     if (!isTl) {
+-      const budget = Math.round((s.endSec - s.startSec) * WORDS_PER_SEC);
++      const dur = s.endSec - s.startSec;
++      if (dur < MIN_SCENE_SEC && !/CTA/i.test(s.role)) out.push({ level: "warn", text: `Cảnh ${n} chỉ ${dur}s (< ${MIN_SCENE_SEC}s) — gộp ý hoặc tăng thời lượng video.` });
++      const budget = Math.round(dur * WORDS_PER_SEC);
+       const w = words(s.voiceover);
+       if (w > budget * 1.15) out.push({ level: "warn", text: `Cảnh ${n}: lời đọc ${w} từ vượt slot (~${budget} từ) — rút gọn nhưng GIỮ claim/disclaimer.` });
++      if (brief && s.voiceover.trim()) {
++        const loose = numbersIn(s.voiceover).filter((num) => !claimText.includes(num) && !/giả sử|ví dụ|minh họa|mô phỏng/i.test(s.voiceover));
++        if (loose.length) out.push({ level: "warn", text: `Cảnh ${n}: số liệu ${loose.join(", ")} không có trong claim ledger — cần anchor hoặc ghi "giả sử/minh họa".` });
++      }
+     }
+     if (s.order === 0 && !isTl && !s.label.trim()) out.push({ level: "info", text: "Cảnh hook chưa có chữ màn hình — hook cần lời + hình + chữ cùng thông điệp." });
+   });
+@@ -556,6 +785,16 @@
+     if (total > 0 && total > target * 1.1) out.push({ level: "warn", text: `Tổng lời đọc ${total} từ > mục tiêu ~${target} từ cho ${p.durationSec}s.` });
+     const tags = hashtagList(p.caption.hashtags).length;
+     if (p.caption.hashtags.trim() && (tags < 5 || tags > 8)) out.push({ level: "warn", text: `Caption có ${tags} hashtag — contract là 5–8.` });
++  }
++  if (brief) {
++    const unverified = brief.claims.filter((c) => c.status === "unverified").length;
++    if (unverified) out.push({ level: "warn", text: `${unverified} claim UNVERIFIED — xác minh với sources-index.json hoặc bỏ khỏi kịch bản.` });
++    if (/giả lập|mô phỏng|minh họa/i.test(brief.risk.notes) && !/mô phỏng|minh họa|giả lập/i.test(captionText(p)))
++      out.push({ level: "warn", text: "Brief có ví dụ giả lập — caption cần ghi rõ 'mô phỏng minh họa' (README kho tri thức)." });
++    const hookText = p.selectedHook >= 0 ? p.hooks[p.selectedHook]?.text ?? "" : "";
++    const hookNums = numbersIn(hookText).filter((num) => !claimText.includes(num));
++    if (hookNums.length) out.push({ level: "warn", text: `Hook chứa số liệu ${hookNums.join(", ")} chưa có anchor — đổi thành câu không số hoặc thêm claim.` });
++    if (brief.continuity) out.push({ level: "info", text: `Continuity: ${brief.continuity}` });
+   }
+   return out;
+ }
+@@ -653,6 +892,14 @@
+   return <div className="guide text-small">{children}</div>;
+ }
+ 
++function ErrorText({ text }: { text: string | null }) {
++  return text ? (
++    <div className="text-small" style={{ color: "var(--error-text)" }}>
++      {text}
++    </div>
++  ) : null;
++}
++
+ class ErrorBoundary extends Component<{ children: ReactNode }, { error: Error | null }> {
+   state = { error: null as Error | null };
+   static getDerivedStateFromError(error: Error) {
+@@ -673,7 +920,7 @@
+   }
+ }
+ 
+-// ───────────────────────── AI helper (typeAi) ─────────────────────────
++// ───────────────────────── AI helpers (typeAi) ─────────────────────────
+ const aiAvailable = () => typeof window !== "undefined" && !!window.typeAi?.available;
+ async function aiJson<T>(prompt: string, schema: Record<string, unknown> & { type: "object" }, system: string): Promise<T> {
+   if (!window.typeAi?.available) throw new Error("AI không khả dụng trên bề mặt này");
+@@ -681,49 +928,196 @@
+   return r as T;
+ }
+ const DIRECTOR_SYSTEM =
+-  "Bạn là đạo diễn + nhà sản xuất video ngắn TikTok tiếng Việt. Nguyên tắc: một mục tiêu một CTA; hook = [nỗi đau/kết quả] + [đối tượng] + [lời hứa cụ thể], rõ ràng không giật tít; không claim y tế/tài chính chắc nịch; không mô phỏng người thật; nhân vật hư cấu; mỗi cảnh một chuyển động, camera chậm; không chữ trong hình AI. Trả lời ngắn gọn, tiếng Việt.";
++  "Bạn là đạo diễn + nhà sản xuất video ngắn TikTok tiếng Việt làm việc trên nền tri thức có nguồn. Nguyên tắc: một mục tiêu một CTA; hook = [nỗi đau/kết quả] + [đối tượng] + [lời hứa cụ thể], rõ ràng không giật tít; KHÔNG đưa số liệu/nhận định nào ngoài claim ledger được cung cấp — ví dụ minh họa phải nói rõ 'giả sử'/'ví dụ'; không claim y tế/tài chính chắc nịch; không mô phỏng người thật; nhân vật hư cấu; mỗi cảnh một chuyển động, camera chậm; không chữ trong hình AI. Trả lời ngắn gọn, tiếng Việt.";
++
++function briefContext(p: Project, brief: Brief | null) {
++  const hook = p.selectedHook >= 0 ? p.hooks[p.selectedHook]?.text : "";
++  const lines = [
++    `Brief: giúp ${p.brief.audience}; nỗi đau: ${p.brief.pain}; góc nhìn: ${p.brief.angle}; bằng chứng: ${p.brief.evidence}; CTA: ${p.brief.cta}.`,
++    `Hook chính: ${hook || "(chưa có)"}.`,
++  ];
++  if (brief?.claims.length) {
++    lines.push("Claim ledger (chỉ được dùng các dữ kiện này):");
++    brief.claims.forEach((c) => lines.push(`- [${CLAIM_STATUS[c.status].label}] ${c.text} ${c.anchors.map((a) => `[${a}]`).join(" ")}`));
++  }
++  if (brief?.risk.notes) lines.push(`Rủi ro/gate: ${brief.risk.notes}`);
++  if (brief?.continuity) lines.push(`Continuity: ${brief.continuity}`);
++  return lines.join("\n");
++}
++
++async function aiFillShotList(p: Project, scenes: Scene[], brief: Brief | null, patchScene: (id: Id<"scenes">, patch: ScenePatch) => Promise<void>) {
++  const r = await aiJson<{ scenes: { order: number; subject: string; environment: string; prop: string; animal: string; action: string; label: string }[] }>(
++    `${briefContext(p, brief)}\nCharacter bible: ${p.characterBible || "(chưa có — nhân vật hư cấu)"}.\n\nCác cảnh:\n${scenes
++      .map((s) => `${s.order + 1}. ${s.startSec}–${s.endSec}s · ${s.role} · ${SHOT_SIZES[s.shotSize].label} · ${CAMERAS[s.camera].label}${beatOf(brief, s.order) ? ` · Ý: ${beatOf(brief, s.order)}` : ""}`)
++      .join("\n")}\n\nVới mỗi cảnh điền: subject (ai đang làm gì, tiếng Anh ≤ 15 từ, có người/bàn tay thật — không chỉ sơ đồ), environment (ở đâu, tiếng Anh ≤ 10 từ), prop (vật kể chuyện cụ thể neo cho ý trừu tượng, tiếng Anh ≤ 6 từ), animal (tiếng Anh hoặc rỗng), action (MỘT chuyển động duy nhất, tiếng Anh ≤ 10 từ, không phá logic tay–mắt–vật), label (chữ màn hình tiếng Việt ≤ 6 từ; cảnh 1 và CTA bắt buộc, cảnh khác có thể rỗng). Trả order đúng số thứ tự.`,
++    {
++      type: "object",
++      properties: {
++        scenes: {
++          type: "array",
++          items: {
++            type: "object",
++            properties: {
++              order: { type: "integer" },
++              subject: { type: "string" },
++              environment: { type: "string" },
++              prop: { type: "string" },
++              animal: { type: "string" },
++              action: { type: "string" },
++              label: { type: "string" },
++            },
++            required: ["order", "subject", "environment", "prop", "animal", "action", "label"],
++          },
++        },
++      },
++      required: ["scenes"],
++    },
++    DIRECTOR_SYSTEM,
++  );
++  const byOrder = new Map(scenes.map((s) => [s.order + 1, s]));
++  const pick = (cur: string, next: unknown) => (cur.trim() ? cur : typeof next === "string" ? next.trim().slice(0, 1000) : cur);
++  await Promise.all(
++    (r.scenes ?? []).map(async (x) => {
++      const s = byOrder.get(Number(x.order));
++      if (!s) return;
++      await patchScene(s._id, {
++        subject: pick(s.subject, x.subject),
++        environment: pick(s.environment, x.environment),
++        prop: pick(s.prop, x.prop),
++        animal: pick(s.animal, x.animal),
++        action: pick(s.action, x.action),
++        label: pick(s.label, x.label),
++      });
++    }),
++  );
++}
++
++async function aiWriteVo(p: Project, scenes: Scene[], brief: Brief | null, patchScene: (id: Id<"scenes">, patch: ScenePatch) => Promise<void>) {
++  const target = Math.round(p.durationSec * WORDS_PER_SEC);
++  const r = await aiJson<{ lines: { order: number; text: string }[] }>(
++    `${briefContext(p, brief)}\n\nViết lời đọc tiếng Việt cho từng cảnh, tổng ~${target} từ cho ${p.durationSec}s (2,5 từ/giây). Mỗi cảnh ≤ số từ cho phép:\n${scenes
++      .map(
++        (s) =>
++          `${s.order + 1}. ${s.role} (${s.startSec}–${s.endSec}s, tối đa ${Math.round((s.endSec - s.startSec) * WORDS_PER_SEC)} từ)${beatOf(brief, s.order) ? ` — ý: ${beatOf(brief, s.order)}` : ""}${s.action ? ` — hình: ${s.action}` : ""}`,
++      )
++      .join("\n")}\nQuy tắc: cảnh 1 mở bằng hook; giá trị đầu tiên trước giây 15; mỗi cảnh một ý + một cầu nối; cảnh cuối MỘT CTA duy nhất; viết số bằng chữ để TTS đọc đúng; chỉ dùng dữ kiện trong claim ledger, ví dụ minh họa phải có chữ "giả sử"/"ví dụ"; không claim y tế/tài chính chắc nịch.`,
++    {
++      type: "object",
++      properties: {
++        lines: {
++          type: "array",
++          items: { type: "object", properties: { order: { type: "integer" }, text: { type: "string" } }, required: ["order", "text"] },
++        },
++      },
++      required: ["lines"],
++    },
++    DIRECTOR_SYSTEM,
++  );
++  const byOrder = new Map(scenes.map((s) => [s.order + 1, s]));
++  await Promise.all(
++    (r.lines ?? []).map(async (x) => {
++      const s = byOrder.get(Number(x.order));
++      if (!s || typeof x.text !== "string") return;
++      await patchScene(s._id, { voiceover: x.text.trim().slice(0, 2000) });
++    }),
++  );
++}
++
++type ClaimFinding = { scene: number; sentence: string; status: "covered" | "uncovered" | "illustrative"; reason: string };
++async function aiCheckClaims(p: Project, scenes: Scene[], brief: Brief): Promise<ClaimFinding[]> {
++  const r = await aiJson<{ findings: ClaimFinding[] }>(
++    `Claim ledger:\n${brief.claims.map((c) => `- [${CLAIM_STATUS[c.status].label}] ${c.text} ${c.anchors.map((a) => `[${a}]`).join(" ")}`).join("\n") || "(trống)"}\n\nLời đọc theo cảnh:\n${scenes
++      .filter((s) => s.voiceover.trim())
++      .map((s) => `${s.order + 1}. ${s.voiceover.trim()}`)
++      .join("\n")}\n\nTách lời đọc thành từng câu có nhận định/số liệu. Với mỗi câu: status = covered (được claim ledger bao phủ), illustrative (ví dụ giả định, có chữ giả sử/ví dụ), uncovered (nhận định/số liệu không có trong ledger). reason ≤ 15 từ. Chỉ liệt kê câu có nhận định; bỏ câu chuyển tiếp/CTA.`,
++    {
++      type: "object",
++      properties: {
++        findings: {
++          type: "array",
++          items: {
++            type: "object",
++            properties: {
++              scene: { type: "integer" },
++              sentence: { type: "string" },
++              status: { type: "string", enum: ["covered", "uncovered", "illustrative"] },
++              reason: { type: "string" },
++            },
++            required: ["scene", "sentence", "status", "reason"],
++          },
++        },
++      },
++      required: ["findings"],
++    },
++    "Bạn là biên tập viên kiểm chứng (fact-check) cho video tri thức. Chỉ đối chiếu với claim ledger được cung cấp, không dùng kiến thức ngoài. Trả lời tiếng Việt, ngắn gọn.",
++  );
++  return (r.findings ?? []).filter((f) => typeof f.sentence === "string" && ["covered", "uncovered", "illustrative"].includes(f.status));
++}
+ 
+ // ───────────────────────── App ─────────────────────────
+ export default function App() {
+-  const [selected, setSelected] = useState<Id<"projects"> | null>(null);
++  const [view, setView] = useState<View>({ kind: "welcome" });
++  const open = (id: Id<"projects">) => setView({ kind: "project", id });
+   return (
+     <div className="studio">
+       <ErrorBoundary>
+-        <Sidebar selected={selected} onSelect={setSelected} />
++        <Sidebar view={view} onSelect={open} onIntake={() => setView({ kind: "intake" })} />
+       </ErrorBoundary>
+       <main className="studio-main">
+-        <ErrorBoundary>{selected ? <Workspace projectId={selected} onDeleted={() => setSelected(null)} /> : <Welcome />}</ErrorBoundary>
++        <ErrorBoundary>
++          {view.kind === "project" ? (
++            <Workspace projectId={view.id} onDeleted={() => setView({ kind: "welcome" })} />
++          ) : view.kind === "intake" ? (
++            <Intake onCreated={open} />
++          ) : (
++            <Welcome onIntake={() => setView({ kind: "intake" })} />
++          )}
++        </ErrorBoundary>
+       </main>
+     </div>
+   );
+ }
+ 
+-function Welcome() {
++function Welcome({ onIntake }: { onIntake: () => void }) {
++  const { capabilities } = useTypeAppSession();
+   return (
+     <div className="welcome">
+       <h1>Director Studio</h1>
+       <p className="text-secondary">
+-        Pipeline đạo diễn cho video TikTok 9:16: brief → hook → casting → shot list → keyframe/motion prompt → lời đọc, phụ đề .ass, mix beat →
+-        caption → QC 4 lượt → gói bàn giao.
++        Hệ thống tạo video tri thức cho TikTok 9:16: kho tri thức có nguồn → brief → production board → prompt/lời đọc có kiểm chứng → phụ đề .ass, mix
++        beat → QC 5 lượt → gói bàn giao.
+       </p>
+       <div className="pipeline">
+-        {["Tiền kỳ: brief, hook, character bible, shot list có logic vật lý", "Quay: keyframe trước, animate sau; 2 take cảnh hero; dailies frame giữa", "Dựng: ghép 1080x1920, sub .ass PlayRes 1080x1920, beat 0.15 + ducking", "Hậu kỳ: QC 4 lượt → caption → gắn nhãn AI khi đăng"].map(
+-          (t, i) => (
+-            <div key={i} className="card pipeline-step">
+-              <span className="badge badge-info">{i + 1}</span>
+-              <span className="text-small">{t}</span>
+-            </div>
+-          ),
+-        )}
++        {[
++          "Tri thức: brief 8 trường + claim ledger có anchor → nhập một hoặc cả series",
++          "Tiền kỳ: brief, hook, character bible, shot list có logic vật lý, ý nội dung từng cảnh",
++          "Quay: keyframe trước, animate sau; 2 take cảnh hero; dailies frame giữa",
++          "Dựng & QC: 1080x1920, sub .ass, beat 0.15 + ducking; số liệu phải có anchor; gắn nhãn AI",
++        ].map((t, i) => (
++          <div key={i} className="card pipeline-step">
++            <span className="badge badge-info">{i + 1}</span>
++            <span className="text-small">{t}</span>
++          </div>
++        ))}
+       </div>
+-      <p className="text-small text-muted">Tạo dự án mới ở cột bên trái để bắt đầu.</p>
++      {capabilities.write ? (
++        <div className="row">
++          <button className="button button-primary" type="button" onClick={onIntake}>
++            Nhập brief tri thức
++          </button>
++          <span className="text-small text-muted">hoặc tạo dự án trống ở cột bên trái.</span>
++        </div>
++      ) : (
++        <p className="text-small text-muted">Chọn một dự án ở cột bên trái.</p>
++      )}
+     </div>
+   );
+ }
+ 
+ // ───────────────────────── Sidebar ─────────────────────────
+-function Sidebar({ selected, onSelect }: { selected: Id<"projects"> | null; onSelect: (id: Id<"projects">) => void }) {
++function Sidebar({ view, onSelect, onIntake }: { view: View; onSelect: (id: Id<"projects">) => void; onIntake: () => void }) {
+   const projects = useQuery(api.app.listProjects);
++  const briefs = useQuery(api.app.listBriefs);
+   const create = useMutation(api.app.createProject);
+   const { capabilities } = useTypeAppSession();
+   const canWrite = capabilities.write;
+@@ -740,6 +1134,7 @@
+   });
+   const [busy, setBusy] = useState(false);
+   const [err, setErr] = useState<string | null>(null);
++  const selectedId = view.kind === "project" ? view.id : null;
+ 
+   const submit = async () => {
+     if (!title.trim()) {
+@@ -768,6 +1163,18 @@
+     }
+   };
+ 
++  const briefMap = useMemo(() => new Map((briefs ?? []).map((b) => [b.projectId, b])), [briefs]);
++  const groups = useMemo(() => {
++    const map = new Map<string, NonNullable<typeof projects>>();
++    (projects ?? []).forEach((p) => {
++      const b = briefMap.get(p._id);
++      const key = b?.series?.trim() || (b ? "Series chưa đặt tên" : "Dự án lẻ");
++      if (!map.has(key)) map.set(key, []);
++      map.get(key)!.push(p);
++    });
++    return Array.from(map.entries()).sort((a, b) => (a[0] === "Dự án lẻ" ? 1 : b[0] === "Dự án lẻ" ? -1 : a[0].localeCompare(b[0])));
++  }, [projects, briefMap]);
++
+   return (
+     <aside className="studio-side">
+       <div className="side-head">
+@@ -781,6 +1188,11 @@
+           </button>
+         ) : null}
+       </div>
++      {canWrite ? (
++        <button className={`button${view.kind === "intake" ? " button-primary" : ""}`} type="button" onClick={onIntake}>
++          Nhập brief tri thức (.md)
++        </button>
++      ) : null}
+ 
+       {open && canWrite ? (
+         <div className="card new-project">
+@@ -824,7 +1236,7 @@
+               </Labeled>
+             </>
+           )}
+-          {err ? <div className="text-small" style={{ color: "var(--error-text)" }}>{err}</div> : null}
++          <ErrorText text={err} />
+           <button className="button button-primary" type="button" disabled={busy} onClick={submit}>
+             {busy ? "Đang tạo…" : "Tạo production board"}
+           </button>
+@@ -837,18 +1249,27 @@
+         ) : projects.length === 0 ? (
+           <div className="text-small text-muted empty">Chưa có dự án nào.</div>
+         ) : (
+-          projects.map((p) => (
+-            <button
+-              key={p._id}
+-              type="button"
+-              className={`side-item${selected === p._id ? " on" : ""}`}
+-              onClick={() => onSelect(p._id)}
+-            >
+-              <span className="side-item-title">{p.title}</span>
+-              <span className="text-small text-muted">
+-                {p.format === "timelapse" ? "Timelapse" : "Giải thích"} · {p.durationSec}s
+-              </span>
+-            </button>
++          groups.map(([series, items]) => (
++            <div key={series} className="side-group">
++              <div className="side-group-title text-small text-muted">
++                {series} · {items.length}
++              </div>
++              {items.map((p) => {
++                const b = briefMap.get(p._id);
++                return (
++                  <button key={p._id} type="button" className={`side-item${selectedId === p._id ? " on" : ""}`} onClick={() => onSelect(p._id)}>
++                    <span className="side-item-title">
++                      {b?.briefNo ? <span className="text-muted">{b.briefNo} · </span> : null}
++                      {p.title}
++                    </span>
++                    <span className="text-small text-muted">
++                      {p.format === "timelapse" ? "Timelapse" : "Giải thích"} · {p.durationSec}s
++                      {b ? ` · ${b.verified}✓${b.unverified ? ` ${b.unverified}?` : ""}` : ""}
++                    </span>
++                  </button>
++                );
++              })}
++            </div>
+           ))
+         )}
+       </div>
+@@ -857,17 +1278,226 @@
+   );
+ }
+ 
++// ───────────────────────── Intake (knowledge → projects) ─────────────────────────
++function Intake({ onCreated }: { onCreated: (id: Id<"projects">) => void }) {
++  const create = useMutation(api.app.createProjectFromBrief);
++  const { capabilities } = useTypeAppSession();
++  const canWrite = capabilities.write;
++  const [series, setSeries] = useState("");
++  const [cta, setCta] = useState("Lưu video và theo dõi để xem phần tiếp theo của series");
++  const [bible, setBible] = useState("");
++  const [durationMode, setDurationMode] = useState<"auto" | 60 | 75 | 90>("auto");
++  const [paste, setPaste] = useState("");
++  const [items, setItems] = useState<ParsedBrief[]>([]);
++  const [busy, setBusy] = useState(false);
++  const [err, setErr] = useState<string | null>(null);
++
++  const addText = (md: string) => {
++    const chunks = md.split(/\n(?=# )/).map((c) => c.trim()).filter((c) => /^#\s/.test(c) || /^---\n/.test(c));
++    const parsed = (chunks.length ? chunks : [md]).map(parseBrief);
++    setItems((prev) => [...prev, ...parsed]);
++    if (parsed[0]?.series && !series) setSeries(parsed[0].series);
++  };
++  const onFiles = async (files: FileList | null) => {
++    if (!files) return;
++    const texts = await Promise.all(Array.from(files).map((f) => f.text()));
++    texts.forEach(addText);
++  };
++  const audiences = Array.from(new Set(items.map((b) => b.audience.trim()).filter(Boolean)));
++
++  const submit = async () => {
++    if (!items.length) return;
++    setBusy(true);
++    setErr(null);
++    try {
++      let first: Id<"projects"> | null = null;
++      for (const b of items) {
++        const duration = durationMode === "auto" ? b.durationSec : durationMode;
++        const ctaFinal = b.cta || cta;
++        const { scenes, outline } = scenesFromBrief(b, duration, ctaFinal);
++        const verified = b.claims.filter((c) => c.status === "verified").length;
++        const knowledge: Knowledge = {
++          series: series.trim() || b.series,
++          briefNo: b.briefNo,
++          source: b.source,
++          claims: b.claims,
++          risk: { accuracy: b.riskAccuracy, notes: b.riskNotes },
++          outline,
++          continuity: b.continuity,
++          raw: b.raw,
++        };
++        const id = await create({
++          title: b.title,
++          durationSec: duration,
++          now: Date.now(),
++          brief: {
++            audience: b.audience,
++            pain: b.hook,
++            angle: b.angle,
++            evidence: b.claims.length
++              ? `${verified}/${b.claims.length} claim VERIFIED — ${b.source.docId || "nguồn"} ${b.source.section} ${b.source.anchors.map((a) => `[${a}]`).join(" ")}`.trim()
++              : "",
++            cta: ctaFinal,
++          },
++          hooks: b.hook ? [{ type: b.hookType, text: b.hook }] : [],
++          selectedHook: b.hook ? 0 : -1,
++          characterBible: bible,
++          scenes,
++          knowledge,
++        });
++        first = first ?? id;
++      }
++      setItems([]);
++      setPaste("");
++      if (first) onCreated(first);
++    } catch (e) {
++      setErr(e instanceof Error ? e.message : "Không tạo được dự án");
++    } finally {
++      setBusy(false);
++    }
++  };
++
++  return (
++    <div className="workspace">
++      <header className="ws-head">
++        <div className="ws-title">
++          <h2>Nhập brief tri thức → production board</h2>
++          <p className="text-small text-muted">
++            Đọc brief 8 trường (Nguồn · Đối tượng · Góc mới · Hook · Dàn ý cảnh · Claim ledger · Rủi ro/gate · Format) ở dạng bullet hiện tại hoặc frontmatter v2.
++            Mỗi brief → 1 dự án; nhiều brief → 1 series dùng chung character bible + CTA.
++          </p>
++        </div>
++      </header>
++      <div className="grid-2">
++        <div className="stack">
++          <div className="card">
++            <h3>Cấp series (dùng chung)</h3>
++            <Labeled label="Tên series" hint="Khán giả khác nhau → tách series khác nhau (VD: nn-co-ban · ai-agent-doanh-nghiep)">
++              <input className="input" value={series} onChange={(e) => setSeries(e.target.value)} placeholder="VD: nn-co-ban" />
++            </Labeled>
++            <Labeled label="CTA mặc định (khi brief không có CTA)">
++              <input className="input" value={cta} onChange={(e) => setCta(e.target.value)} />
++            </Labeled>
++            <Labeled label="Character bible chung cho series" hint="Nhân vật hư cấu, tiếng Anh, 40–90 từ. Có thể sửa riêng từng dự án sau.">
++              <textarea
++                className="input"
++                rows={4}
++                value={bible}
++                onChange={(e) => setBible(e.target.value)}
++                placeholder="VD: Vietnamese male presenter, late 20s, short neat black hair, round thin-frame glasses, navy knit sweater over white tee, calm friendly expression. Same outfit in every scene."
++              />
++            </Labeled>
++            <Labeled label="Thời lượng" hint="Auto = theo brief (thường 60s). Brief có > 3 ý nên dùng 90s.">
++              <div className="segment">
++                {(["auto", 60, 75, 90] as const).map((d) => (
++                  <button key={String(d)} type="button" className={`segment-item${durationMode === d ? " on" : ""}`} onClick={() => setDurationMode(d)}>
++                    {d === "auto" ? "Theo brief" : `${d}s`}
++                  </button>
++                ))}
++              </div>
++            </Labeled>
++          </div>
++          <div className="card">
++            <h3>Thêm brief</h3>
++            <label className="button">
++              Chọn file .md (nhiều file)
++              <input type="file" accept=".md,.txt,text/markdown" multiple hidden onChange={(e) => onFiles(e.target.files)} />
++            </label>
++            <textarea className="input mono" rows={10} value={paste} onChange={(e) => setPaste(e.target.value)} placeholder="…hoặc dán nội dung brief vào đây (có thể dán nhiều brief liền nhau, mỗi brief bắt đầu bằng '# ')" />
++            <button
++              className="button"
++              type="button"
++              disabled={!paste.trim()}
++              onClick={() => {
++                addText(paste);
++                setPaste("");
++              }}
++            >
++              Phân tích brief đã dán
++            </button>
++          </div>
++        </div>
++        <div className="stack">
++          <div className="card">
++            <div className="row space-between">
++              <h3>Đã phân tích ({items.length})</h3>
++              {items.length ? (
++                <button className="button button-small" type="button" onClick={() => setItems([])}>
++                  Xóa hết
++                </button>
++              ) : null}
++            </div>
++            {!items.length ? <p className="text-small text-muted empty">Chưa có brief nào. Chọn file hoặc dán nội dung.</p> : null}
++            {audiences.length > 1 ? (
++              <div className="text-small lint-warn">
++                {audiences.length} nhóm khán giả khác nhau trong cùng series ({audiences.map((a) => a.slice(0, 30)).join(" · ")}) — cân nhắc tách series.
++              </div>
++            ) : null}
++            {items.map((b, i) => {
++              const duration = durationMode === "auto" ? b.durationSec : durationMode;
++              const { scenes } = scenesFromBrief(b, duration, b.cta || cta);
++              return (
++                <div key={i} className="intake-item">
++                  <div className="row space-between">
++                    <div>
++                      <b>
++                        {b.briefNo ? `${b.briefNo} · ` : ""}
++                        {b.title}
++                      </b>
++                      <div className="text-small text-muted">
++                        {b.audience || "—"} · {duration}s · {scenes.length} cảnh · {b.claims.length} claim ({b.claims.filter((c) => c.status === "verified").length} ✓) ·{" "}
++                        {b.source.docId || "không rõ nguồn"} {b.source.section}
++                      </div>
++                    </div>
++                    <div className="row">
++                      <span className={`badge ${RISK[b.riskAccuracy].badge}`}>{RISK[b.riskAccuracy].label}</span>
++                      <button className="button button-small" type="button" onClick={() => setItems((prev) => prev.filter((_, j) => j !== i))}>
++                        Bỏ
++                      </button>
++                    </div>
++                  </div>
++                  <Timeline scenesLike={scenes} duration={duration} />
++                  {b.warnings.length ? (
++                    <ul className="lint-list">
++                      {b.warnings.map((w, k) => (
++                        <li key={k} className="lint-warn">
++                          {w}
++                        </li>
++                      ))}
++                    </ul>
++                  ) : null}
++                </div>
++              );
++            })}
++            <ErrorText text={err} />
++            {canWrite ? (
++              <button className="button button-primary" type="button" disabled={!items.length || busy} onClick={submit}>
++                {busy ? "Đang tạo…" : `Tạo ${items.length || ""} dự án từ brief`}
++              </button>
++            ) : (
++              <p className="text-small text-muted">Chế độ xem — không thể tạo dự án.</p>
++            )}
++          </div>
++        </div>
++      </div>
++    </div>
++  );
++}
++
+ // ───────────────────────── Workspace ─────────────────────────
+ function Workspace({ projectId, onDeleted }: { projectId: Id<"projects">; onDeleted: () => void }) {
+   const data = useQuery(api.app.getProject, { projectId });
++  const brief = useQuery(api.app.getBrief, { projectId });
+   const updateProject = useMutation(api.app.updateProject);
+   const updateScene = useMutation(api.app.updateScene);
+   const replaceScenes = useMutation(api.app.replaceScenes);
+   const deleteProject = useMutation(api.app.deleteProject);
++  const upsertBrief = useMutation(api.app.upsertBrief);
+   const { capabilities } = useTypeAppSession();
+   const canWrite = capabilities.write;
+   const [step, setStep] = useState<StepId>("brief");
+   const [error, setError] = useState<string | null>(null);
++  const [drafting, setDrafting] = useState<string | null>(null);
+ 
+   useEffect(() => {
+     setStep("brief");
+@@ -883,7 +1513,7 @@
+     }
+   };
+ 
+-  if (data === undefined) return <div className="text-muted">Đang tải dự án…</div>;
++  if (data === undefined || brief === undefined) return <div className="text-muted">Đang tải dự án…</div>;
+   if (data === null)
+     return (
+       <div className="card">
+@@ -891,46 +1521,69 @@
+       </div>
+     );
+   const { project, scenes } = data;
+-  const lints = lintProject(project, scenes);
++  const lints = lintProject(project, scenes, brief);
+   const patchProject = (patch: Parameters<typeof updateProject>[0]["patch"]) => run(() => updateProject({ projectId, patch, now: Date.now() }));
+-  const patchScene = (sceneId: Id<"scenes">, patch: Parameters<typeof updateScene>[0]["patch"]) =>
+-    run(() => updateScene({ sceneId, patch, now: Date.now() }));
++  const patchScene = (sceneId: Id<"scenes">, patch: ScenePatch) => run(() => updateScene({ sceneId, patch, now: Date.now() }));
++  const patchBrief = (patch: Parameters<typeof upsertBrief>[0]["patch"]) => run(() => upsertBrief({ projectId, patch, now: Date.now() }));
+ 
+   const progress = scenes.length ? Math.round((scenes.filter((s) => s.status.approved).length / scenes.length) * 100) : 0;
+-
+-  const ctx: StepCtx = { project, scenes, canWrite, patchProject, patchScene, run, replaceScenes, lints };
++  const warnCount = lints.filter((l) => l.level === "warn").length;
++
++  const draftAll = async () => {
++    setDrafting("Đang điền shot list…");
++    try {
++      await aiFillShotList(project, scenes, brief, patchScene);
++      setDrafting("Đang viết lời đọc…");
++      await aiWriteVo(project, scenes, brief, patchScene);
++      setStep("shots");
++    } catch (e) {
++      setError(e instanceof Error ? e.message : "AI không phản hồi");
++    } finally {
++      setDrafting(null);
++    }
++  };
++
++  const ctx: StepCtx = { project, scenes, brief, canWrite, patchProject, patchScene, patchBrief, run, replaceScenes, lints };
+ 
+   return (
+     <div className="workspace">
+       <header className="ws-head">
+         <div className="ws-title">
++          {canWrite ? <Field value={project.title} onSave={(v) => patchProject({ title: v })} /> : <h2>{project.title}</h2>}
++          <div className="row ws-meta">
++            {brief?.series ? <span className="badge badge-info">Series: {brief.series}</span> : null}
++            <span className="badge">{project.format === "timelapse" ? "Timelapse công trình" : "Giải thích / kể chuyện"}</span>
++            <span className="badge">
++              {project.durationSec}s · {scenes.length} cảnh
++            </span>
++            {brief ? <span className={`badge ${RISK[brief.risk.accuracy].badge}`}>{RISK[brief.risk.accuracy].label}</span> : null}
++            {brief ? (
++              <span className="badge">
++                Claim {brief.claims.filter((c) => c.status === "verified").length}✓ / {brief.claims.length}
++              </span>
++            ) : null}
++            <span className={`badge ${progress === 100 ? "badge-success" : "badge-info"}`}>Duyệt {progress}%</span>
++            {warnCount ? <span className="badge badge-warning">{warnCount} cảnh báo</span> : <span className="badge badge-success">Không cảnh báo</span>}
++          </div>
++        </div>
++        <div className="row">
++          {canWrite && aiAvailable() && project.format !== "timelapse" ? (
++            <button className="button button-primary button-small" type="button" disabled={!!drafting} onClick={draftAll} title="AI điền ô trống shot list rồi viết lời đọc theo beat + claim ledger">
++              {drafting ?? "⚡ AI dựng nháp"}
++            </button>
++          ) : null}
+           {canWrite ? (
+-            <Field value={project.title} onSave={(v) => patchProject({ title: v })} />
+-          ) : (
+-            <h2>{project.title}</h2>
+-          )}
+-          <div className="row ws-meta">
+-            <span className="badge">{project.format === "timelapse" ? "Timelapse công trình" : "Giải thích / kể chuyện"}</span>
+-            <span className="badge">{project.durationSec}s · {scenes.length} cảnh</span>
+-            <span className={`badge ${progress === 100 ? "badge-success" : "badge-info"}`}>Duyệt {progress}%</span>
+-            {lints.filter((l) => l.level === "warn").length ? (
+-              <span className="badge badge-warning">{lints.filter((l) => l.level === "warn").length} cảnh báo</span>
+-            ) : (
+-              <span className="badge badge-success">Không cảnh báo</span>
+-            )}
+-          </div>
+-        </div>
+-        {canWrite ? (
+-          <button
+-            className="button button-small danger"
+-            type="button"
+-            onClick={() => {
+-              if (confirm("Xóa dự án này và toàn bộ cảnh?")) run(() => deleteProject({ projectId }).then(onDeleted));
+-            }}
+-          >
+-            Xóa
+-          </button>
+-        ) : null}
++            <button
++              className="button button-small danger"
++              type="button"
++              onClick={() => {
++                if (confirm("Xóa dự án này và toàn bộ cảnh?")) run(() => deleteProject({ projectId }).then(onDeleted));
++              }}
++            >
++              Xóa
++            </button>
++          ) : null}
++        </div>
+       </header>
+ 
+       <nav className="steps">
+@@ -941,14 +1594,11 @@
+         ))}
+       </nav>
+ 
+-      {error ? (
+-        <div className="card alert-error text-small">
+-          {error}
+-        </div>
+-      ) : null}
++      {error ? <div className="card alert-error text-small">{error}</div> : null}
+ 
+       <section className="step-body">
+         {step === "brief" && <BriefStep {...ctx} />}
++        {step === "claims" && <ClaimStep {...ctx} />}
+         {step === "hook" && <HookStep {...ctx} />}
+         {step === "cast" && <CastStep {...ctx} />}
+         {step === "shots" && <ShotsStep {...ctx} />}
+@@ -964,6 +1614,7 @@
+ type StepCtx = {
+   project: Project;
+   scenes: Scene[];
++  brief: Brief | null;
+   canWrite: boolean;
+   patchProject: (patch: {
+     title?: string;
+@@ -975,14 +1626,15 @@
+     caption?: Project["caption"];
+     qc?: string[];
+   }) => Promise<void>;
+-  patchScene: (sceneId: Id<"scenes">, patch: Partial<Omit<SceneInput, "order" | "startSec" | "endSec">>) => Promise<void>;
++  patchScene: (sceneId: Id<"scenes">, patch: ScenePatch) => Promise<void>;
++  patchBrief: (patch: Partial<Omit<Knowledge, "raw">>) => Promise<void>;
+   run: (fn: () => Promise<unknown>) => Promise<void>;
+   replaceScenes: (args: { projectId: Id<"projects">; scenes: SceneInput[]; now: number }) => Promise<null>;
+   lints: Lint[];
+ };
+ 
+ // ───────────────────────── Step 1: Brief ─────────────────────────
+-function BriefStep({ project, canWrite, patchProject }: StepCtx) {
++function BriefStep({ project, brief, canWrite, patchProject }: StepCtx) {
+   const b = project.brief;
+   const save = (k: keyof Project["brief"]) => (v: string) => patchProject({ brief: { ...b, [k]: v } });
+   return (
+@@ -999,7 +1651,7 @@
+         <Labeled label="Góc nhìn DUY NHẤT của video" hint="Không ôm đồm. Một angle, 2–3 ý, mỗi ý một bằng chứng.">
+           <Field value={b.angle} onSave={save("angle")} disabled={!canWrite} multiline rows={2} placeholder="VD: 3 lỗi hook phổ biến và cách sửa trong 10 giây" />
+         </Labeled>
+-        <Labeled label="Bằng chứng / minh họa sẽ dùng">
++        <Labeled label="Bằng chứng / minh họa sẽ dùng" hint={brief ? "Nguồn & claim chi tiết ở bước 2 · Claim ledger" : undefined}>
+           <Field value={b.evidence} onSave={save("evidence")} disabled={!canWrite} multiline rows={2} placeholder="VD: so sánh trước–sau 2 bản hook; số liệu % dừng 3s" />
+         </Labeled>
+         <Labeled label="CTA duy nhất" hint="theo dõi / lưu / bình luận / link bio — chọn MỘT">
+@@ -1007,26 +1659,74 @@
+         </Labeled>
+       </div>
+       <div className="stack">
++        {brief ? (
++          <div className="card">
++            <h3>Nguồn tri thức</h3>
++            <table className="mini-table">
++              <tbody>
++                <tr>
++                  <td>Series</td>
++                  <td>{brief.series || "—"}</td>
++                </tr>
++                <tr>
++                  <td>doc_id</td>
++                  <td>
++                    <code>{brief.source.docId || "—"}</code> {brief.source.section}
++                  </td>
++                </tr>
++                <tr>
++                  <td>Anchor</td>
++                  <td>{brief.source.anchors.map((a) => `[${a}]`).join(" ") || "—"}</td>
++                </tr>
++                <tr>
++                  <td>Rủi ro</td>
++                  <td>
++                    <span className={`badge ${RISK[brief.risk.accuracy].badge}`}>{RISK[brief.risk.accuracy].label}</span>
++                  </td>
++                </tr>
++              </tbody>
++            </table>
++            <details>
++              <summary className="text-small">Brief gốc</summary>
++              <pre className="prompt small">{brief.raw || "—"}</pre>
++            </details>
++          </div>
++        ) : null}
+         <div className="card">
+           <h3>Timeline chuẩn {project.durationSec}s</h3>
+           <Timeline scenesLike={project.format === "timelapse" ? undefined : standardScenes(project.durationSec)} duration={project.durationSec} />
+           <table className="mini-table">
+             <tbody>
+-              <tr><td>0–3s</td><td>HOOK: lời + hình + chữ cùng một thông điệp</td></tr>
+-              <tr><td>3–10s</td><td>Định hướng: người xem sẽ nhận được gì</td></tr>
+-              <tr><td>10–45s</td><td>2–3 ý, mỗi ý MỘT minh họa/bằng chứng</td></tr>
+-              <tr><td>45–55s</td><td>Tóm tắt một câu</td></tr>
+-              <tr><td>55–60s</td><td>MỘT CTA duy nhất</td></tr>
++              <tr>
++                <td>0–3s</td>
++                <td>HOOK: lời + hình + chữ cùng một thông điệp</td>
++              </tr>
++              <tr>
++                <td>3–10s</td>
++                <td>Định hướng: người xem sẽ nhận được gì</td>
++              </tr>
++              <tr>
++                <td>10–45s</td>
++                <td>2–3 ý, mỗi ý MỘT minh họa/bằng chứng</td>
++              </tr>
++              <tr>
++                <td>45–55s</td>
++                <td>Tóm tắt một câu</td>
++              </tr>
++              <tr>
++                <td>55–60s</td>
++                <td>MỘT CTA duy nhất</td>
++              </tr>
+             </tbody>
+           </table>
+         </div>
+         <div className="card">
+           <h3>Guardrails</h3>
+           <ul className="text-small checklist-plain">
+-            <li>Original-first: nguồn viral chỉ là tín hiệu chủ đề — không re-upload, không đọc lại lời nguồn.</li>
++            <li>Original-first: nguồn chỉ là tín hiệu chủ đề + dữ kiện — góc kể, lời dẫn viết mới; không re-upload.</li>
++            <li>Mọi số liệu lấy từ claim ledger có anchor; không để AI "tính nhẩm".</li>
+             <li>Không claim y tế/tài chính chắc nịch; không hứa thu nhập.</li>
+-            <li>Không mô phỏng người thật (mặt/giọng) khi chưa có consent văn bản.</li>
+-            <li>Không engagement bait rỗng. Nội dung AI chân thực → gắn nhãn AI.</li>
++            <li>Không mô phỏng người thật khi chưa có consent văn bản. Nội dung AI chân thực → gắn nhãn AI.</li>
+             <li>Sản phẩm thật: verify hình dáng bằng ảnh ref TRƯỚC khi vẽ keyframe.</li>
+           </ul>
+         </div>
+@@ -1040,12 +1740,7 @@
+   return (
+     <div className="timeline">
+       {scenesLike.map((s, i) => (
+-        <div
+-          key={i}
+-          className={`tl-seg${s.hero ? " hero" : ""}`}
+-          style={{ flexGrow: s.endSec - s.startSec }}
+-          title={`${s.role} (${s.startSec}–${s.endSec}s)`}
+-        >
++        <div key={i} className={`tl-seg${s.hero ? " hero" : ""}`} style={{ flexGrow: s.endSec - s.startSec }} title={`${s.role} (${s.startSec}–${s.endSec}s)`}>
+           <span>{s.startSec}s</span>
+         </div>
+       ))}
+@@ -1054,8 +1749,178 @@
+   );
+ }
+ 
+-// ───────────────────────── Step 2: Hook ─────────────────────────
+-function HookStep({ project, canWrite, patchProject }: StepCtx) {
++// ───────────────────────── Step 2: Claim ledger ─────────────────────────
++function ClaimStep({ project, scenes, brief, canWrite, patchBrief }: StepCtx) {
++  const [busy, setBusy] = useState(false);
++  const [aiErr, setAiErr] = useState<string | null>(null);
++  const [findings, setFindings] = useState<ClaimFinding[] | null>(null);
++  if (!brief) {
++    return (
++      <div className="card">
++        <h3>Dự án này chưa có lớp tri thức</h3>
++        <p className="text-small text-muted">Claim ledger giữ mọi số liệu / nhận định có anchor nguồn. Lời đọc chỉ được dùng dữ kiện trong ledger.</p>
++        {canWrite ? (
++          <button className="button button-primary" type="button" onClick={() => patchBrief({ claims: [] })}>
++            Tạo claim ledger trống
++          </button>
++        ) : null}
++      </div>
++    );
++  }
++  const claims = brief.claims;
++  const setClaims = (next: Brief["claims"]) => patchBrief({ claims: next });
++  const update = (i: number, patch: Partial<Brief["claims"][number]>) => setClaims(claims.map((c, j) => (j === i ? { ...c, ...patch } : c)));
++  const parseAnchors = (s: string) => Array.from(new Set((s.match(/\d{1,3}/g) ?? []).map((a) => a.padStart(2, "0"))));
++  const check = async () => {
++    setBusy(true);
++    setAiErr(null);
++    try {
++      setFindings(await aiCheckClaims(project, scenes, brief));
++    } catch (e) {
++      setAiErr(e instanceof Error ? e.message : "AI không phản hồi");
++    } finally {
++      setBusy(false);
++    }
++  };
++  const hasVo = scenes.some((s) => s.voiceover.trim());
++  return (
++    <div className="grid-2">
++      <div className="stack">
++        <div className="card">
++          <div className="row space-between">
++            <h3>Claim ledger ({claims.length})</h3>
++            {canWrite ? (
++              <button className="button button-small" type="button" onClick={() => setClaims([...claims, { text: "", anchors: [], status: "unverified" }])}>
++                + Claim
++              </button>
++            ) : null}
++          </div>
++          <Guide>
++            Mỗi claim = một dữ kiện được phép nói trong video. <b>VERIFIED</b> cần mã nguồn <code>[NN]</code> trong sources-index.json; chỉ tham chiếu "mục" →{" "}
++            <b>EDITORIAL</b> (diễn đạt như ý kiến biên soạn); <b>UNVERIFIED</b> không được lên kịch bản.
++          </Guide>
++          {!claims.length ? <p className="text-small text-muted empty">Chưa có claim.</p> : null}
++          {claims.map((c, i) => (
++            <div key={i} className="claim-row">
++              <Field value={c.text} disabled={!canWrite} multiline rows={2} onSave={(v) => update(i, { text: v })} placeholder="Dữ kiện được phép nói…" />
++              <div className="claim-meta">
++                <Field value={c.anchors.join(", ")} disabled={!canWrite} onSave={(v) => update(i, { anchors: parseAnchors(v) })} placeholder="anchor: 41, 42" />
++                <select className="input" value={c.status} disabled={!canWrite} onChange={(e) => update(i, { status: e.target.value as ClaimStatus })}>
++                  {(Object.keys(CLAIM_STATUS) as ClaimStatus[]).map((k) => (
++                    <option key={k} value={k}>
++                      {CLAIM_STATUS[k].label}
++                    </option>
++                  ))}
++                </select>
++                <span className={`badge ${CLAIM_STATUS[c.status].badge}`}>{c.anchors.map((a) => `[${a}]`).join(" ") || "no anchor"}</span>
++                {canWrite ? (
++                  <button className="button button-small" type="button" onClick={() => setClaims(claims.filter((_, j) => j !== i))}>
++                    Xóa
++                  </button>
++                ) : null}
++              </div>
++            </div>
++          ))}
++        </div>
++        <div className="card">
++          <h3>Nguồn, rủi ro, continuity</h3>
++          <div className="grid-3">
++            <Labeled label="Series">
++              <Field value={brief.series} disabled={!canWrite} onSave={(v) => patchBrief({ series: v })} placeholder="nn-co-ban" />
++            </Labeled>
++            <Labeled label="Mã brief">
++              <Field value={brief.briefNo} disabled={!canWrite} onSave={(v) => patchBrief({ briefNo: v })} placeholder="01" />
++            </Labeled>
++            <Labeled label="Mức rủi ro sai lệch">
++              <select className="input" value={brief.risk.accuracy} disabled={!canWrite} onChange={(e) => patchBrief({ risk: { ...brief.risk, accuracy: e.target.value as RiskLevel } })}>
++                {(Object.keys(RISK) as RiskLevel[]).map((k) => (
++                  <option key={k} value={k}>
++                    {RISK[k].label}
++                  </option>
++                ))}
++              </select>
++            </Labeled>
++            <Labeled label="doc_id">
++              <Field value={brief.source.docId} disabled={!canWrite} onSave={(v) => patchBrief({ source: { ...brief.source, docId: v } })} placeholder="nn-knowledge-map-v1" />
++            </Labeled>
++            <Labeled label="Mục">
++              <Field value={brief.source.section} disabled={!canWrite} onSave={(v) => patchBrief({ source: { ...brief.source, section: v } })} placeholder="mục 2" />
++            </Labeled>
++            <Labeled label="Anchor nguồn">
++              <Field value={brief.source.anchors.join(", ")} disabled={!canWrite} onSave={(v) => patchBrief({ source: { ...brief.source, anchors: parseAnchors(v) } })} placeholder="41, 42, 44" />
++            </Labeled>
++          </div>
++          <Labeled label="Ghi chú rủi ro / gate" hint="Ví dụ giả lập → caption phải ghi 'mô phỏng minh họa'. Không claim y tế/tài chính.">
++            <Field value={brief.risk.notes} disabled={!canWrite} multiline rows={2} onSave={(v) => patchBrief({ risk: { ...brief.risk, notes: v } })} />
++          </Labeled>
++          <Labeled label="Continuity — nhất quán với video trước trong series" hint="Mốc năm, số liệu, cách gọi tên đã dùng (VD: 2012 AlexNet, 2017 Transformer).">
++            <Field value={brief.continuity} disabled={!canWrite} multiline rows={2} onSave={(v) => patchBrief({ continuity: v })} />
++          </Labeled>
++        </div>
++      </div>
++      <div className="stack">
++        <div className="card">
++          <div className="row space-between">
++            <h3>Đối chiếu lời đọc ↔ ledger</h3>
++            {aiAvailable() ? (
++              <button className="button" type="button" disabled={busy || !hasVo} onClick={check}>
++                {busy ? "Đang đối chiếu…" : "AI đối chiếu"}
++              </button>
++            ) : null}
++          </div>
++          <Guide>AI chỉ tách câu và so với ledger — kết quả là gợi ý để người duyệt, không tự sửa kịch bản.</Guide>
++          {!hasVo ? <p className="text-small text-muted">Chưa có lời đọc (bước 7) để đối chiếu.</p> : null}
++          <ErrorText text={aiErr} />
++          {findings ? (
++            findings.length ? (
++              <ul className="finding-list">
++                {findings.map((f, i) => (
++                  <li key={i} className={`finding ${f.status}`}>
++                    <span className={`badge ${f.status === "covered" ? "badge-success" : f.status === "illustrative" ? "badge-info" : "badge-error"}`}>
++                      {f.status === "covered" ? "có nguồn" : f.status === "illustrative" ? "ví dụ giả định" : "KHÔNG có nguồn"}
++                    </span>
++                    <div>
++                      <div className="text-small">
++                        Cảnh {f.scene}: “{f.sentence}”
++                      </div>
++                      <div className="text-small text-muted">{f.reason}</div>
++                    </div>
++                  </li>
++                ))}
++              </ul>
++            ) : (
++              <p className="text-small text-muted">Không tìm thấy câu có nhận định/số liệu.</p>
++            )
++          ) : null}
++        </div>
++        <div className="card">
++          <h3>Dàn ý (ý nội dung từng cảnh)</h3>
++          <p className="text-small text-muted">Beat từ brief — AI shot-list dịch beat thành SUBJECT/ENV/PROP/ACTION cụ thể; lời đọc bám beat.</p>
++          {scenes.map((s) => (
++            <div key={s._id} className="beat-row">
++              <span className="text-small text-muted">
++                {s.order + 1} · {s.startSec}–{s.endSec}s
++              </span>
++              <Field
++                value={beatOf(brief, s.order)}
++                disabled={!canWrite}
++                onSave={(v) => {
++                  const next = brief.outline.filter((o) => o.order !== s.order);
++                  if (v.trim()) next.push({ order: s.order, text: v });
++                  patchBrief({ outline: next.sort((a, b) => a.order - b.order) });
++                }}
++                placeholder={s.role}
++              />
++            </div>
++          ))}
++        </div>
++      </div>
++    </div>
++  );
++}
++
++// ───────────────────────── Step 3: Hook ─────────────────────────
++function HookStep({ project, brief, canWrite, patchProject }: StepCtx) {
+   const [type, setType] = useState<HookType>("ket_qua");
+   const [text, setText] = useState("");
+   const [busy, setBusy] = useState(false);
+@@ -1077,7 +1942,7 @@
+     setAiErr(null);
+     try {
+       const r = await aiJson<{ hooks: { type: string; text: string }[] }>(
+-        `Brief:\n- Giúp ai: ${project.brief.audience}\n- Nỗi đau: ${project.brief.pain}\n- Góc nhìn: ${project.brief.angle}\n- Bằng chứng: ${project.brief.evidence}\n- CTA: ${project.brief.cta}\n\nViết 6 hook mở đầu (≤ 18 từ mỗi hook), mỗi hook một dạng: ket_qua, sai_lam, doi_lap, cau_hoi, demo, cau_chuyen. Giúp đúng người nhận ra "cái này cho vấn đề của mình".`,
++        `${briefContext(project, brief)}\n\nViết 6 hook mở đầu (≤ 18 từ mỗi hook), mỗi hook một dạng: ket_qua, sai_lam, doi_lap, cau_hoi, demo, cau_chuyen. Giúp đúng người nhận ra "cái này cho vấn đề của mình". Không dùng số liệu nào ngoài claim ledger.`,
+         {
+           type: "object",
+           properties: {
+@@ -1113,7 +1978,7 @@
+       <div className="card">
+         <h3>Hook quyết định 80%</h3>
+         <Guide>
+-          Công thức: <b>[Nỗi đau / kết quả] + [đối tượng] + [lời hứa cụ thể]</b>. Viết 5–10 bản, chọn bản RÕ nhất — không giật tít.
++          Công thức: <b>[Nỗi đau / kết quả] + [đối tượng] + [lời hứa cụ thể]</b>. Viết 5–10 bản, chọn bản RÕ nhất — không giật tít, không số liệu chưa có anchor.
+         </Guide>
+         <div className="hook-types">
+           {HOOK_TYPES.map((h) => (
+@@ -1136,7 +2001,7 @@
+                 </button>
+               ) : null}
+             </div>
+-            {aiErr ? <div className="text-small" style={{ color: "var(--error-text)" }}>{aiErr}</div> : null}
++            <ErrorText text={aiErr} />
+           </>
+         ) : null}
+       </div>
+@@ -1171,8 +2036,7 @@
+         )}
+         {project.selectedHook >= 0 && hooks[project.selectedHook] ? (
+           <Guide>
+-            Hook chính: <b>{hooks[project.selectedHook].text}</b>. Trong video, hook phải xuất hiện bằng lời + hình + chữ màn hình (Label cảnh 1) cùng một
+-            thông điệp.
++            Hook chính: <b>{hooks[project.selectedHook].text}</b>. Trong video, hook phải xuất hiện bằng lời + hình + chữ màn hình (Label cảnh 1) cùng một thông điệp.
+           </Guide>
+         ) : null}
+       </div>
+@@ -1180,7 +2044,7 @@
+   );
+ }
+ 
+-// ───────────────────────── Step 3: Casting ─────────────────────────
++// ───────────────────────── Step 4: Casting ─────────────────────────
+ function CastStep({ project, canWrite, patchProject }: StepCtx) {
+   const isTl = project.format === "timelapse";
+   return (
+@@ -1189,24 +2053,18 @@
+         <h3>{isTl ? "Bối cảnh khóa (4 ô)" : "Character bible — khóa casting một lần"}</h3>
+         {isTl ? (
+           <>
+-            <Guide>Đổi 4 ô này sẽ cần tạo lại shot list (bước 4 → "Tạo lại từ template") để prompt cập nhật.</Guide>
++            <Guide>Đổi 4 ô này sẽ cần tạo lại shot list (bước 5 → "Tạo lại từ template") để prompt cập nhật.</Guide>
+             {(["boiCanh", "vatNeo", "kienTruc", "chu"] as const).map((k) => (
+               <Labeled key={k} label={{ boiCanh: "[BỐI CẢNH]", vatNeo: "[VẬT NEO]", kienTruc: "[KIẾN TRÚC]", chu: "[CHỮ]" }[k]}>
+-                <Field
+-                  value={project.timelapse[k]}
+-                  disabled={!canWrite}
+-                  multiline={k !== "chu"}
+-                  rows={2}
+-                  onSave={(v) => patchProject({ timelapse: { ...project.timelapse, [k]: v } })}
+-                />
++                <Field value={project.timelapse[k]} disabled={!canWrite} multiline={k !== "chu"} rows={2} onSave={(v) => patchProject({ timelapse: { ...project.timelapse, [k]: v } })} />
+               </Labeled>
+             ))}
+           </>
+         ) : (
+           <>
+             <Guide>
+-              Viết MỘT đoạn mô tả nhân vật duy nhất (tuổi, tóc, trang phục từng cảnh, đặc điểm nhận dạng) và paste nguyên văn vào mọi prompt keyframe.
+-              Đổi 1 chữ = đổi nhân vật. Nhân vật hư cấu — không mô phỏng người thật.
++              Viết MỘT đoạn mô tả nhân vật duy nhất (tuổi, tóc, trang phục từng cảnh, đặc điểm nhận dạng) và paste nguyên văn vào mọi prompt keyframe. Đổi 1 chữ = đổi nhân vật.
++              Cùng một series dùng cùng một bible để xây nhận diện kênh.
+             </Guide>
+             <Field
+               value={project.characterBible}
+@@ -1224,11 +2082,19 @@
+         <div className="card">
+           <h3>Cast & world — 4 yếu tố mỗi cảnh (7c)</h3>
+           <ul className="text-small checklist-plain">
+-            <li><b>SUBJECT</b> — ai, đang làm gì (diễn xuất tự nhiên).</li>
+-            <li><b>ENVIRONMENT</b> — ở đâu, cụ thể: quán cà phê, sân bay, văn phòng…</li>
+-            <li><b>PROP</b> — vật kể chuyện: điện thoại, hợp đồng, vali…</li>
+-            <li><b>ANIMAL</b> — chó/mèo/chim nếu hợp, tạo sức sống đời thường.</li>
+-            <li>Cảnh chỉ có giấy tờ → thêm bàn tay/người thao tác. Cảnh địa điểm → người/con vật hậu cảnh mờ.</li>
++            <li>
++              <b>SUBJECT</b> — ai, đang làm gì (diễn xuất tự nhiên).
++            </li>
++            <li>
++              <b>ENVIRONMENT</b> — ở đâu, cụ thể: quán cà phê, xưởng, lớp học, kho hàng…
++            </li>
++            <li>
++              <b>PROP</b> — vật kể chuyện neo cho ý trừu tượng: bảng trắng, mô hình, hộp gia vị, phiếu kho…
++            </li>
++            <li>
++              <b>ANIMAL</b> — chó/mèo/chim nếu hợp, tạo sức sống đời thường.
++            </li>
++            <li>Ý trừu tượng (sơ đồ, đường cong, vòng lặp) → luôn có bàn tay/người thao tác trên vật thật.</li>
+           </ul>
+         </div>
+         <div className="card">
+@@ -1245,67 +2111,22 @@
+   );
+ }
+ 
+-// ───────────────────────── Step 4: Shot list / Production board ─────────────────────────
+-function ShotsStep({ project, scenes, canWrite, patchScene, run, replaceScenes, lints }: StepCtx) {
++// ───────────────────────── Step 5: Shot list / Production board ─────────────────────────
++function ShotsStep({ project, scenes, brief, canWrite, patchScene, run, replaceScenes, lints }: StepCtx) {
+   const [busy, setBusy] = useState(false);
+   const [aiErr, setAiErr] = useState<string | null>(null);
+   const isTl = project.format === "timelapse";
+-  const hook = project.selectedHook >= 0 ? project.hooks[project.selectedHook]?.text : "";
+ 
+   const regenerate = () => {
+     if (!confirm("Tạo lại toàn bộ cảnh từ template? Nội dung đã điền trong các cảnh sẽ mất.")) return;
+     const next = isTl ? timelapseScenes(project.timelapse) : standardScenes(project.durationSec);
+     run(() => replaceScenes({ projectId: project._id, scenes: next, now: Date.now() }));
+   };
+-
+   const suggest = async () => {
+     setBusy(true);
+     setAiErr(null);
+     try {
+-      const r = await aiJson<{ scenes: { order: number; subject: string; environment: string; prop: string; animal: string; action: string; label: string }[] }>(
+-        `Brief: giúp ${project.brief.audience}; nỗi đau: ${project.brief.pain}; góc nhìn: ${project.brief.angle}; bằng chứng: ${project.brief.evidence}; CTA: ${project.brief.cta}.\nHook chính: ${hook || "(chưa có)"}.\nCharacter bible: ${project.characterBible || "(chưa có — nhân vật hư cấu)"}.\n\nCác cảnh:\n${scenes
+-          .map((s) => `${s.order + 1}. ${s.startSec}–${s.endSec}s · ${s.role} · ${SHOT_SIZES[s.shotSize].label} · ${CAMERAS[s.camera].label}`)
+-          .join("\n")}\n\nVới mỗi cảnh điền: subject (ai đang làm gì, tiếng Anh ≤ 15 từ), environment (ở đâu, tiếng Anh ≤ 10 từ), prop (vật kể chuyện, tiếng Anh ≤ 6 từ), animal (tiếng Anh hoặc rỗng), action (MỘT chuyển động duy nhất, tiếng Anh ≤ 10 từ, không phá logic tay–mắt–vật), label (chữ màn hình tiếng Việt ≤ 6 từ, chỉ cảnh 1 và CTA bắt buộc, cảnh khác có thể rỗng). Trả order đúng số thứ tự.`,
+-        {
+-          type: "object",
+-          properties: {
+-            scenes: {
+-              type: "array",
+-              items: {
+-                type: "object",
+-                properties: {
+-                  order: { type: "integer" },
+-                  subject: { type: "string" },
+-                  environment: { type: "string" },
+-                  prop: { type: "string" },
+-                  animal: { type: "string" },
+-                  action: { type: "string" },
+-                  label: { type: "string" },
+-                },
+-                required: ["order", "subject", "environment", "prop", "animal", "action", "label"],
+-              },
+-            },
+-          },
+-          required: ["scenes"],
+-        },
+-        DIRECTOR_SYSTEM,
+-      );
+-      const byOrder = new Map(scenes.map((s) => [s.order + 1, s]));
+-      await Promise.all(
+-        (r.scenes ?? []).map(async (x) => {
+-          const s = byOrder.get(Number(x.order));
+-          if (!s) return;
+-          const pick = (cur: string, next: unknown) => (cur.trim() ? cur : typeof next === "string" ? next.trim().slice(0, 1000) : cur);
+-          await patchScene(s._id, {
+-            subject: pick(s.subject, x.subject),
+-            environment: pick(s.environment, x.environment),
+-            prop: pick(s.prop, x.prop),
+-            animal: pick(s.animal, x.animal),
+-            action: pick(s.action, x.action),
+-            label: pick(s.label, x.label),
+-          });
+-        }),
+-      );
++      await aiFillShotList(project, scenes, brief, patchScene);
+     } catch (e) {
+       setAiErr(e instanceof Error ? e.message : "AI không phản hồi");
+     } finally {
+@@ -1320,8 +2141,8 @@
+           <div>
+             <h3>Production board — {scenes.length} cảnh</h3>
+             <p className="text-small text-muted">
+-              Mỗi cảnh ≈ 10s: SHOT · CAMERA (một chuyển động, chậm) · ACTION (một chuyển động trong khung) · SUBJECT / ENVIRONMENT / PROP / ANIMAL. ★ = cảnh hero, 2 take.
+-              Không ghép cảnh nào chưa duyệt.
++              Mỗi cảnh ≈ 10s: SHOT · CAMERA (một chuyển động, chậm) · ACTION (một chuyển động trong khung) · SUBJECT / ENVIRONMENT / PROP / ANIMAL. ★ = cảnh hero, 2 take. Không ghép
++              cảnh nào chưa duyệt.
+             </p>
+           </div>
+           {canWrite ? (
+@@ -1337,7 +2158,7 @@
+             </div>
+           ) : null}
+         </div>
+-        {aiErr ? <div className="text-small" style={{ color: "var(--error-text)" }}>{aiErr}</div> : null}
++        <ErrorText text={aiErr} />
+         <Timeline scenesLike={scenes} duration={project.durationSec} />
+       </div>
+ 
+@@ -1355,23 +2176,13 @@
+       ) : null}
+ 
+       {scenes.map((s) => (
+-        <SceneCard key={s._id} scene={s} canWrite={canWrite} isTl={isTl} onPatch={(patch) => patchScene(s._id, patch)} />
++        <SceneCard key={s._id} scene={s} beat={beatOf(brief, s.order)} canWrite={canWrite} isTl={isTl} onPatch={(patch) => patchScene(s._id, patch)} />
+       ))}
+     </div>
+   );
+ }
+ 
+-function SceneCard({
+-  scene: s,
+-  canWrite,
+-  isTl,
+-  onPatch,
+-}: {
+-  scene: Scene;
+-  canWrite: boolean;
+-  isTl: boolean;
+-  onPatch: (patch: Partial<Omit<SceneInput, "order" | "startSec" | "endSec">>) => void;
+-}) {
++function SceneCard({ scene: s, beat, canWrite, isTl, onPatch }: { scene: Scene; beat: string; canWrite: boolean; isTl: boolean; onPatch: (patch: ScenePatch) => void }) {
+   const statusKeys: (keyof Scene["status"])[] = ["keyframe", "take", "approved", "assembled"];
+   const statusLabel: Record<keyof Scene["status"], string> = { keyframe: "Keyframe", take: "Take", approved: "Duyệt", assembled: "Ghép" };
+   return (
+@@ -1383,16 +2194,12 @@
+           <span className="text-small text-muted">
+             {s.startSec}–{s.endSec}s · {(s.endSec - s.startSec).toFixed(0)}s{s.hero ? " · ★ hero" : ""}
+           </span>
++          {beat ? <span className="beat text-small">Ý: {beat}</span> : null}
+         </div>
+         <div className="status-row">
+           {statusKeys.map((k) => (
+             <label key={k} className={`status-pill${s.status[k] ? " on" : ""}`}>
+-              <input
+-                type="checkbox"
+-                checked={s.status[k]}
+-                disabled={!canWrite}
+-                onChange={(e) => onPatch({ status: { ...s.status, [k]: e.target.checked } })}
+-              />
++              <input type="checkbox" checked={s.status[k]} disabled={!canWrite} onChange={(e) => onPatch({ status: { ...s.status, [k]: e.target.checked } })} />
+               {statusLabel[k]}
+             </label>
+           ))}
+@@ -1403,28 +2210,36 @@
+         <Labeled label="SHOT">
+           <select className="input" value={s.shotSize} disabled={!canWrite} onChange={(e) => onPatch({ shotSize: e.target.value as ShotSize })}>
+             {(Object.keys(SHOT_SIZES) as ShotSize[]).map((k) => (
+-              <option key={k} value={k}>{SHOT_SIZES[k].label}</option>
++              <option key={k} value={k}>
++                {SHOT_SIZES[k].label}
++              </option>
+             ))}
+           </select>
+         </Labeled>
+         <Labeled label="CAMERA">
+           <select className="input" value={s.camera} disabled={!canWrite} onChange={(e) => onPatch({ camera: e.target.value as CameraMove })}>
+             {(Object.keys(CAMERAS) as CameraMove[]).map((k) => (
+-              <option key={k} value={k}>{CAMERAS[k].label}</option>
++              <option key={k} value={k}>
++                {CAMERAS[k].label}
++              </option>
+             ))}
+           </select>
+         </Labeled>
+         <Labeled label="Bố cục màn hình (7d)">
+           <select className="input" value={s.screenLayout} disabled={!canWrite} onChange={(e) => onPatch({ screenLayout: e.target.value as ScreenLayout })}>
+             {(Object.keys(SCREEN_LAYOUTS) as ScreenLayout[]).map((k) => (
+-              <option key={k} value={k}>{SCREEN_LAYOUTS[k].label}</option>
++              <option key={k} value={k}>
++                {SCREEN_LAYOUTS[k].label}
++              </option>
+             ))}
+           </select>
+         </Labeled>
+         <Labeled label="Takes">
+           <select className="input" value={s.takes} disabled={!canWrite} onChange={(e) => onPatch({ takes: Number(e.target.value) })}>
+             {[1, 2, 3].map((n) => (
+-              <option key={n} value={n}>{n} take</option>
++              <option key={n} value={n}>
++                {n} take
++              </option>
+             ))}
+           </select>
+         </Labeled>
+@@ -1460,9 +2275,9 @@
+   );
+ }
+ 
+-// ───────────────────────── Step 5: Prompts ─────────────────────────
+-function PromptsStep({ project, scenes, canWrite, patchScene }: StepCtx) {
+-  const all = scenes.map((s) => `### Cảnh ${s.order + 1} — ${s.role}\nKEYFRAME:\n${keyframePrompt(project, s)}\n\nMOTION:\n${motionPrompt(s)}`).join("\n\n");
++// ───────────────────────── Step 6: Prompts ─────────────────────────
++function PromptsStep({ project, scenes, brief, canWrite, patchScene }: StepCtx) {
++  const all = scenes.map((s) => `### Cảnh ${s.order + 1} — ${s.role}\nKEYFRAME:\n${keyframePrompt(project, s, brief)}\n\nMOTION:\n${motionPrompt(s)}`).join("\n\n");
+   return (
+     <div className="stack">
+       <div className="card">
+@@ -1487,15 +2302,17 @@
+             <h3>
+               Cảnh {s.order + 1} · {s.startSec}–{s.endSec}s · {s.role}
+             </h3>
+-            <span className="text-small text-muted">{SHOT_SIZES[s.shotSize].label} · {CAMERAS[s.camera].label}</span>
++            <span className="text-small text-muted">
++              {SHOT_SIZES[s.shotSize].label} · {CAMERAS[s.camera].label}
++            </span>
+           </div>
+           <div className="grid-2">
+             <div>
+               <div className="row space-between">
+                 <span className="text-label">Keyframe prompt (generate_image / CapCut AI image)</span>
+-                <CopyButton text={keyframePrompt(project, s)} />
++                <CopyButton text={keyframePrompt(project, s, brief)} />
+               </div>
+-              <pre className="prompt">{keyframePrompt(project, s)}</pre>
++              <pre className="prompt">{keyframePrompt(project, s, brief)}</pre>
+             </div>
+             <div>
+               <div className="row space-between">
+@@ -1523,20 +2340,8 @@
+   );
+ }
+ 
+-function slug(s: string) {
+-  return (
+-    s
+-      .normalize("NFD")
+-      .replace(/[\u0300-\u036f]/g, "")
+-      .replace(/đ/gi, "d")
+-      .toLowerCase()
+-      .replace(/[^a-z0-9]+/g, "-")
+-      .replace(/^-|-$/g, "") || "video"
+-  );
+-}
+-
+-// ───────────────────────── Step 6: Audio ─────────────────────────
+-function AudioStep({ project, scenes, canWrite, patchScene }: StepCtx) {
++// ───────────────────────── Step 7: Audio ─────────────────────────
++function AudioStep({ project, scenes, brief, canWrite, patchScene }: StepCtx) {
+   const isTl = project.format === "timelapse";
+   const [busy, setBusy] = useState(false);
+   const [aiErr, setAiErr] = useState<string | null>(null);
+@@ -1545,36 +2350,12 @@
+   const labels = useMemo(() => buildLabelsAss(project, scenes), [project, scenes]);
+   const subs = useMemo(() => buildSubsAss(project, scenes), [project, scenes]);
+   const script = useMemo(() => buildFfmpegScript(project, scenes), [project, scenes]);
+-  const hook = project.selectedHook >= 0 ? project.hooks[project.selectedHook]?.text : "";
+ 
+   const writeVo = async () => {
+     setBusy(true);
+     setAiErr(null);
+     try {
+-      const r = await aiJson<{ lines: { order: number; text: string }[] }>(
+-        `Brief: giúp ${project.brief.audience}; nỗi đau: ${project.brief.pain}; góc nhìn: ${project.brief.angle}; bằng chứng: ${project.brief.evidence}; CTA: ${project.brief.cta}.\nHook chính: ${hook || "(tự viết theo brief)"}.\n\nViết lời đọc tiếng Việt cho từng cảnh, tổng ~${target} từ cho ${project.durationSec}s (2,5 từ/giây). Mỗi cảnh ≤ số từ cho phép:\n${scenes
+-          .map((s) => `${s.order + 1}. ${s.role} (${s.startSec}–${s.endSec}s, tối đa ${Math.round((s.endSec - s.startSec) * WORDS_PER_SEC)} từ)${s.action ? ` — hình: ${s.action}` : ""}`)
+-          .join("\n")}\nQuy tắc: cảnh 1 mở bằng hook; giá trị đầu tiên trước giây 15; mỗi cảnh một ý + một cầu nối; cảnh cuối MỘT CTA duy nhất; viết số bằng chữ để TTS đọc đúng; không claim y tế/tài chính chắc nịch.`,
+-        {
+-          type: "object",
+-          properties: {
+-            lines: {
+-              type: "array",
+-              items: { type: "object", properties: { order: { type: "integer" }, text: { type: "string" } }, required: ["order", "text"] },
+-            },
+-          },
+-          required: ["lines"],
+-        },
+-        DIRECTOR_SYSTEM,
+-      );
+-      const byOrder = new Map(scenes.map((s) => [s.order + 1, s]));
+-      await Promise.all(
+-        (r.lines ?? []).map(async (x) => {
+-          const s = byOrder.get(Number(x.order));
+-          if (!s || typeof x.text !== "string") return;
+-          await patchScene(s._id, { voiceover: x.text.trim().slice(0, 2000) });
+-        }),
+-      );
++      await aiWriteVo(project, scenes, brief, patchScene);
+     } catch (e) {
+       setAiErr(e instanceof Error ? e.message : "AI không phản hồi");
+     } finally {
+@@ -1590,8 +2371,8 @@
+             <div>
+               <h3>Lời đọc theo cảnh</h3>
+               <p className="text-small text-muted">
+-                Tổng <b className={total > target * 1.1 ? "over" : ""}>{total}</b> / ~{target} từ (140–160 từ cho 60s). Vượt slot → rút gọn câu nhưng GIỮ nguyên claim, số liệu,
+-                disclaimer; báo rõ chỗ trim. Viết số bằng chữ ("ba mươi giây").
++                Tổng <b className={total > target * 1.1 ? "over" : ""}>{total}</b> / ~{target} từ (140–160 từ cho 60s). Vượt slot → rút gọn câu nhưng GIỮ nguyên claim, số liệu, disclaimer.
++                Viết số bằng chữ ("ba mươi giây"). {brief ? "Chỉ dùng dữ kiện trong claim ledger; ví dụ phải có 'giả sử/ví dụ'." : ""}
+               </p>
+             </div>
+             {canWrite && aiAvailable() ? (
+@@ -1600,11 +2381,12 @@
+               </button>
+             ) : null}
+           </div>
+-          {aiErr ? <div className="text-small" style={{ color: "var(--error-text)" }}>{aiErr}</div> : null}
++          <ErrorText text={aiErr} />
+           <div className="vo-list">
+             {scenes.map((s) => {
+               const budget = Math.round((s.endSec - s.startSec) * WORDS_PER_SEC);
+               const w = words(s.voiceover);
++              const beat = beatOf(brief, s.order);
+               return (
+                 <div key={s._id} className="vo-row">
+                   <div className="vo-meta">
+@@ -1612,6 +2394,7 @@
+                     <span className="text-small text-muted">
+                       {s.startSec}–{s.endSec}s · {s.role}
+                     </span>
++                    {beat ? <span className="text-small beat">Ý: {beat}</span> : null}
+                     <span className={`text-small ${w > budget * 1.15 ? "over" : "text-muted"}`}>
+                       {w}/{budget} từ · vo-canh{s.order + 1}.mp3
+                     </span>
+@@ -1637,7 +2420,9 @@
+             <h3>labels.ass</h3>
+             <div className="row">
+               <CopyButton text={labels} />
+-              <button className="button button-small" type="button" onClick={() => download("labels.ass", labels)}>Tải</button>
++              <button className="button button-small" type="button" onClick={() => download("labels.ass", labels)}>
++                Tải
++              </button>
+             </div>
+           </div>
+           <Guide>PlayResX 1080 / PlayResY 1920 — bắt buộc, SRT dùng PlayRes 384x288 làm sai mọi px. Label vàng, trên-center, size 54.</Guide>
+@@ -1648,7 +2433,9 @@
+             <h3>subs.ass</h3>
+             <div className="row">
+               <CopyButton text={subs} />
+-              <button className="button button-small" type="button" onClick={() => download("subs.ass", subs)}>Tải</button>
++              <button className="button button-small" type="button" onClick={() => download("subs.ass", subs)}>
++                Tải
++              </button>
+             </div>
+           </div>
+           <Guide>Sub trắng, dưới-center, size 46, MarginV 300 chừa lề UI TikTok. Thời gian chia theo câu, khớp cảnh. KHÔNG dùng drawtext cho câu tiếng Việt dài.</Guide>
+@@ -1661,7 +2448,9 @@
+           <h3>build.sh — ghép, phụ đề, mix beat + ducking</h3>
+           <div className="row">
+             <CopyButton text={script} />
+-            <button className="button button-small" type="button" onClick={() => download("build.sh", script)}>Tải</button>
++            <button className="button button-small" type="button" onClick={() => download("build.sh", script)}>
++              Tải
++            </button>
+           </div>
+         </div>
+         <Guide>
+@@ -1673,18 +2462,27 @@
+   );
+ }
+ 
+-// ───────────────────────── Step 7: Caption ─────────────────────────
+-function CaptionStep({ project, canWrite, patchProject }: StepCtx) {
++// ───────────────────────── Step 8: Caption ─────────────────────────
++function CaptionStep({ project, brief, canWrite, patchProject }: StepCtx) {
+   const c = project.caption;
+   const save = (k: keyof Project["caption"]) => (v: string) => patchProject({ caption: { ...c, [k]: v } });
+   const tags = hashtagList(c.hashtags);
+   const text = captionText(project);
+   const hookDefault = project.selectedHook >= 0 ? project.hooks[project.selectedHook]?.text : "";
++  const needsDisclaimer = brief ? /giả lập|mô phỏng|minh họa/i.test(brief.risk.notes) : false;
+   return (
+     <div className="grid-2">
+       <div className="card">
+         <h3>Caption contract</h3>
+-        <Guide>1 HOOK + 2–3 câu ngắn + 1 CTA + 5–8 hashtag tiếng Việt, từ khóa tự nhiên. Không engagement bait rỗng.</Guide>
++        <Guide>
++          1 HOOK + 2–3 câu ngắn + 1 CTA + 5–8 hashtag tiếng Việt, từ khóa tự nhiên. Không engagement bait rỗng.
++          {needsDisclaimer ? (
++            <>
++              {" "}
++              <b>Brief có ví dụ giả lập → thêm "Ví dụ trong video là mô phỏng minh họa."</b>
++            </>
++          ) : null}
++        </Guide>
+         <Labeled label="Hook" hint={hookDefault ? `Để trống = dùng hook chính: "${hookDefault}"` : undefined}>
+           <Field value={c.hook} disabled={!canWrite} onSave={save("hook")} placeholder={hookDefault || "Câu đầu caption"} />
+         </Labeled>
+@@ -1695,7 +2493,7 @@
+           <Field value={c.cta} disabled={!canWrite} onSave={save("cta")} />
+         </Labeled>
+         <Labeled label={`Hashtag (${tags.length}/5–8)`}>
+-          <Field value={c.hashtags} disabled={!canWrite} onSave={save("hashtags")} placeholder="#tiktokviet #lamnoidung #hook …" />
++          <Field value={c.hashtags} disabled={!canWrite} onSave={save("hashtags")} placeholder="#tiktokviet #hocai #mangnoron …" />
+         </Labeled>
+       </div>
+       <div className="stack">
+@@ -1712,7 +2510,7 @@
+             <li>Giờ đăng: 7–9h · 11–13h · 19–22h.</li>
+             <li>60 phút đầu: kiểm tra caption/phụ đề → ghim 1 bình luận đặt câu hỏi → trả lời bình luận đầu bằng thông tin hữu ích.</li>
+             <li>Bật nhãn "nội dung do AI tạo"; bật Commercial Content Disclosure nếu có affiliate.</li>
+-            <li>Theo dõi phễu: reach → % dừng 3s → % xem hết → saves/shares/comments → profile visits.</li>
++            <li>Theo dõi phễu: reach → % dừng 3s → % xem hết → saves/shares/comments → profile visits → ghi câu hỏi mới vào kho ý tưởng/brief tiếp theo.</li>
+           </ul>
+         </div>
+       </div>
+@@ -1720,11 +2518,12 @@
+   );
+ }
+ 
+-// ───────────────────────── Step 8: QC & handoff ─────────────────────────
+-function QcStep({ project, scenes, canWrite, patchProject, lints }: StepCtx) {
+-  const totalItems = QC_GROUPS.reduce((a, g) => a + g.items.length, 0);
+-  const done = project.qc.length;
+-  const handoff = useMemo(() => buildHandoff(project, scenes), [project, scenes]);
++// ───────────────────────── Step 9: QC & handoff ─────────────────────────
++function QcStep({ project, scenes, brief, canWrite, patchProject, lints }: StepCtx) {
++  const groups = brief ? QC_GROUPS : QC_GROUPS.slice(0, 5);
++  const totalItems = groups.reduce((a, g) => a + g.items.length, 0);
++  const done = project.qc.filter((k) => Number(k.split("-")[0]) < groups.length).length;
++  const handoff = useMemo(() => buildHandoff(project, scenes, brief), [project, scenes, brief]);
+   const toggle = (key: string, on: boolean) => {
+     const next = on ? Array.from(new Set([...project.qc, key])) : project.qc.filter((k) => k !== key);
+     patchProject({ qc: next });
+@@ -1735,13 +2534,13 @@
+       <div className="stack">
+         <div className="card">
+           <div className="row space-between">
+-            <h3>QC 4 lượt — mỗi lượt một việc</h3>
++            <h3>QC {groups.length - 1} lượt — mỗi lượt một việc</h3>
+             <span className={`badge ${done === totalItems ? "badge-success" : "badge-info"}`}>
+               {done}/{totalItems}
+             </span>
+           </div>
+           {unapproved > 0 ? <div className="text-small lint-warn">Còn {unapproved} cảnh chưa duyệt trên production board — không ghép cảnh chưa duyệt.</div> : null}
+-          {QC_GROUPS.map((g, gi) => (
++          {groups.map((g, gi) => (
+             <div key={gi} className="qc-group">
+               <div className="text-label">{g.title}</div>
+               {g.items.map((it, ii) => {
+@@ -1762,7 +2561,9 @@
+             <h3>Cảnh báo còn lại</h3>
+             <ul>
+               {lints.map((l, i) => (
+-                <li key={i} className={`lint-${l.level}`}>{l.text}</li>
++                <li key={i} className={`lint-${l.level}`}>
++                  {l.text}
++                </li>
+               ))}
+             </ul>
+           </div>
+@@ -1772,17 +2573,25 @@
+         <div className="card">
+           <h3>Gói bàn giao</h3>
+           <p className="text-small text-muted">
+-            Production pack (.md) gồm brief, hook, character bible, production board, handoff contract CapCut (canhN.mp4 / vo-canhN.mp3 / beat.mp3), prompt từng cảnh, caption và QC.
++            Production pack (.md) gồm nguồn tri thức, brief, hook, claim ledger, character bible, production board (có ý nội dung), handoff contract CapCut (canhN.mp4 / vo-canhN.mp3 /
++            beat.mp3), prompt từng cảnh, caption và QC. Dưới 20000 ký tự — dán thẳng vào auto-build được.
+           </p>
+           <div className="row wrap">
+             <button className="button button-primary" type="button" onClick={() => download(`${slug(project.title)}-production-pack.md`, handoff)}>
+               Tải production pack
+             </button>
+-            <button className="button" type="button" onClick={() => download("labels.ass", buildLabelsAss(project, scenes))}>labels.ass</button>
+-            <button className="button" type="button" onClick={() => download("subs.ass", buildSubsAss(project, scenes))}>subs.ass</button>
+-            <button className="button" type="button" onClick={() => download("build.sh", buildFfmpegScript(project, scenes))}>build.sh</button>
++            <button className="button" type="button" onClick={() => download("labels.ass", buildLabelsAss(project, scenes))}>
++              labels.ass
++            </button>
++            <button className="button" type="button" onClick={() => download("subs.ass", buildSubsAss(project, scenes))}>
++              subs.ass
++            </button>
++            <button className="button" type="button" onClick={() => download("build.sh", buildFfmpegScript(project, scenes))}>
++              build.sh
++            </button>
+             <CopyButton text={handoff} label="Chép pack" />
+           </div>
++          <p className="text-small text-muted">{handoff.length.toLocaleString("vi-VN")} ký tự</p>
+         </div>
+         <div className="card">
+           <h3>Failover — không bao giờ bỏ cảnh</h3>

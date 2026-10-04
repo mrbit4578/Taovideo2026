@@ -1,0 +1,41 @@
+--- D:\AI\KIEMTIEN ONLINE\taovideo chatgpt\_audit\tiktok-director-skillpack\director-studio-app\convex\schema.ts
++++ D:\AI\KIEMTIEN ONLINE\taovideo chatgpt\_audit\tiktok-director-skillpack-v2\director-studio-app-v2\convex\schema.ts
+@@ -25,6 +25,8 @@
+   v.literal("front"),
+   v.literal("pip"),
+ );
++export const claimStatus = v.union(v.literal("verified"), v.literal("unverified"), v.literal("editorial"));
++export const riskLevel = v.union(v.literal("low"), v.literal("medium"), v.literal("high"));
+ 
+ export const briefFields = {
+   audience: v.string(),
+@@ -89,6 +91,18 @@
+   updatedAt: v.number(),
+ };
+ 
++// Knowledge layer: one source brief per project (series, claim ledger, risk gate, beats).
++export const knowledgeFields = {
++  series: v.string(),
++  briefNo: v.string(),
++  source: v.object({ docId: v.string(), section: v.string(), anchors: v.array(v.string()) }),
++  claims: v.array(v.object({ text: v.string(), anchors: v.array(v.string()), status: claimStatus })),
++  risk: v.object({ accuracy: riskLevel, notes: v.string() }),
++  outline: v.array(v.object({ order: v.number(), text: v.string() })),
++  continuity: v.string(),
++  raw: v.string(),
++};
++
+ export default defineSchema({
+   ...typePlatformTables,
+   projects: defineTable(projectFields).index("by_updated", ["updatedAt"]),
+@@ -96,4 +110,10 @@
+     projectId: v.id("projects"),
+     ...sceneInputFields,
+   }).index("by_project", ["projectId", "order"]),
++  briefs: defineTable({
++    projectId: v.id("projects"),
++    ...knowledgeFields,
++  })
++    .index("by_project", ["projectId"])
++    .index("by_series", ["series"]),
+ });

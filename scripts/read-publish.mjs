@@ -1,0 +1,10 @@
+import { readFile } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
+const files = JSON.parse(await readFile('.publish/manifest.json', 'utf8'));
+const index = Number(process.argv[2]), offset = Number(process.argv[3] || 0), count = Number(process.argv[4] || 0);
+if (!Number.isInteger(index) || !files[index]) throw new Error('Unknown publish file');
+const f = files[index];
+const bytes = await readFile(f.path);
+if (createHash('sha256').update(bytes).digest('hex') !== f.sha256) throw new Error('File changed since audit: ' + f.path);
+const content = bytes.toString(f.encoding === 'base64' ? 'base64' : 'utf8');
+console.log(JSON.stringify({ ...f, length: content.length, content: count ? content.slice(offset, offset + count) : content }));

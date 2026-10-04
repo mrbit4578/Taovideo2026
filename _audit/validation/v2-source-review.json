@@ -1,0 +1,220 @@
+{
+  "zip_members": [
+    {
+      "path": "AUDIT-KAIZEN.md",
+      "bytes": 9394,
+      "sha256": "36eb2ae34b263c128c68305ba6965a762611ce56daeb0a74bffc3fa088849660",
+      "changed_from_v1": true
+    },
+    {
+      "path": "director-studio-app-v2/convex/app.ts",
+      "bytes": 16140,
+      "sha256": "98aba6e2cbf6a6c9326f71aa80dabd5bc7a7a996d6bbe17451c8af19c115b0aa",
+      "changed_from_v1": true
+    },
+    {
+      "path": "director-studio-app-v2/convex/schema.ts",
+      "bytes": 3346,
+      "sha256": "0da32751e0cfc1ebad82cc838e184dceb7d2c5a0ade5135719a762c1a6073530",
+      "changed_from_v1": true
+    },
+    {
+      "path": "director-studio-app-v2/README.md",
+      "bytes": 1494,
+      "sha256": "a00461887b807f7dcc5ddc6454c33281d3fc17066b18b707b170d1923c40469d",
+      "changed_from_v1": true
+    },
+    {
+      "path": "director-studio-app-v2/src/App.tsx",
+      "bytes": 127752,
+      "sha256": "bce13bd95c4ce636e01d9175abadfa69e77172c9b1f9eac934e733bda481051f",
+      "changed_from_v1": true
+    },
+    {
+      "path": "director-studio-app-v2/src/styles.css",
+      "bytes": 18994,
+      "sha256": "0785995ce416f08685f9385df3a710fbff5088a5d538acad88fbdfe83165000c",
+      "changed_from_v1": true
+    },
+    {
+      "path": "knowledge/README.md",
+      "bytes": 2539,
+      "sha256": "befad2fc5db8aa8f547fa23af23da712591787bfb3913273ff711916f8f09602",
+      "changed_from_v1": true
+    },
+    {
+      "path": "knowledge/video-briefs/01-mang-no-ron-hoc-nhu-the-nao.md",
+      "bytes": 1589,
+      "sha256": "3eeaddf2d7aa440cc9303869571658b86398baeb3c1d4d80930c721f0a56bafe",
+      "changed_from_v1": true
+    },
+    {
+      "path": "knowledge/video-briefs/02-3-loi-khien-ai-hoc-lech.md",
+      "bytes": 1663,
+      "sha256": "76c6d695a29c82f5fabb2f355decc06d66a17fd6735d1c2aa93c43528a10f0f7",
+      "changed_from_v1": true
+    },
+    {
+      "path": "knowledge/video-briefs/03-cnn-rnn-transformer-khac-nhau.md",
+      "bytes": 1724,
+      "sha256": "0797fdf21a4ae457c70fac758217f71ed5f592d1385848d63ced1e82cb92f51d",
+      "changed_from_v1": true
+    },
+    {
+      "path": "knowledge/video-briefs/04-hoi-dap-workflow-ai-agent.md",
+      "bytes": 1636,
+      "sha256": "fe5e530e7bd4121f8bb9a71522969d4dc4138b26e27e02149f9bc73f9dae806d",
+      "changed_from_v1": true
+    },
+    {
+      "path": "knowledge/video-briefs/05-mot-ngay-lam-viec-cua-ai-agent-kho.md",
+      "bytes": 1753,
+      "sha256": "de71110e0704d64d4e8c3f285446b1e11aac277f2f8a3eeab3cc52f18266dafa",
+      "changed_from_v1": true
+    },
+    {
+      "path": "knowledge/video-briefs/06-5-nguyen-tac-giao-viec-cho-ai-agent.md",
+      "bytes": 1717,
+      "sha256": "e104dd0f56fd2b86ab9b1d272e6cdacb7f30eca87416b4413a2ddfc819117950",
+      "changed_from_v1": true
+    },
+    {
+      "path": "knowledge-v2/brief-template-v2.md",
+      "bytes": 1922,
+      "sha256": "7b53bb039757d007abbdfb343d3a6d0b1d9a5a482b1d9ce227054010790e42c1",
+      "changed_from_v1": true
+    },
+    {
+      "path": "knowledge-v2/video-briefs/01-mang-no-ron-hoc-nhu-the-nao.md",
+      "bytes": 1910,
+      "sha256": "1fa226dacd934c554059837e437191f368020f711cfc1b70a008663ebf4a56e0",
+      "changed_from_v1": true
+    },
+    {
+      "path": "knowledge-v2/video-briefs/02-3-loi-khien-ai-hoc-lech.md",
+      "bytes": 1988,
+      "sha256": "8d136687174eadf1a177937c24f6af7c30b8ecf4433b27d80d01e4564212a17f",
+      "changed_from_v1": true
+    },
+    {
+      "path": "knowledge-v2/video-briefs/03-cnn-rnn-transformer-khac-nhau.md",
+      "bytes": 2022,
+      "sha256": "b42878c5c0546958d0c4e84a265d83ab43369137c0b24d400208396ae2c99304",
+      "changed_from_v1": true
+    },
+    {
+      "path": "knowledge-v2/video-briefs/04-hoi-dap-workflow-ai-agent.md",
+      "bytes": 2061,
+      "sha256": "f19ff45c5b55bd18dfeeafb743a620aee1501716b94e5b8f56ea51cc1fcd5af1",
+      "changed_from_v1": true
+    },
+    {
+      "path": "knowledge-v2/video-briefs/05-mot-ngay-lam-viec-cua-ai-agent-kho.md",
+      "bytes": 2278,
+      "sha256": "99c16c2f803cec53a58dcf493b5fee4971d77c7b5f2ac6875684c44fee98b8e0",
+      "changed_from_v1": true
+    },
+    {
+      "path": "knowledge-v2/video-briefs/06-5-nguyen-tac-giao-viec-cho-ai-agent.md",
+      "bytes": 2372,
+      "sha256": "f6d955c5b743eb92b6c7727e137f36bdd26d59593bd2552c2d2cd279c7dbeeae",
+      "changed_from_v1": true
+    },
+    {
+      "path": "tiktok-director-skill/README.md",
+      "bytes": 1221,
+      "sha256": "a78bc4096ee2196e8faa505f7370a13e2398b2d3a2941d33f8b82103052fe5c7",
+      "changed_from_v1": false
+    },
+    {
+      "path": "tiktok-director-skill/references/capcut-workflow.md",
+      "bytes": 1900,
+      "sha256": "bad8c2543f81b61e4ab446d32854a1ef7f6a398c2e51b20ed8c3dd0cd1b8f8b4",
+      "changed_from_v1": false
+    },
+    {
+      "path": "tiktok-director-skill/references/character-swap.md",
+      "bytes": 1433,
+      "sha256": "b3fc8165de191f2bbab8878b0b174484a3c2187057987b00fb71a49ee0cffcef",
+      "changed_from_v1": false
+    },
+    {
+      "path": "tiktok-director-skill/references/loi-doc-phu-de-mix.md",
+      "bytes": 4310,
+      "sha256": "238feecd2d6716f3bb22ba95fec63f9673f80078f0a055ce8b210da1ceef4d48",
+      "changed_from_v1": false
+    },
+    {
+      "path": "tiktok-director-skill/references/san-xuat-dien-anh.md",
+      "bytes": 5608,
+      "sha256": "5e69869e4f5ed16af895798b0d8c600674f03eda6ae04829c634aebab271df6c",
+      "changed_from_v1": false
+    },
+    {
+      "path": "tiktok-director-skill/shot-list-30-keyframes.md",
+      "bytes": 13730,
+      "sha256": "7c984f5aa9e8fd6c113f5945b05aa1d85140e7c5f042520c8d34d11f3c65c003",
+      "changed_from_v1": false
+    },
+    {
+      "path": "tiktok-director-skill/SKILL.md",
+      "bytes": 17185,
+      "sha256": "7b86a535a2a707e83a6409c0164e50387ccdf4b15ff783d6931068134174c004",
+      "changed_from_v1": false
+    }
+  ],
+  "rar_members": [
+    {
+      "path": "mang noron\\01-mang-no-ron-hoc-nhu-the-nao.md",
+      "bytes": 1589,
+      "sha256": "3eeaddf2d7aa440cc9303869571658b86398baeb3c1d4d80930c721f0a56bafe",
+      "identical_to_existing": true
+    },
+    {
+      "path": "mang noron\\02-3-loi-khien-ai-hoc-lech.md",
+      "bytes": 1663,
+      "sha256": "76c6d695a29c82f5fabb2f355decc06d66a17fd6735d1c2aa93c43528a10f0f7",
+      "identical_to_existing": true
+    },
+    {
+      "path": "mang noron\\03-cnn-rnn-transformer-khac-nhau.md",
+      "bytes": 1724,
+      "sha256": "0797fdf21a4ae457c70fac758217f71ed5f592d1385848d63ced1e82cb92f51d",
+      "identical_to_existing": true
+    },
+    {
+      "path": "mang noron\\04-hoi-dap-workflow-ai-agent.md",
+      "bytes": 1636,
+      "sha256": "fe5e530e7bd4121f8bb9a71522969d4dc4138b26e27e02149f9bc73f9dae806d",
+      "identical_to_existing": true
+    },
+    {
+      "path": "mang noron\\05-mot-ngay-lam-viec-cua-ai-agent-kho.md",
+      "bytes": 1753,
+      "sha256": "de71110e0704d64d4e8c3f285446b1e11aac277f2f8a3eeab3cc52f18266dafa",
+      "identical_to_existing": true
+    },
+    {
+      "path": "mang noron\\06-5-nguyen-tac-giao-viec-cho-ai-agent.md",
+      "bytes": 1717,
+      "sha256": "e104dd0f56fd2b86ab9b1d272e6cdacb7f30eca87416b4413a2ddfc819117950",
+      "identical_to_existing": true
+    },
+    {
+      "path": "mang noron\\README.md",
+      "bytes": 2539,
+      "sha256": "befad2fc5db8aa8f547fa23af23da712591787bfb3913273ff711916f8f09602",
+      "identical_to_existing": true
+    },
+    {
+      "path": "mang noron\\SKILL.md",
+      "bytes": 17185,
+      "sha256": "7b86a535a2a707e83a6409c0164e50387ccdf4b15ff783d6931068134174c004",
+      "identical_to_existing": true
+    }
+  ],
+  "archives": {
+    "mang noron.rar": "ba2c28bf6e37d9512b9813bcae50cc64117f67d4569f605f2b2123f0d3b1f2d2",
+    "tiktok-director-skillpack-v2.zip": "cb5352ee24aea360b583853a2c7a39cdb0e6882ab0ed2fc50fd39dad813e8d14"
+  }
+}

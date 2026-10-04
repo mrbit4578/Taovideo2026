@@ -1,0 +1,45 @@
+{
+  "date": "2026-10-03T17:01:53.663Z",
+  "checks": [
+    {
+      "name": "All 12 brief variants parse, v2 frontmatter stays with each heading",
+      "passed": true
+    },
+    {
+      "name": "Six briefs create six real local projects and correctly ordered continuous timelines",
+      "passed": true
+    },
+    {
+      "name": "Imported VERIFIED cannot be forged through a backend mutation",
+      "passed": true
+    },
+    {
+      "name": "Shot edits and claim edits invalidate earlier approvals and QC",
+      "passed": true
+    },
+    {
+      "name": "Invalid scene order, empty board and invalid hook selection are rejected atomically",
+      "passed": true
+    },
+    {
+      "name": "ASS rounds through second/minute rollover and short cues retain positive duration",
+      "passed": true
+    },
+    {
+      "name": "90s standard plan, short inputs and excessive outlines are bounded",
+      "passed": true
+    },
+    {
+      "name": "Raw brief text cannot launder a numeric claim into approved script facts",
+      "passed": true
+    },
+    {
+      "name": "Export pack keeps claim provenance; override retains character and physics constraints",
+      "passed": true
+    },
+    {
+      "name": "Persisted snapshot reloads and deleting a project cascades only its scenes and brief",
+      "passed": true
+    }
+  ]
+}
